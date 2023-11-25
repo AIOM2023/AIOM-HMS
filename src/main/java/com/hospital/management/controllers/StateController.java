@@ -1,6 +1,6 @@
 package com.hospital.management.controllers;
 
-import com.hospital.management.entities.StateModel;
+import com.hospital.management.entities.State;
 import com.hospital.management.repositary.StateRepo;
 import com.hospital.management.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +22,20 @@ public class StateController {
 
     @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping
-    public ResponseEntity<List<StateModel>> getAllStateNames() {
-        List<StateModel> allStateNames = stateService.getAllStateNames();
+    public ResponseEntity<List<State>> getAllStateNames() {
+        List<State> allStateNames = stateService.getAllStateNames();
         return ResponseEntity.ok(allStateNames);
     }
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/state")
-    public StateModel saveState(@RequestBody StateModel saveState){
+    public State saveState(@RequestBody State saveState){
         return stateRepo.save(saveState);
     }
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("State/{id}")
-    public Optional<StateModel> getState(@PathVariable Integer id){
+    public Optional<State> getState(@PathVariable Integer id){
         return stateRepo.findById(id);
     }
 

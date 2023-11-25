@@ -1,6 +1,6 @@
 package com.hospital.management.service.impl;
 
-import com.hospital.management.entities.StateModel;
+import com.hospital.management.entities.State;
 import com.hospital.management.repositary.StateRepo;
 import com.hospital.management.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ public class StateServiceImpl implements StateService {
     private StateRepo stateRepo;
 
     @Override
-    public List<StateModel> getAllStateNames() {
+    public List<State> getAllStateNames() {
         return stateRepo.findAll();
     }
 }

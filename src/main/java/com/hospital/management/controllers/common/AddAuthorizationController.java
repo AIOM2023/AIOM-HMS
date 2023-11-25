@@ -1,12 +1,10 @@
 package com.hospital.management.controllers.common;
 
 import com.hospital.management.entities.Country;
-import com.hospital.management.entities.commom.AddAuthorization;
-import com.hospital.management.model.common.AddAuthorizationModel;
-import com.hospital.management.repositary.CountryRepo;
-import com.hospital.management.service.AddAuthorizationService;
-import com.hospital.management.service.CountryService;
+import com.hospital.management.entities.commom.Authorization;
+import com.hospital.management.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,29 +16,28 @@ import java.util.List;
 public class AddAuthorizationController {
 
     @Autowired
-    private AddAuthorizationService authorizationService;
+    private AuthorizationService authorizationService;
 
-    @GetMapping
+    @PostMapping
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<List<AddAuthorization>> addAuthorizationList() {
-        return null;
+    public ResponseEntity<List<Authorization>> addAuthorizationList() {
+        List<Authorization> authorization = authorizationService.getAuthorizationList();
+        return  ResponseEntity.ok(authorization);
 
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
-    @CrossOrigin(origins = "http://localhost:8080")
-    public AddAuthorization saveCountry(@RequestBody @Validated AddAuthorizationModel addAuthorizationModel){
-
-        authorizationService.save(addAuthorizationModel);
-        return null;
+    public ResponseEntity<Authorization> saveAuthorization(@RequestBody @Validated Authorization authorizationModel){
+        authorizationService.save(authorizationModel);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/update")
+
     @CrossOrigin(origins = "http://localhost:8080")
-    public Country saveCity(@RequestBody @Validated com.hospital.management.model.Country country){
-        Country countryModel= new Country();
-        countryModel.setCountryid(country.getCountryId());
-        countryModel.setCountryname(country.getCountryName());
-        return countryRepo.save(countryModel);
+    @PostMapping("/update/{authId}")
+    public ResponseEntity<Authorization> updateAuthorization(@RequestBody @Validated Authorization authorization){
+        authorizationService.update(authorization);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

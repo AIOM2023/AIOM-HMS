@@ -1,11 +1,11 @@
 package com.hospital.management.service;
 
-import com.hospital.management.entities.StateModel;
+import com.hospital.management.entities.State;
 
 import java.util.List;
 
 public interface StateService {
 
-    List<StateModel> getAllStateNames();
+    List<State> getAllStateNames();
 
 }

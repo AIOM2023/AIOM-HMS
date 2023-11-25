@@ -4,12 +4,8 @@ package com.hospital.management.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Entity
+@Data
 @Table(name= "MASTER_USER")
 public class User {
 
@@ -32,7 +28,6 @@ public class User {
 
     @Column(name="ROLE")
     private  String role;
-
 
 }
 

@@ -1,6 +1,6 @@
 package com.hospital.management.service.impl;
 
-import com.hospital.management.entities.CityModel;
+import com.hospital.management.entities.City;
 import com.hospital.management.repositary.CityRepo;
 import com.hospital.management.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ public class CityServiceImpl implements CityService {
     private CityRepo cityRepo;
 
     @Override
-    public List<CityModel> getAllCityNames() {
+    public List<City> getAllCityNames() {
         return cityRepo.findAll();
     }
 

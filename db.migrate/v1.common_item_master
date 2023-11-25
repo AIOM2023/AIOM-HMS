@@ -1,0 +1,8 @@
+CREATE TABLE `common_item_master` (
+ `item_master_id` int NOT NULL AUTO_INCREMENT,
+ `item_master_code` varchar(55) DEFAULT NULL,
+ `item_master_value` varchar(55) DEFAULT NULL,
+ `item_master_description` varchar(55) DEFAULT NULL,
+ PRIMARY KEY (`item_master_id`)
+ );
+

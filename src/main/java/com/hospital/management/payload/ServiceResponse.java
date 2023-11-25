@@ -11,8 +11,9 @@ import org.springframework.http.HttpStatus;
 public class ServiceResponse{
 
     private String message;
-    private Boolean success;
-    private HttpStatus httpStatus;
 
+    private Boolean success;
+
+    private HttpStatus httpStatus;
 
 }

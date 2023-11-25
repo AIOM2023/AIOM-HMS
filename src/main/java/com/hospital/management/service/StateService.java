@@ -7,4 +7,5 @@ import java.util.List;
 public interface StateService {
 
     List<StateModel> getAllStateNames();
+
 }

@@ -1,30 +1,24 @@
 package com.hospital.management.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Entity
+@Data
 @Table(name= "master_state")
-public class StateModel {
+public class State {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "STATE_ID")
-    private  Integer stateid;
+    private  Integer id;
 
     @Column(name="STATE_NAME")
-    private  String statename;
+    private  String stateName;
 
     @Column(name="COUNTRY_ID")
-    private  Integer countryid;
+    private  Integer countryId;
 
    /* @ManyToOne
     @JoinColumn(name="country_id")

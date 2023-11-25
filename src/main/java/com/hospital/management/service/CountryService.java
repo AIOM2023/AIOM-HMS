@@ -1,10 +1,10 @@
 package com.hospital.management.service;
 
-import com.hospital.management.entities.CountryModel;
+import com.hospital.management.entities.Country;
 
 import java.util.List;
 
 public interface CountryService {
 
-    List<CountryModel> getAllCountryNames();
+    List<Country> getAllCountryNames();
 }

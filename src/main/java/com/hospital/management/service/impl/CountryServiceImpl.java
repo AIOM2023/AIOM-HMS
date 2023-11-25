@@ -1,6 +1,6 @@
 package com.hospital.management.service.impl;
 
-import com.hospital.management.entities.CountryModel;
+import com.hospital.management.entities.Country;
 import com.hospital.management.repositary.CountryRepo;
 import com.hospital.management.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ public class CountryServiceImpl implements CountryService {
     private CountryRepo countryRepo;
 
     @Override
-    public List<CountryModel> getAllCountryNames() {
+    public List<Country> getAllCountryNames() {
         return countryRepo.findAll();
     }
 }

@@ -1,27 +1,24 @@
 package com.hospital.management.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Data
 @Entity
 @Table(name= "master_country")
-public class CountryModel {
+public class Country {
 
     @Id
     @Column(name= " COUNTRY_ID")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private  Integer countryid;
 
     @Column(name="COUNTRY_NAME")
     private  String countryname;
+
+    @Column(name="STATUS")
+    private String status;
 
 
 }

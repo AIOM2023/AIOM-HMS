@@ -55,17 +55,21 @@ public class UserController {
    @Autowired
    private UserService userService;
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user){
         User userCreation = userService.saveUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(userCreation);
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/{userId}")
     public ResponseEntity<User> getUserbyUserId(@PathVariable String userId){
        User user= userService.getUser(userId);
       return ResponseEntity.ok(user);
     }
+
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping
     public ResponseEntity<List<User>> getAllUser(){
        List<User> allUsers = userService.getAllUsers();

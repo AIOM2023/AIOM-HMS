@@ -12,7 +12,7 @@ public class ServiceResponse{
 
     private String message;
 
-    private Boolean success;
+   private Boolean success;
 
     private HttpStatus httpStatus;
 

@@ -22,66 +22,66 @@ public class Authorization {
     private String authorizationName;
 
     @Column(name="designation")
-    private  String designation;
+    private Integer designation;
 
     @Column(name="reference_code")
     private String referenceCode;
 
     @Column(name="op_conces")
-    private String opConces;
+    private Integer opConces;
 
     @Column(name="op_credit")
-    private String opCredit;
+    private Integer opCredit;
 
     @Column(name="op_canc")
-    private String opCanc;
+    private Integer opCanc;
 
     @Column(name="op_phar_conc")
-    private String opPharConc;
+    private Integer opPharConc;
 
     @Column(name="op_phar_due")
-    private String opPharDue;
+    private Integer opPharDue;
 
     @Column(name="ip_conces")
-    private String ipConces;
+    private Integer ipConces;
 
     @Column(name="ip_credit")
-    private String ipCredit;
+    private Integer ipCredit;
 
     @Column(name="ip_canc")
-    private String ipCanc;
+    private Integer ipCanc;
 
     @Column(name="pat_bil_conv")
-    private String patBilConv;
+    private Integer patBilConv;
 
     @Column(name="fnb_conces")
-    private String fnbConces;
+    private Integer fnbConces;
 
     @Column(name="vouch_appr")
-    private String vouchAppr;
+    private Integer vouchAppr;
 
     @Column(name="mod_appr_trans")
-    private String modApprTrans;
+    private Integer modApprTrans;
 
     @Column(name="disch_wo_settl")
-    private String dischWoSettl;
+    private Integer dischWoSettl;
 
     @Column(name="fnb_due")
-    private String fnbDue;
+    private Integer fnbDue;
 
     @Column(name="pat_reg")
-    private String patReg;
+    private Integer patReg;
 
-    @Column(name="createdDate")
+    @Column(name="created_date")
     private OffsetDateTime createdDate;
 
-    @Column(name="createdBy")
+    @Column(name="created_by")
     private String createdBy;
 
-    @Column(name="modifiedDate")
+    @Column(name="modified_date")
     private OffsetDateTime modifiedDate;
 
-    @Column(name="modifiedBy")
+    @Column(name="modified_by")
     private String modifiedBy;
 
     @Column(name="del_auth")

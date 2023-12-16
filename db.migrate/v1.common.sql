@@ -151,3 +151,101 @@ CREATE TABLE `users` (
   `in_active` int NOT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE `tariff` (
+  `tariff_id` int NOT NULL AUTO_INCREMENT,
+  `tariff_code` varchar(25) NOT NULL,
+  `tariff` varchar(155) NOT NULL,
+  `tariff_desc` varchar(255) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `created_by` varchar(155) NOT NULL,
+  `modified_date` datetime NOT NULL,
+  `modified_by` varchar(155) NOT NULL,
+  `del_tariff` int NOT NULL,
+  `in_active` int NOT NULL,
+PRIMARY KEY (`tariff_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `nurse_station` (
+  `nurse_station_id` int NOT NULL AUTO_INCREMENT,
+  `nurse_station_code` varchar(100) NOT NULL,
+  `nurse_station_name` varchar(155) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `created_by` varchar(155) NOT NULL,
+  `modified_date` datetime NOT NULL,
+  `modified_by` varchar(155) NOT NULL,
+  `del_nurse_station` int NOT NULL,
+  `in_active` int NOT NULL,
+PRIMARY KEY (`nurse_station_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `insurance_comp` (
+  `in_com_id` int NOT NULL AUTO_INCREMENT,
+  `comp_id` varchar(15) NOT NULL,
+  `ins_org` int NOT NULL,
+  `company_name` varchar(50) NOT NULL,
+  `company_address` varchar(100) NOT NULL,
+  `phone_no` varchar(15) NOT NULL,
+  `fax_no` varchar(25) NOT NULL,
+  `gst` varchar(100) NOT NULL,
+  `email_address` varchar(50) NOT NULL,
+  `contact_person` varchar(100) NOT NULL,
+  `contact_no_person` varchar(100) NOT NULL,
+  `contact_email` varchar(50) NOT NULL,
+  `notes` text NOT NULL,
+  `contract_date` date NOT NULL,
+  `valid_from` date NOT NULL,
+  `valid_to` date NOT NULL,
+  `ipp_type` varchar(255) NOT NULL,
+  `ipp_disc` varchar(55) NOT NULL,
+  `ipb_type` varchar(255) NOT NULL,
+  `ipb_disc` varchar(55) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `created_by` varchar(255) NOT NULL,
+  `modified_date` datetime NOT NULL,
+  `modified_by` varchar(255) NOT NULL,
+  `del_ins` int NOT NULL,
+  `in_active` int NOT NULL,
+PRIMARY KEY (`in_com_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE reg_fees (
+  reg_fees_id int NOT NULL,
+  reg_fee_code varchar(25) NOT NULL,
+  reg_fees_name varchar(500) NOT NULL,
+  reg_fees float NOT NULL,
+  reg_valid date NOT NULL,
+  reg_valid_to datetime NOT NULL,
+  reg_fees_desc text NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(100) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(100) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_reg_fee int NOT NULL,
+  in_active int NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+ CREATE TABLE appointment_time (
+  app_time_id int NOT NULL,
+  doctor_code varchar(55) NOT NULL,
+  appointment_minutes int NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(100) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(100) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_appointment_time int NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ CREATE TABLE how_did (
+  how_did_id int NOT NULL,
+  how_did_name varchar(500) NOT NULL,
+  how_did_desc text NOT NULL,
+  in_active int NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;

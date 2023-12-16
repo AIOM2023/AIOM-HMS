@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 
+import java.time.OffsetDateTime;
+
 @Data
 @Entity
-@Table(name= "common_tariff")
+@Table(name= "tariff")
 public class Tariff {
 
     @Id
@@ -20,9 +22,26 @@ public class Tariff {
     @Column(name= "tariff")
     private String tariff;
 
-    @Column(name= "tariff_color")
-    private String tariffColor;
+    @Column(name= "tariff_desc")
+    private String tariffDescription;
 
-    @Column(name= "tariff_description")
-    private String description;
+    @Column(name="created_date")
+    private OffsetDateTime createdDate;
+
+    @Column(name="created_by")
+    private String  createdBy;
+
+    @Column(name="modified_date")
+    private OffsetDateTime modifiedDate;
+
+    @Column(name="modified_by")
+    private String  modifiedBy;
+
+    @Column(name= "del_tariff")
+    private Integer delTariff;
+
+    @Column(name= "in_active")
+    private Integer inActive;
+
+
 }

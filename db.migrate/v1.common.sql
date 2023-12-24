@@ -249,3 +249,75 @@ CREATE TABLE reg_fees (
   how_did_desc text NOT NULL,
   in_active int NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE room_group (
+  room_group_id int NOT NULL,
+  room_group_code varchar(100) NOT NULL,
+  room_group_name varchar(155) NOT NULL,
+  room_group_description varchar(255) NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(155) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(155) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_room_group int NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE room_bed (
+  room_bed_id int NOT NULL,
+  room_group_code varchar(100) NOT NULL,
+  room_code varchar(155) NOT NULL,
+  no_of_beds int NOT NULL,
+  extension_no int NOT NULL,
+  room_status varchar(155) NOT NULL,
+  room_block varchar(155) NOT NULL,
+  room_level varchar(100) NOT NULL,
+  room_wing varchar(100) NOT NULL,
+  nurse_station varchar(155) NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(155) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(155) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_room_bed int NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE bed_delete (
+  bed_id int NOT NULL,
+  room_bed_id int NOT NULL,
+  bed_code varchar(100) NOT NULL,
+  bed_status varchar(100) NOT NULL,
+  is_active int NOT NULL,
+  room_code varchar(155) NOT NULL,
+  room_group_code varchar(100) NOT NULL,
+  room_group_name varchar(155) NOT NULL,
+  admission_no varchar(155) NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(155) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(155) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_bed_details int NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ CREATE TABLE specialization (
+  specialization_id int NOT NULL,
+  specialization_code varchar(255) NOT NULL,
+  specialization_desc text NOT NULL,
+  specialization_status int NOT NULL,
+  in_active int NOT NULL,
+  appr_specialization int NOT NULL,
+  del_specialization int NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(200) NOT NULL,
+  created_id varchar(50) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(200) NOT NULL,
+  modified_id varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

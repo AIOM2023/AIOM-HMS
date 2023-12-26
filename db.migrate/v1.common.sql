@@ -321,3 +321,217 @@ CREATE TABLE bed_delete (
   modified_by varchar(200) NOT NULL,
   modified_id varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE billing_head (
+  billing_head_id int NOT NULL,
+  billing_head_code varchar(25) NOT NULL,
+  billing_head_name varchar(155) NOT NULL,
+  service_type varchar(100) NOT NULL,
+  billing_head_desc varchar(255) NOT NULL,
+  priority int NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(155) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(155) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_billing_head int NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE service_category (
+  service_group_id int NOT NULL,
+  department_code int NOT NULL,
+  service_group_code varchar(25) NOT NULL,
+  service_group_name varchar(255) NOT NULL,
+  service_group_desc text NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(155) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(155) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_service_group int NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE consult_charge (
+  consult_id int NOT NULL,
+  consult_code varchar(100) NOT NULL,
+  tariff varchar(100) NOT NULL,
+  doctor_code varchar(100) NOT NULL,
+  doctor_name varchar(155) NOT NULL,
+  billing_head_code varchar(100) NOT NULL,
+  consult_normal_fee int NOT NULL,
+  consult_emerg_fee int NOT NULL,
+  consult_revisit_fee int NOT NULL,
+  registration_fee int NOT NULL,
+  no_of_days int NOT NULL,
+  no_of_visits int NOT NULL,
+  discount_op int NOT NULL,
+  discount_ip int NOT NULL,
+  service_tax varchar(25) NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(155) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(155) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_consult_charge int NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE service_charge (
+  service_charge_id int NOT NULL,
+  service_charge_code varchar(25) NOT NULL,
+  service_type varchar(155) NOT NULL,
+  tariff varchar(25) NOT NULL,
+  service_grp varchar(25) NOT NULL,
+  service_grp_name varchar(155) NOT NULL,
+  billing_head varchar(25) NOT NULL,
+  service_name varchar(255) NOT NULL,
+  service_code varchar(25) NOT NULL,
+  charge int NOT NULL,
+  applicable_for varchar(25) NOT NULL,
+  service_tax varchar(25) NOT NULL,
+  instructions varchar(2000) NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(155) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(155) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_service_charge int NOT NULL,
+  in_active int NOT NULL
+);
+
+ CREATE TABLE service_request (
+  service_request_id int NOT NULL,
+  service_request_code varchar(100) NOT NULL,
+  service_request_name varchar(255) NOT NULL,
+  department varchar(155) NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(155) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(155) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_service_request int NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE corp_quick_entry (
+  corp_quick_id int NOT NULL,
+  tariff_cd varchar(50) NOT NULL,
+  tariff_name varchar(255) NOT NULL,
+  srv_grp_cd varchar(50) NOT NULL,
+  srv_grp_name varchar(255) NOT NULL,
+  service varchar(50) NOT NULL,
+  ser_name varchar(255) NOT NULL,
+  charge float NOT NULL,
+  app_for varchar(50) NOT NULL,
+  corp_service varchar(50) NOT NULL,
+  corp_ser_name varchar(255) NOT NULL,
+  corp_charge float NOT NULL,
+  corp_appfor varchar(50) NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(100) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(100) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  corp_quick_entry_status int NOT NULL,
+  in_active int NOT NULL,
+  general_ward varchar(100) NOT NULL,
+  non_ac_rooms varchar(100) NOT NULL,
+  iccu varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE lab_parameters (
+  lab_id int NOT NULL,
+  lab_group varchar(155) NOT NULL,
+  param_id varchar(55) NOT NULL,
+  param_name varchar(155) NOT NULL,
+  method int NOT NULL,
+  short_name varchar(55) NOT NULL,
+  normal_ranges int NOT NULL,
+  units_checked int NOT NULL,
+  units int NOT NULL,
+  critical_ranges int NOT NULL,
+  default_ranges int NOT NULL,
+  lab_description int NOT NULL,
+  editor_desc text NOT NULL,
+  mult_val int NOT NULL,
+  mult_values varchar(255) NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(155) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(155) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_lp int NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE parameter_values (
+  parameter_id int NOT NULL,
+  lab_parameter_id varchar(25) NOT NULL,
+  gender int NOT NULL,
+  min_age int NOT NULL,
+  min_uom varchar(25) NOT NULL,
+  max_age int NOT NULL,
+  max_uom varchar(25) NOT NULL,
+  descr varchar(155) NOT NULL,
+  symbol int NOT NULL,
+  min_range varchar(15) NOT NULL,
+  max_range varchar(15) NOT NULL,
+  units int NOT NULL,
+  normal_range varchar(155) NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE modify_appr_transact (
+  modify_id int NOT NULL,
+  modify_code varchar(25) NOT NULL,
+  modify_date datetime NOT NULL,
+  transact_type varchar(100) NOT NULL,
+  transact_from datetime NOT NULL,
+  transact_to datetime NOT NULL,
+  discount_no varchar(25) NOT NULL,
+  modify_type varchar(25) NOT NULL,
+  umr_no varchar(25) NOT NULL,
+  patient_name varchar(155) NOT NULL,
+  authorized_by int NOT NULL,
+  remarks varchar(1000) NOT NULL,
+  created_date datetime NOT NULL,
+  created_by varchar(100) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(100) NOT NULL,
+  created_id varchar(30) NOT NULL,
+  modified_id varchar(30) NOT NULL,
+  del_modify int NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE change_admission_details (
+  ca_id int NOT NULL,
+  reg_no varchar(255) NOT NULL,
+  umr_no varchar(100) NOT NULL,
+  patnt_name varchar(100) NOT NULL,
+  admit_no varchar(100) NOT NULL,
+  refsrc varchar(100) NOT NULL,
+  conslt_code varchar(100) NOT NULL,
+  conslt_name varchar(100) NOT NULL,
+  reff_by varchar(100) NOT NULL,
+  auth_code varchar(255) NOT NULL,
+  created_date datetime NOT NULL,
+  created_id varchar(50) NOT NULL,
+  created_by varchar(50) NOT NULL,
+  modified_id varchar(50) NOT NULL,
+  modified_date datetime NOT NULL,
+  modified_by varchar(50) NOT NULL,
+  in_active int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+

@@ -533,5 +533,24 @@ CREATE TABLE change_admission_details (
   in_active int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `patient_appointment` (
+  `appointment_id` int NOT NULL,
+  `appointment_number` int NOT NULL,
+  `patient_id` int NOT NULL,
+  `doctor_id` int NOT NULL,
+  `appointment_date` datetime NOT NULL,
+  `appointment_time` datetime NOT NULL,
+  `appointment_reason` text NOT NULL,
+  `appointment_status` varchar(255) NOT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `created_by` varchar(255 )DEFAULT NULL,
+  `created_id` varchar(255) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `modified_by` varchar(255) DEFAULT NULL,
+  `modified_id` varchar(255) DEFAULT NULL,
+  `delete_appointment` int NOT NULL,
+  `in_active` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 

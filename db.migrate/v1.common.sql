@@ -533,6 +533,7 @@ CREATE TABLE change_admission_details (
   in_active int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
 CREATE TABLE `patient_appointment` (
   `appointment_id` int NOT NULL,
   `appointment_number` int NOT NULL,

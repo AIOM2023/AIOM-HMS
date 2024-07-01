@@ -33,6 +33,7 @@ public class CountryController {
     public Country saveCountry(@RequestBody @Validated com.hospital.management.model.Country country){
         Country countryModel= new Country();
         countryModel.setCountryname(country.getCountryName());
+        countryModel.setStatus(country.getStatus());
         return countryRepo.save(countryModel);
     }
 

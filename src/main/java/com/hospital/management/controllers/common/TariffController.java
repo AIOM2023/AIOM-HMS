@@ -29,15 +29,22 @@ public class TariffController {
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
     public ResponseEntity<Tariff> saveInsuranceComp(@RequestBody @Validated Tariff tariff){
-        tariffService.save(tariff);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Tariff savedTariff = tariffService.save(tariff);
+        return new ResponseEntity<>(savedTariff, HttpStatus.OK);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/update")
-    public ResponseEntity<Tariff> updateAuthorization(@RequestBody @Validated Tariff tariff){
-        tariffService.update(tariff);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping("/update/{tariffId}")
+    public ResponseEntity<Tariff> updateAuthorization(@RequestBody @Validated Tariff tariff, @PathVariable("tariffId") Integer tariffId){
+        Tariff updatedTariff = tariffService.update(tariff, tariffId);
+        return new ResponseEntity<>(updatedTariff, HttpStatus.OK);
+    }
+
+    @CrossOrigin(origins = "http://localhost:8080")
+    @DeleteMapping("/delete/{tariffId}")
+    public ResponseEntity<String> deleteTariffById(@PathVariable("tariffId") Integer tariffId){
+        String successMsg = tariffService.deleteTariffById(tariffId);
+        return new ResponseEntity<>(successMsg, HttpStatus.OK);
     }
 }

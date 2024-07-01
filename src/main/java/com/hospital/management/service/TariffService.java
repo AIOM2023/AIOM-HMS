@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface TariffService {
 
-    void save(Tariff tariff);
+    Tariff save(Tariff tariff);
 
-    void update(Tariff tariff);
+    Tariff update(Tariff tariff, Integer tariffId);
 
     List<Tariff> tariffList();
+
+    String deleteTariffById(Integer tariffId);
 }

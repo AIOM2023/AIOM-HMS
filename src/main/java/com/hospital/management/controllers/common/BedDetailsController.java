@@ -1,3 +1,4 @@
+
 package com.hospital.management.controllers.common;
 
 import com.hospital.management.entities.commom.BedDetails;
@@ -14,10 +15,12 @@ import java.util.List;
 @RequestMapping("/bed/details")
 public class BedDetailsController {
 
-    @Autowired
+
+@Autowired
     BedDetailsService bedDetailsService;
 
-    @GetMapping
+
+@GetMapping
     @CrossOrigin(origins = "http://localhost:8080")
     public ResponseEntity<List<BedDetails>> bedDetailsList() {
         List<BedDetails> bedDetailsList = bedDetailsService.bedDetailsList();
@@ -25,7 +28,8 @@ public class BedDetailsController {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
+
+@CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
     public ResponseEntity<BedDetails> saveInsuranceComp(@RequestBody @Validated BedDetails bedDetails){
         bedDetailsService.save(bedDetails);
@@ -33,10 +37,12 @@ public class BedDetailsController {
     }
 
 
-    @CrossOrigin(origins = "http://localhost:8080")
+
+@CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/update")
     public ResponseEntity<BedDetails> updateAuthorization(@RequestBody @Validated BedDetails bedDetails){
         bedDetailsService.update(bedDetails);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

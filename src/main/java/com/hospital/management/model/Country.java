@@ -8,4 +8,6 @@ public class Country {
     private int countryId;
 
     private String countryName;
+
+    private String status;
 }

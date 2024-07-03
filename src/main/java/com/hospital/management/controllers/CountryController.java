@@ -5,6 +5,7 @@ import com.hospital.management.entities.Country;
 import com.hospital.management.repositary.CountryRepo;
 import com.hospital.management.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,19 +31,19 @@ public class CountryController {
 
     @PostMapping("/save")
     @CrossOrigin(origins = "http://localhost:8080")
-    public Country saveCountry(@RequestBody @Validated com.hospital.management.model.Country country){
-        Country countryModel= new Country();
-        countryModel.setCountryname(country.getCountryName());
-        countryModel.setStatus(country.getStatus());
-        return countryRepo.save(countryModel);
+    public ResponseEntity<Country> saveCountry(@RequestBody @Validated Country country){
+        return new ResponseEntity<>(countryService.saveCountry(country), HttpStatus.CREATED);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update/{countryId}")
     @CrossOrigin(origins = "http://localhost:8080")
-    public Country saveCity(@RequestBody @Validated com.hospital.management.model.Country country){
-        Country countryModel= new Country();
-        countryModel.setCountryid(country.getCountryId());
-        countryModel.setCountryname(country.getCountryName());
-        return countryRepo.save(countryModel);
+    public ResponseEntity<Country> updateCountry(@RequestBody @Validated Country country, @PathVariable("countryId") Integer countryId){
+        return new ResponseEntity<>(countryService.updateCountry(country, countryId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{countryId}")
+    @CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<String> deleteCountryById(@PathVariable("countryId") Integer countryId){
+        return new ResponseEntity<>(countryService.deleteCountryById(countryId), HttpStatus.OK);
     }
 }

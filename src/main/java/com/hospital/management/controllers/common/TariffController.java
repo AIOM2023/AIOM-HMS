@@ -35,7 +35,7 @@ public class TariffController {
 
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/update/{tariffId}")
+    @PutMapping("/update/{tariffId}")
     public ResponseEntity<Tariff> updateTariffById(@RequestBody @Validated Tariff tariff, @PathVariable("tariffId") Integer tariffId){
         Tariff updatedTariff = tariffService.update(tariff, tariffId);
         return new ResponseEntity<>(updatedTariff, HttpStatus.OK);

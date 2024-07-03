@@ -1,21 +1,77 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.Country;
+import com.hospital.management.exceptions.HmsBusinessException;
+import com.hospital.management.exceptions.ResourceNotFoundException;
+import com.hospital.management.payload.ErrorResponse;
 import com.hospital.management.repositary.CountryRepo;
 import com.hospital.management.service.CountryService;
+import com.hospital.management.utils.HmsCommonUtil;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CountryServiceImpl implements CountryService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountryServiceImpl.class);
 
     @Autowired
     private CountryRepo countryRepo;
 
     @Override
     public List<Country> getAllCountryNames() {
-        return countryRepo.findAll();
+        LOGGER.info("Fetching all countries");
+        return countryRepo.findAllCountries();
+    }
+
+    @Override
+    public Country saveCountry(Country country) {
+        LOGGER.info("Creating a new country");
+        country.setCreatedBy("System");
+        country.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
+        country.setStatus("0");
+        return countryRepo.save(country);
+    }
+
+
+    @Override
+    public Country updateCountry(Country country, Integer countryId) {
+        if(!isCountryExist(countryId)) {
+            LOGGER.error("updateCountry() - Given countryId is not exist");
+            throw new ResourceNotFoundException(String.format("Country not found with the given Id: %s", countryId));
+        }
+        country.setModifiedDate(HmsCommonUtil.getSystemDateInUTCFormat());
+        country.setModifiedBy("System");
+        return countryRepo.save(country);
+    }
+
+    @Transactional
+    @Override
+    public String deleteCountryById(Integer countryId) {
+        if(!isCountryExist(countryId)) {
+            LOGGER.error("deleteCountryById() - Given countryId is not exist");
+            throw new ResourceNotFoundException(String.format("Country not found with the given Id: %s", countryId));
+        }
+        try{
+            countryRepo.deleteCountryById(countryId);
+        } catch (Exception ex){
+            LOGGER.error("deleteCountryById() - Unable to delete Country with the given Id: {}", countryId);
+            ErrorResponse errorResponse = new ErrorResponse("500", ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HmsBusinessException(String.format("Unable to delete Country with the given Id: %s", countryId), errorResponse);
+        }
+
+        return "Country deleted successfully!";
+    }
+
+    private boolean isCountryExist(Integer countryId){
+        Optional<Country> country = countryRepo.findById(countryId);
+        return country.isPresent();
     }
 }

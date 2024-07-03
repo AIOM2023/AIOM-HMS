@@ -6,6 +6,7 @@ import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
 import com.hospital.management.repositary.TariffRepo;
 import com.hospital.management.service.TariffService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,7 @@ public class TariffServiceImpl implements TariffService {
         return tariffRepo.findAllTariffs();
     }
 
+    @Transactional
     @Override
     public String deleteTariffById(Integer tariffId) {
         if(!isTariffExist(tariffId)) {

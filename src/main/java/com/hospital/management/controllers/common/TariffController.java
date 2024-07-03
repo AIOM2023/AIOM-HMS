@@ -28,7 +28,7 @@ public class TariffController {
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
-    public ResponseEntity<Tariff> saveInsuranceComp(@RequestBody @Validated Tariff tariff){
+    public ResponseEntity<Tariff> saveTariff(@RequestBody @Validated Tariff tariff){
         Tariff savedTariff = tariffService.save(tariff);
         return new ResponseEntity<>(savedTariff, HttpStatus.OK);
     }
@@ -36,7 +36,7 @@ public class TariffController {
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/update/{tariffId}")
-    public ResponseEntity<Tariff> updateAuthorization(@RequestBody @Validated Tariff tariff, @PathVariable("tariffId") Integer tariffId){
+    public ResponseEntity<Tariff> updateTariffById(@RequestBody @Validated Tariff tariff, @PathVariable("tariffId") Integer tariffId){
         Tariff updatedTariff = tariffService.update(tariff, tariffId);
         return new ResponseEntity<>(updatedTariff, HttpStatus.OK);
     }

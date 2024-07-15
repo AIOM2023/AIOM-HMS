@@ -29,6 +29,13 @@ public class CountryController {
         return ResponseEntity.ok(allCountryNames);
     }
 
+    @GetMapping("/{countryId}")
+    @CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<Country> findCountryById(@PathVariable("countryId") Integer countryId) {
+        Country country = countryService.findCountryById(countryId);
+        return ResponseEntity.ok(country);
+    }
+
     @PostMapping("/save")
     @CrossOrigin(origins = "http://localhost:8080")
     public ResponseEntity<Country> saveCountry(@RequestBody @Validated Country country){

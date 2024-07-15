@@ -1,6 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.Country;
+import com.hospital.management.entities.commom.Tariff;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -32,11 +33,19 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
+    public Country findCountryById(Integer countryId) {
+        LOGGER.info("Fetching country by id");
+        Optional<Country> country = countryRepo.findByCountryIdAndStatus(countryId, 0);
+        return country.orElseThrow(() ->
+                new ResourceNotFoundException(String.format("Country not found with the given Id: %s", countryId)));
+    }
+
+    @Override
     public Country saveCountry(Country country) {
         LOGGER.info("Creating a new country");
         country.setCreatedBy("System");
         country.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
-        country.setStatus("0");
+        country.setStatus(0);
         return countryRepo.save(country);
     }
 
@@ -71,7 +80,6 @@ public class CountryServiceImpl implements CountryService {
     }
 
     private boolean isCountryExist(Integer countryId){
-        Optional<Country> country = countryRepo.findById(countryId);
-        return country.isPresent();
+        return countryRepo.findByCountryIdAndStatus(countryId, 0).isPresent();
     }
 }

@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,8 +29,7 @@ public class TariffServiceImpl implements TariffService {
         LOGGER.info("Creating a new Tariff");
         tariff.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         tariff.setCreatedBy("System");
-        tariff.setDelTariff(0);
-        tariff.setInActive(0);
+        tariff.setStatus(0);
         return tariffRepo.save(tariff);
     }
 
@@ -54,6 +51,14 @@ public class TariffServiceImpl implements TariffService {
         return tariffRepo.findAllTariffs();
     }
 
+    @Override
+    public Tariff findTariffById(Integer tariffId) {
+        LOGGER.info("Fetching tariff by id");
+        Optional<Tariff> tariff = tariffRepo.findByTariffIdAndStatus(tariffId, 0);
+        return tariff.orElseThrow(() ->
+                new ResourceNotFoundException(String.format("Tariff not found with the given Id: %s", tariffId)));
+    }
+
     @Transactional
     @Override
     public String deleteTariffById(Integer tariffId) {
@@ -73,7 +78,6 @@ public class TariffServiceImpl implements TariffService {
     }
 
     private boolean isTariffExist(Integer tariffId){
-        Optional<Tariff> tariff = tariffRepo.findById(tariffId);
-        return tariff.isPresent();
+        return tariffRepo.findByTariffIdAndStatus(tariffId, 0).isPresent();
     }
 }

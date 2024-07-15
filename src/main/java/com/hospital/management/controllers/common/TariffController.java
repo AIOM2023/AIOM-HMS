@@ -26,6 +26,14 @@ public class TariffController {
 
     }
 
+    @GetMapping("/{tariffId}")
+    @CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<Tariff> getTariffById(@PathVariable("tariffId") Integer tariffId) {
+        Tariff tariff = tariffService.findTariffById(tariffId);
+        return ResponseEntity.ok(tariff);
+
+    }
+
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
     public ResponseEntity<Tariff> saveTariff(@RequestBody @Validated Tariff tariff){

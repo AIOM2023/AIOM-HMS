@@ -1,31 +1,30 @@
 package com.hospital.management.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 import java.time.OffsetDateTime;
 
 @Data
 @Entity
-@Table(name= "master_city")
-public class City {
-
+@Table(name= "master_district")
+public class District {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name= "CITY_ID")
-    private  Integer cityId;
+    @Column(name= "district_id")
+    private Integer districtId;
 
-    @Column(name="CITY_CODE")
-    private String cityCode;
+    @Column(name="district_code")
+    private String districtCode;
 
-    @Column(name="CITY_NAME")
-    private String cityName;
+    @Column(name="district_name")
+    private String districtName;
 
-    @Column(name= "COUNTRY_NAME")
-    private String countryName;
-
-    @Column(name= "STATE_NAME")
+    @Column(name= "state_name")
     private String stateName;
+
+    @Column(name= "country_name")
+    private String countryName;
 
     private Integer status;
 

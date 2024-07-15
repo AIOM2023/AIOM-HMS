@@ -13,5 +13,7 @@ public interface TariffService {
 
     List<Tariff> tariffList();
 
+    Tariff findTariffById(Integer tariffId);
+
     String deleteTariffById(Integer tariffId);
 }

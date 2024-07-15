@@ -3,7 +3,9 @@ package com.hospital.management.controllers;
 import com.hospital.management.entities.City;
 import com.hospital.management.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,11 +17,36 @@ public class CityController {
     @Autowired
     private CityService cityService;
 
-    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping
-    public ResponseEntity<List<City>> getAllCityNames() {
-        List<City> allCityNames = cityService.getAllCityNames();
-        return ResponseEntity.ok(allCityNames);
+    @CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<List<City>> getAllCities() {
+        List<City> cities = cityService.getAllCities();
+        return ResponseEntity.ok(cities);
+    }
+
+    @GetMapping("/{cityId}")
+    @CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<City> findCityById(@PathVariable("cityId") Integer cityId) {
+        City city = cityService.findCityById(cityId);
+        return ResponseEntity.ok(city);
+    }
+
+    @PostMapping("/save")
+    @CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<City> saveCity(@RequestBody @Validated City city){
+        return new ResponseEntity<>(cityService.saveCity(city), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update/{cityId}")
+    @CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<City> updateCity(@RequestBody @Validated City city, @PathVariable("cityId") Integer cityId){
+        return new ResponseEntity<>(cityService.updateCity(city, cityId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{cityId}")
+    @CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<String> deleteCityById(@PathVariable("cityId") Integer cityId){
+        return new ResponseEntity<>(cityService.deleteCityById(cityId), HttpStatus.OK);
     }
     
 }

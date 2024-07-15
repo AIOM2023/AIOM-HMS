@@ -12,18 +12,21 @@ import java.time.OffsetDateTime;
 public class Country {
 
     @Id
-    @Column(name= " COUNTRY_ID")
+    @Column(name= "COUNTRY_ID")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private  Integer countryId;
+
+    @Column(name="COUNTRY_CODE")
+    private  String countryCode;
 
     @Column(name="COUNTRY_NAME")
     private  String countryName;
 
     @Column(name="STATUS")
-    private String status;
+    private Integer status;
 
     @Column(name="created_by")
-    private String  createdBy;
+    private String createdBy;
 
     @Column(name="created_date")
     private OffsetDateTime createdDate;

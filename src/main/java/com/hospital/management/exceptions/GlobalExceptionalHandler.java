@@ -16,7 +16,7 @@ public class GlobalExceptionalHandler {
     public ResponseEntity<ServiceResponse> handlerResourecNotFoundException(ResourceNotFoundException ex){
 
         String message = ex.getMessage();
-        ServiceResponse response= ServiceResponse.builder().message(message).success(true).httpStatus(HttpStatus.NOT_FOUND).build();
+        ServiceResponse response= ServiceResponse.builder().message(message).success(false).httpStatus(HttpStatus.NOT_FOUND).build();
 
         return new ResponseEntity<ServiceResponse>(response,HttpStatus.NOT_FOUND);
     }

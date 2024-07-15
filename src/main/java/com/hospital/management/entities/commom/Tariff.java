@@ -14,16 +14,19 @@ public class Tariff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "tariff_id")
-    private Integer tariff_id;
+    private Integer tariffId;
 
     @Column(name= "tariff_code")
     private String tariffCode;
 
-    @Column(name= "tariff")
-    private String tariff;
+    @Column(name= "tariff_name")
+    private String tariffName;
 
     @Column(name= "tariff_desc")
     private String tariffDescription;
+
+    @Column(name= "status")
+    private Integer status;
 
     @Column(name="created_date")
     private OffsetDateTime createdDate;
@@ -36,12 +39,4 @@ public class Tariff {
 
     @Column(name="modified_by")
     private String  modifiedBy;
-
-    @Column(name= "del_tariff")
-    private Integer delTariff;
-
-    @Column(name= "in_active")
-    private Integer inActive;
-
-
 }

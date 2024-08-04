@@ -9,13 +9,13 @@ public interface CityService {
 
     List<City> getAllCities();
 
-    City findCityById(Integer cityId);
+    City findCityById(Long cityId);
 
     City saveCity(City city);
 
-    City updateCity(City city, Integer cityId);
+    City updateCity(City city, Long cityId);
 
-    String deleteCityById(Integer cityId);
+    String deleteCityById(Long cityId);
 
 
 }

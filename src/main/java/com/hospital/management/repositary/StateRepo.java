@@ -10,13 +10,16 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface StateRepo extends JpaRepository<State, Integer> {
+public interface StateRepo extends JpaRepository<State, Long> {
     @Query(value = "SELECT * FROM master_state c WHERE c.status = 0", nativeQuery = true)
     List<State> findAllStates();
 
-    Optional<State> findByStateIdAndStatus(Integer stateId, Integer status);
+    Optional<State> findByStateIdAndStatus(Long stateId, Integer status);
 
     @Query(value = "UPDATE master_state SET status = 1 WHERE STATE_ID = :stateId", nativeQuery = true)
     @Modifying
-    void deleteStateById(@Param("stateId") Integer stateId);
+    void deleteStateById(@Param("stateId") Long stateId);
+
+    @Query(value = "SELECT max(STATE_ID) FROM master_state", nativeQuery = true)
+    Long getMaxId();
 }

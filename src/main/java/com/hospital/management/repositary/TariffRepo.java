@@ -11,15 +11,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TariffRepo extends JpaRepository<Tariff, Integer> {
+public interface TariffRepo extends JpaRepository<Tariff, Long> {
     @Query(value = "SELECT * FROM tariff t WHERE t.status = 0", nativeQuery = true)
     List<Tariff> findAllTariffs();
 
 
-    Optional<Tariff> findByTariffIdAndStatus(Integer tariffId, Integer status);
+    Optional<Tariff> findByTariffIdAndStatus(Long tariffId, Integer status);
 
     @Query(value = "UPDATE tariff SET status = 1 WHERE tariff_id = :tariffId", nativeQuery = true)
     @Modifying
-    void deleteTariffById(@Param("tariffId") Integer tariffId);
+    void deleteTariffById(@Param("tariffId") Long tariffId);
+
+    @Query(value = "SELECT max(tariff_id) FROM tariff", nativeQuery = true)
+    Long getMaxId();
 
 }

@@ -8,11 +8,11 @@ import java.util.List;
 public interface DistrictService {
     List<District> getAllDistricts();
 
-    District findDistrictById(Integer districtId);
+    District findDistrictById(Long districtId);
 
     District saveDistrict(District district);
 
-    District updateDistrict(District district, Integer districtId);
+    District updateDistrict(District district, Long districtId);
 
-    String deleteDistrictById(Integer districtId);
+    String deleteDistrictById(Long districtId);
 }

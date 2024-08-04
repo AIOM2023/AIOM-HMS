@@ -27,6 +27,10 @@ public class TariffServiceImpl implements TariffService {
     @Override
     public Tariff save(Tariff tariff) {
         LOGGER.info("Creating a new Tariff");
+
+        Long maxId = tariffRepo.getMaxId();
+        tariff.setTariffCode("TF-"+ (maxId == null ? 1 : maxId + 1));
+
         tariff.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         tariff.setCreatedBy("System");
         tariff.setStatus(0);
@@ -34,7 +38,7 @@ public class TariffServiceImpl implements TariffService {
     }
 
     @Override
-    public Tariff update(Tariff tariff, Integer tariffId) {
+    public Tariff update(Tariff tariff, Long tariffId) {
         LOGGER.info("Updating an existing Tariff");
         if(!isTariffExist(tariffId)) {
             LOGGER.error("update() - Tariff not found with the given Id: {} ", tariffId);
@@ -52,7 +56,7 @@ public class TariffServiceImpl implements TariffService {
     }
 
     @Override
-    public Tariff findTariffById(Integer tariffId) {
+    public Tariff findTariffById(Long tariffId) {
         LOGGER.info("Fetching tariff by id");
         Optional<Tariff> tariff = tariffRepo.findByTariffIdAndStatus(tariffId, 0);
         return tariff.orElseThrow(() ->
@@ -61,7 +65,7 @@ public class TariffServiceImpl implements TariffService {
 
     @Transactional
     @Override
-    public String deleteTariffById(Integer tariffId) {
+    public String deleteTariffById(Long tariffId) {
         if(!isTariffExist(tariffId)) {
             LOGGER.error("deleteTariffById() - Tariff not found with the given Id: {} ", tariffId);
             throw new ResourceNotFoundException(String.format("Tariff not found with the given Id: %s", tariffId));
@@ -77,7 +81,7 @@ public class TariffServiceImpl implements TariffService {
         return "Tariff deleted successfully!";
     }
 
-    private boolean isTariffExist(Integer tariffId){
+    private boolean isTariffExist(Long tariffId){
         return tariffRepo.findByTariffIdAndStatus(tariffId, 0).isPresent();
     }
 }

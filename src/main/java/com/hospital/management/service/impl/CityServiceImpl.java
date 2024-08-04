@@ -34,7 +34,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public City findCityById(Integer cityId) {
+    public City findCityById(Long cityId) {
         LOGGER.info("Fetching city by id");
         Optional<City> city = cityRepo.findByCityIdAndStatus(cityId, 0);
         return city.orElseThrow(() ->
@@ -44,6 +44,10 @@ public class CityServiceImpl implements CityService {
     @Override
     public City saveCity(City city) {
         LOGGER.info("Creating a new city");
+
+        Long maxId = cityRepo.getMaxId();
+        city.setCityCode("CT-"+(maxId == null ? 1 : maxId+1));
+
         city.setCreatedBy("System");
         city.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         city.setStatus(0);
@@ -51,7 +55,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public City updateCity(City city, Integer cityId) {
+    public City updateCity(City city, Long cityId) {
         if(!isCityExist(cityId)) {
             LOGGER.error("updateCity() - Given cityId is not exist");
             throw new ResourceNotFoundException(String.format("City not found with the given Id: %s", cityId));
@@ -65,7 +69,7 @@ public class CityServiceImpl implements CityService {
 
     @Transactional
     @Override
-    public String deleteCityById(Integer cityId) {
+    public String deleteCityById(Long cityId) {
         if(!isCityExist(cityId)) {
             LOGGER.error("deleteCityById() - Given cityId is not exist");
             throw new ResourceNotFoundException(String.format("City not found with the given Id: %s", cityId));
@@ -82,7 +86,7 @@ public class CityServiceImpl implements CityService {
     }
 
 
-    private boolean isCityExist(Integer cityId){
+    private boolean isCityExist(Long cityId){
         return cityRepo.findByCityIdAndStatus(cityId, 0).isPresent();
     }
 }

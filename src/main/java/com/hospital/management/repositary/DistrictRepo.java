@@ -11,14 +11,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface DistrictRepo extends JpaRepository<District, Integer> {
+public interface DistrictRepo extends JpaRepository<District, Long> {
 
     @Query(value = "SELECT * FROM master_district c WHERE c.status = 0", nativeQuery = true)
     List<District> findAllDistricts();
 
-    Optional<District> findByDistrictIdAndStatus(Integer districtId, Integer status);
+    Optional<District> findByDistrictIdAndStatus(Long districtId, Integer status);
 
     @Query(value = "UPDATE master_district SET status = 1 WHERE district_id = :districtId", nativeQuery = true)
     @Modifying
-    void deleteDistrictById(@Param("districtId") Integer districtId);
+    void deleteDistrictById(@Param("districtId") Long districtId);
+
+    @Query(value = "SELECT max(district_id) FROM master_district", nativeQuery = true)
+    Long getMaxId();
 }

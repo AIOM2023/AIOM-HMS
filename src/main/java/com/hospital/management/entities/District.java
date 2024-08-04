@@ -12,7 +12,7 @@ public class District {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "district_id")
-    private Integer districtId;
+    private Long districtId;
 
     @Column(name="district_code")
     private String districtCode;

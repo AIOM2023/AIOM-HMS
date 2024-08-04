@@ -9,11 +9,11 @@ public interface TariffService {
 
     Tariff save(Tariff tariff);
 
-    Tariff update(Tariff tariff, Integer tariffId);
+    Tariff update(Tariff tariff, Long tariffId);
 
     List<Tariff> tariffList();
 
-    Tariff findTariffById(Integer tariffId);
+    Tariff findTariffById(Long tariffId);
 
-    String deleteTariffById(Integer tariffId);
+    String deleteTariffById(Long tariffId);
 }

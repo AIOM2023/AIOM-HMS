@@ -32,7 +32,7 @@ public class StateController {
 
     @GetMapping("/{stateId}")
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<State> findStateById(@PathVariable("stateId") Integer stateId) {
+    public ResponseEntity<State> findStateById(@PathVariable("stateId") Long stateId) {
         State state = stateService.findStateById(stateId);
         return ResponseEntity.ok(state);
     }
@@ -46,13 +46,13 @@ public class StateController {
 
     @PutMapping("/update/{stateId}")
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<State> updateState(@RequestBody @Validated State state, @PathVariable("stateId") Integer stateId){
+    public ResponseEntity<State> updateState(@RequestBody @Validated State state, @PathVariable("stateId") Long stateId){
         return new ResponseEntity<>(stateService.updateState(state, stateId), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{stateId}")
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<String> deleteStateById(@PathVariable("stateId") Integer stateId){
+    public ResponseEntity<String> deleteStateById(@PathVariable("stateId") Long stateId){
         return new ResponseEntity<>(stateService.deleteStateById(stateId), HttpStatus.OK);
     }
 

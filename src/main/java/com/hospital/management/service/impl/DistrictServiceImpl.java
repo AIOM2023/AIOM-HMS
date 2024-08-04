@@ -33,7 +33,7 @@ public class DistrictServiceImpl implements DistrictService {
     }
 
     @Override
-    public District findDistrictById(Integer districtId) {
+    public District findDistrictById(Long districtId) {
         LOGGER.info("Fetching District by id");
         Optional<District> district = districtRepo.findByDistrictIdAndStatus(districtId, 0);
         return district.orElseThrow(() ->
@@ -43,6 +43,10 @@ public class DistrictServiceImpl implements DistrictService {
     @Override
     public District saveDistrict(District district) {
         LOGGER.info("Creating a new district");
+
+        Long maxId = districtRepo.getMaxId();
+        district.setDistrictCode("DT-"+(maxId == null ? 1 : maxId+1));
+
         district.setCreatedBy("System");
         district.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         district.setStatus(0);
@@ -50,7 +54,7 @@ public class DistrictServiceImpl implements DistrictService {
     }
 
     @Override
-    public District updateDistrict(District district, Integer districtId) {
+    public District updateDistrict(District district, Long districtId) {
         if(!isDistrictExist(districtId)) {
             LOGGER.error("updateDistrict() - Given districtId is not exist");
             throw new ResourceNotFoundException(String.format("District not found with the given Id: %s", districtId));
@@ -63,7 +67,7 @@ public class DistrictServiceImpl implements DistrictService {
 
     @Transactional
     @Override
-    public String deleteDistrictById(Integer districtId) {
+    public String deleteDistrictById(Long districtId) {
         if(!isDistrictExist(districtId)) {
             LOGGER.error("deleteDistrictById() - Given districtId is not exist");
             throw new ResourceNotFoundException(String.format("District not found with the given Id: %s", districtId));
@@ -79,7 +83,7 @@ public class DistrictServiceImpl implements DistrictService {
         return "District deleted successfully!";
     }
 
-    private boolean isDistrictExist(Integer districtId){
+    private boolean isDistrictExist(Long districtId){
         return districtRepo.findByDistrictIdAndStatus(districtId, 0).isPresent();
     }
 }

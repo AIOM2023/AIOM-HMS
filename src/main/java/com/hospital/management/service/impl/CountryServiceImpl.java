@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public Country findCountryById(Integer countryId) {
+    public Country findCountryById(Long countryId) {
         LOGGER.info("Fetching country by id");
         Optional<Country> country = countryRepo.findByCountryIdAndStatus(countryId, 0);
         return country.orElseThrow(() ->
@@ -43,6 +44,11 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public Country saveCountry(Country country) {
         LOGGER.info("Creating a new country");
+
+        Long maxId = countryRepo.getMaxId();
+        country.setCountryCode(HmsCommonUtil.getCountryCodeFromName(country.getCountryName())
+                +(maxId == null ? 1 : maxId+1));
+
         country.setCreatedBy("System");
         country.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         country.setStatus(0);
@@ -51,7 +57,7 @@ public class CountryServiceImpl implements CountryService {
 
 
     @Override
-    public Country updateCountry(Country country, Integer countryId) {
+    public Country updateCountry(Country country, Long countryId) {
         if(!isCountryExist(countryId)) {
             LOGGER.error("updateCountry() - Given countryId is not exist");
             throw new ResourceNotFoundException(String.format("Country not found with the given Id: %s", countryId));
@@ -63,7 +69,7 @@ public class CountryServiceImpl implements CountryService {
 
     @Transactional
     @Override
-    public String deleteCountryById(Integer countryId) {
+    public String deleteCountryById(Long countryId) {
         if(!isCountryExist(countryId)) {
             LOGGER.error("deleteCountryById() - Given countryId is not exist");
             throw new ResourceNotFoundException(String.format("Country not found with the given Id: %s", countryId));
@@ -79,7 +85,7 @@ public class CountryServiceImpl implements CountryService {
         return "Country deleted successfully!";
     }
 
-    private boolean isCountryExist(Integer countryId){
+    private boolean isCountryExist(Long countryId){
         return countryRepo.findByCountryIdAndStatus(countryId, 0).isPresent();
     }
 }

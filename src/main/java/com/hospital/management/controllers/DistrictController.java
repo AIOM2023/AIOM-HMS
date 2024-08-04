@@ -24,7 +24,7 @@ public class DistrictController {
     }
 
     @GetMapping("/{districtId}")
-    public ResponseEntity<District> findDistrictById(@PathVariable("districtId") Integer districtId) {
+    public ResponseEntity<District> findDistrictById(@PathVariable("districtId") Long districtId) {
         District district = districtService.findDistrictById(districtId);
         return ResponseEntity.ok(district);
     }
@@ -35,12 +35,12 @@ public class DistrictController {
     }
 
     @PutMapping("/update/{districtId}")
-    public ResponseEntity<District> updateDistrict(@RequestBody @Validated District district, @PathVariable("districtId") Integer districtId){
+    public ResponseEntity<District> updateDistrict(@RequestBody @Validated District district, @PathVariable("districtId") Long districtId){
         return new ResponseEntity<>(districtService.updateDistrict(district, districtId), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{districtId}")
-    public ResponseEntity<String> deleteDistrictById(@PathVariable("districtId") Integer districtId){
+    public ResponseEntity<String> deleteDistrictById(@PathVariable("districtId") Long districtId){
         return new ResponseEntity<>(districtService.deleteDistrictById(districtId), HttpStatus.OK);
     }
 }

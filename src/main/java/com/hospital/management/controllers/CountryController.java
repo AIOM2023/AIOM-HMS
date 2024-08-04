@@ -31,7 +31,7 @@ public class CountryController {
 
     @GetMapping("/{countryId}")
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<Country> findCountryById(@PathVariable("countryId") Integer countryId) {
+    public ResponseEntity<Country> findCountryById(@PathVariable("countryId") Long countryId) {
         Country country = countryService.findCountryById(countryId);
         return ResponseEntity.ok(country);
     }
@@ -44,13 +44,13 @@ public class CountryController {
 
     @PutMapping("/update/{countryId}")
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<Country> updateCountry(@RequestBody @Validated Country country, @PathVariable("countryId") Integer countryId){
+    public ResponseEntity<Country> updateCountry(@RequestBody @Validated Country country, @PathVariable("countryId") Long countryId){
         return new ResponseEntity<>(countryService.updateCountry(country, countryId), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{countryId}")
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<String> deleteCountryById(@PathVariable("countryId") Integer countryId){
+    public ResponseEntity<String> deleteCountryById(@PathVariable("countryId") Long countryId){
         return new ResponseEntity<>(countryService.deleteCountryById(countryId), HttpStatus.OK);
     }
 }

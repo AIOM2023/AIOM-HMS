@@ -33,7 +33,7 @@ public class StateServiceImpl implements StateService {
     }
 
     @Override
-    public State findStateById(Integer stateId) {
+    public State findStateById(Long stateId) {
         LOGGER.info("Fetching state by id");
         Optional<State> state = stateRepo.findByStateIdAndStatus(stateId, 0);
         return state.orElseThrow(() ->
@@ -43,6 +43,10 @@ public class StateServiceImpl implements StateService {
     @Override
     public State saveState(State state) {
         LOGGER.info("Creating a new state");
+
+        Long maxId = stateRepo.getMaxId();
+        state.setStateCode("ST-"+(maxId == null ? 1 : maxId+1));
+
         state.setCreatedBy("System");
         state.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         state.setStatus(0);
@@ -50,7 +54,7 @@ public class StateServiceImpl implements StateService {
     }
 
     @Override
-    public State updateState(State state, Integer stateId) {
+    public State updateState(State state, Long stateId) {
         if(!isSateExist(stateId)) {
             LOGGER.error("updateState() - Given stateId is not exist");
             throw new ResourceNotFoundException(String.format("State not found with the given Id: %s", stateId));
@@ -62,7 +66,7 @@ public class StateServiceImpl implements StateService {
 
     @Transactional
     @Override
-    public String deleteStateById(Integer stateId) {
+    public String deleteStateById(Long stateId) {
         if(!isSateExist(stateId)) {
             LOGGER.error("deleteStateById() - Given stateId is not exist");
             throw new ResourceNotFoundException(String.format("State not found with the given Id: %s", stateId));
@@ -78,7 +82,7 @@ public class StateServiceImpl implements StateService {
         return "State deleted successfully!";
     }
 
-    private boolean isSateExist(Integer stateId){
+    private boolean isSateExist(Long stateId){
         return stateRepo.findByStateIdAndStatus(stateId, 0).isPresent();
     }
 }

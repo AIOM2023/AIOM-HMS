@@ -9,12 +9,12 @@ public interface StateService {
 
     List<State> getAllStates();
 
-    State findStateById(Integer stateId);
+    State findStateById(Long stateId);
 
     State saveState(State state);
 
-    State updateState(State state, Integer stateId);
+    State updateState(State state, Long stateId);
 
-    String deleteStateById(Integer stateId);
+    String deleteStateById(Long stateId);
 
 }

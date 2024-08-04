@@ -12,13 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CityRepo extends JpaRepository<City, Integer> {
+public interface CityRepo extends JpaRepository<City, Long> {
     @Query(value = "SELECT * FROM master_city c WHERE c.status = 0", nativeQuery = true)
     List<City> findAllCities();
 
-    Optional<City> findByCityIdAndStatus(Integer cityId, Integer status);
+    Optional<City> findByCityIdAndStatus(Long cityId, Integer status);
 
     @Query(value = "UPDATE master_city SET status = 1 WHERE city_id = :cityId", nativeQuery = true)
     @Modifying
-    void deleteCityById(@Param("cityId") Integer cityId);
+    void deleteCityById(@Param("cityId") Long cityId);
+
+    @Query(value = "SELECT max(city_id) FROM master_city", nativeQuery = true)
+    Long getMaxId();
 }

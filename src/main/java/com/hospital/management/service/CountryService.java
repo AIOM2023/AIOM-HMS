@@ -9,11 +9,11 @@ public interface CountryService {
 
     List<Country> getAllCountryNames();
 
-    Country findCountryById(Integer countryId);
+    Country findCountryById(Long countryId);
 
     Country saveCountry(Country country);
 
-    Country updateCountry(Country country, Integer countryId);
+    Country updateCountry(Country country, Long countryId);
 
-    String deleteCountryById(Integer countryId);
+    String deleteCountryById(Long countryId);
 }

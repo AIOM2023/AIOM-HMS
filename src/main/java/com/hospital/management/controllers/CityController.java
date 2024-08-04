@@ -26,7 +26,7 @@ public class CityController {
 
     @GetMapping("/{cityId}")
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<City> findCityById(@PathVariable("cityId") Integer cityId) {
+    public ResponseEntity<City> findCityById(@PathVariable("cityId") Long cityId) {
         City city = cityService.findCityById(cityId);
         return ResponseEntity.ok(city);
     }
@@ -39,13 +39,13 @@ public class CityController {
 
     @PutMapping("/update/{cityId}")
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<City> updateCity(@RequestBody @Validated City city, @PathVariable("cityId") Integer cityId){
+    public ResponseEntity<City> updateCity(@RequestBody @Validated City city, @PathVariable("cityId") Long cityId){
         return new ResponseEntity<>(cityService.updateCity(city, cityId), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{cityId}")
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<String> deleteCityById(@PathVariable("cityId") Integer cityId){
+    public ResponseEntity<String> deleteCityById(@PathVariable("cityId") Long cityId){
         return new ResponseEntity<>(cityService.deleteCityById(cityId), HttpStatus.OK);
     }
     

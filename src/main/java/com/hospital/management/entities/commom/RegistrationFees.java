@@ -39,8 +39,8 @@ public class RegistrationFees {
     @Column(name= "created_by")
     private String createdBy;
 
-    @Column(name= "created_id")
-    private String createdId;
+  //  @Column(name= "created_id")
+   // private String createdId;
 
     @Column(name= "modified_date")
     private OffsetDateTime modifiedDate;
@@ -48,13 +48,13 @@ public class RegistrationFees {
     @Column(name= "modified_by")
     private String modifiedBy;
 
-    @Column(name= "modified_id")
-    private String modifiedId;
+  //  @Column(name= "modified_id")
+    //private String modifiedId;
 
-    @Column(name= "del_reg_fee")
-    private String delRegFee;
+   // @Column(name= "del_reg_fee")
+    //private String delRegFee;
 
-    @Column(name= "in_active")
-    private String inActive;
+    @Column(name= "status")
+    private Integer status;
 
 }

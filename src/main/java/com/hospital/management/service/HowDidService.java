@@ -6,8 +6,12 @@ import java.util.List;
 
 public interface HowDidService {
 
-    void save(HowDid howDid);
-    void update(HowDid howDid);
+    HowDid saveHowDid(HowDid howDid);
+    HowDid updateHowDid(HowDid howDid,Integer howDidId);
     List<HowDid> howDidList();
+    HowDid findHowDidByHowDidId(Integer howDidId);
+    String deleteHowDidByHowDidId(Integer regFeesId);
+
+
 
 }

@@ -15,17 +15,27 @@ public class InsuranceCompServiceImpl implements InsuranceCompService {
     InsuranceCompRepo insuranceCompRepo;
 
     @Override
-    public void save(InsuranceComp insuranceComp) {
-        insuranceCompRepo.save(insuranceComp);
+    public InsuranceComp saveInsuranceComp(InsuranceComp insuranceComp) {
+       return insuranceCompRepo.save(insuranceComp);
     }
 
     @Override
-    public void update(InsuranceComp insuranceComp) {
-        insuranceCompRepo.save(insuranceComp);
+    public InsuranceComp updateInsuranceComp(InsuranceComp insuranceComp,Integer insComId) {
+        return insuranceCompRepo.save(insuranceComp);
     }
 
     @Override
     public List<InsuranceComp> insuranceCompList() {
         return insuranceCompRepo.findAll();
+    }
+
+    @Override
+    public InsuranceComp findInsuranceCompByInsComId(Integer insComId) {
+        return null;
+    }
+
+    @Override
+    public String deleteInsuranceCompByInsComId(Integer insComId) {
+        return "";
     }
 }

@@ -1,36 +1,43 @@
 package com.hospital.management.service.impl;
 
 
+import com.hospital.management.entities.Country;
 import com.hospital.management.entities.commom.NurseStation;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
 import com.hospital.management.repositary.NurseStationRepo;
+
+import com.hospital.management.service.NurseStationService;
 import com.hospital.management.utils.HmsCommonUtil;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+@Service
+public class NurseStationServiceImpl implements NurseStationService {
+//public class CountryServiceImpl implements CountryService {
 
-public class NurseStationServiceimpl {
-
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NurseStationService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NurseStationServiceImpl.class);
 
     @Autowired
     private NurseStationRepo nurseStationRepo;
 
-    //@Override
+
+
+
+    @Override
     public List<NurseStation> getAllNurseStation() {
-        LOGGER.info("Fetching all NurseStation details ");
+        LOGGER.info("Fetching all NurseStatioms");
         return nurseStationRepo.findAllNurseStations();
     }
 
-    //@Override
+    @Override
     public NurseStation findNurseStationId(Integer nurseStationId) {
         LOGGER.info("Fetching NurseStation by id");
         Optional<NurseStation> nurseStation = nurseStationRepo.findByNurseStationIdAndStatus(nurseStationId, 0);
@@ -38,9 +45,10 @@ public class NurseStationServiceimpl {
                 new ResourceNotFoundException(String.format("Country not found with the given Id: %s", nurseStationId)));
     }
 
-  //  @Override
+    @Override
     public NurseStation saveNurseStation(NurseStation nurseStation) {
         LOGGER.info("Creating a new NurseStation");
+        //nurseStation.setNurseStationCode();
         nurseStation.setCreatedBy("System");
         nurseStation.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         nurseStation.setStatus(0);
@@ -48,7 +56,7 @@ public class NurseStationServiceimpl {
     }
 
 
- //   @Override
+    @Override
     public NurseStation updatenurseStation(NurseStation nurseStation, Integer nurseStationId) {
         if(!isNurseStationExist(nurseStationId)) {
             LOGGER.error("updateNurseStation() - Given nurseStationId is not exist");
@@ -60,7 +68,7 @@ public class NurseStationServiceimpl {
     }
 
     @Transactional
-   // @Override
+     @Override
     public String deleteNurseStationById(Integer nurseStationId) {
         if(!isNurseStationExist(nurseStationId)) {
             LOGGER.error("deleteNurseStationById() - Given NurseStationId is not exist");

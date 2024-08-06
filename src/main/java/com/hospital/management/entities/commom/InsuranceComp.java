@@ -87,7 +87,7 @@ public class InsuranceComp {
     @Column(name= "del_ins")
     private Integer delIns;
 
-    @Column(name= "in_active")
-    private Integer inActive;
+    @Column(name= "status")
+    private Integer status;
 
 }

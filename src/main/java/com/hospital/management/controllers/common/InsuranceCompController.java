@@ -29,15 +29,15 @@ public class InsuranceCompController {
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
     public ResponseEntity<InsuranceComp> saveInsuranceComp(@RequestBody @Validated InsuranceComp insuranceComp){
-        insuranceCompService.save(insuranceComp);
+        insuranceCompService.saveInsuranceComp(insuranceComp);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/update")
-    public ResponseEntity<InsuranceComp> updateAuthorization(@RequestBody @Validated InsuranceComp insuranceComp){
-        insuranceCompService.update(insuranceComp);
+    public ResponseEntity<InsuranceComp> updateAuthorization(@RequestBody @Validated InsuranceComp insuranceComp,@PathVariable("insComId") Integer insComId){
+        insuranceCompService.updateInsuranceComp(insuranceComp,insComId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

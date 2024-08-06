@@ -1,19 +1,19 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.Country;
+import com.hospital.management.entities.commom.NurseStation;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface CountryService {
+public interface NurseStationService {
 
-    List<Country> getAllCountryNames();
+    List<NurseStation> getAllNurseStation();
 
-    Country findCountryById(Integer countryId);
+    NurseStation findNurseStationId(Integer nurseStationId);
 
-    Country saveCountry(Country country);
+    NurseStation saveNurseStation(NurseStation nurseStation);
 
-    Country updateCountry(Country country, Integer countryId);
+    NurseStation updatenurseStation(NurseStation nurseStation, Integer nurseStationId);
 
-    String deleteCountryById(Integer countryId);
+    String deleteNurseStationById(Integer nurseStationId);
 }

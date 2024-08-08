@@ -22,7 +22,11 @@ public class SystemParameters {
     @Column(name= "comm_desc")
     private String commonDesc;
 
-    @Column(name= "in_active")
-    private Integer inActive;
+    @Column(name= "status")
+    private Integer status;
+
+    @OneToOne
+    @JoinColumn(name = "params_main_id")
+    private SystemParametersMain systemParametersMain;
 
 }

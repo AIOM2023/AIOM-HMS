@@ -33,11 +33,11 @@ public class Designation {
     @Column(name="modified_by")
     private String  modifiedBy;
 
-    @Column(name= "del_desig")
-    private Integer delDesignation;
+   /* @Column(name= "del_desig")
+    private Integer delDesignation;*/
 
-    @Column(name= "in_active")
-    private Integer inActive;
+    @Column(name= "status")
+    private Integer status;
 
 
 }

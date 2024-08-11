@@ -66,10 +66,10 @@ public class ServiceCharge {
     @Column(name= "modified_id")
     private String modifiedId;
 
-    @Column(name= "del_service_charge")
-    private Integer delServiceCharge;
+  //  @Column(name= "del_service_charge")
+    //private Integer delServiceCharge;
 
-    @Column(name= "in_active")
-    private Integer inActive;
+    @Column(name= "status")
+    private Integer status;
 
 }

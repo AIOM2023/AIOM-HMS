@@ -13,7 +13,7 @@ public class DischargeSummary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "dischrg_id")
-    private Integer dischargeId;
+    private Long dischargeId;
 
     @Column(name= "dischrg_no")
     private String dischargeNo;
@@ -60,6 +60,6 @@ public class DischargeSummary {
     @Column(name="modified_by")
     private String  modifiedBy;
 
-    @Column(name= "in_active")
-    private Integer inActive;
+  /*  @Column(name= "status")
+    private Integer status;*/
 }

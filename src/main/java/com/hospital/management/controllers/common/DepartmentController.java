@@ -19,7 +19,7 @@ public class DepartmentController {
 
     @GetMapping
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<List<Department>> systemParamsList() {
+    public ResponseEntity<List<Department>> departmentList() {
         List<Department> department = departmentService.departmentList();
         return  ResponseEntity.ok(department);
 
@@ -27,16 +27,32 @@ public class DepartmentController {
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
-    public ResponseEntity<Department> saveSystemParameters(@RequestBody @Validated Department department){
-        departmentService.save(department);
+    public ResponseEntity<Department> saveDepartment(@RequestBody @Validated Department department){
+        departmentService.saveDepartment(department);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/{departmentId}")
+    @CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<Department> findDepartmentById(@PathVariable("departmentId") Integer departmentId) {
+        Department department = departmentService.findDepartmentById(departmentId);
+        return ResponseEntity.ok(department);
+
+    }
+
+
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/update")
-    public ResponseEntity<Department> updateAuthorization(@RequestBody @Validated Department department){
-        departmentService.update(department);
+    @PutMapping("/update/{departmentId}")
+    public ResponseEntity<Department> updateDepartmentById(@RequestBody @Validated Department department,@PathVariable("departmentId") Integer departmentId){
+        departmentService.updateDepartmentById(department,departmentId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @CrossOrigin(origins = "http://localhost:8080")
+    @DeleteMapping("/delete/{departmentId}")
+    public ResponseEntity<String> deleteDepartmentById(@PathVariable("departmentId") Integer departmentId) {
+        String successMsg = departmentService.deleteDepartmentById(departmentId);
+        return new ResponseEntity<>(successMsg, HttpStatus.OK);
     }
 }

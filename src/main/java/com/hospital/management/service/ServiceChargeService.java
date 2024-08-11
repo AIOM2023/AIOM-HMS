@@ -7,10 +7,13 @@ import java.util.List;
 
 public interface ServiceChargeService {
 
-    void save(ServiceCharge serviceCharge);
+    ServiceCharge saveServiceCharge(ServiceCharge serviceCharge);
 
-    void update(ServiceCharge serviceCharge);
+    ServiceCharge updateServiceCharge(ServiceCharge serviceCharge,Integer serviceChargeId);
 
     List<ServiceCharge> serviceChargeList();
+    ServiceCharge findServiceChargeById(Integer serviceChargeId);
+    String deleteServiceChargeById(Integer serviceChargeId);
+
 
 }

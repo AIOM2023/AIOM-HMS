@@ -2,6 +2,7 @@ package com.hospital.management.controllers.common;
 
 
 import com.hospital.management.entities.commom.SystemParametersMain;
+import com.hospital.management.exceptions.DuplicateNameException;
 import com.hospital.management.service.SystemParametersMainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,13 @@ public class SystemParametersMainController {
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
     public ResponseEntity<SystemParametersMain> saveSystemMainParameters(@RequestBody @Validated SystemParametersMain systemMainParameters){
-        systemParametersMainService.save(systemMainParameters);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try{
+            systemParametersMainService.save(systemMainParameters);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(DuplicateNameException e){
+            throw new DuplicateNameException("Name '" + systemMainParameters.getParamName() + "' already exists.");
+        }
+
     }
 
 

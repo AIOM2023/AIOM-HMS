@@ -13,7 +13,7 @@ public class SystemParametersMain {
     @Column(name= "params_main_id")
     private Integer paramsMainId;
 
-    @Column(name= "param_name")
+    @Column(name= "param_name",unique = true)
     private String paramName;
 
 

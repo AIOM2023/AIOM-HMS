@@ -6,9 +6,13 @@ import java.util.List;
 
 public interface DischargeSummaryService {
 
-    void save(DischargeSummary dischargeSummary);
+    DischargeSummary saveDischargeSummary(DischargeSummary dischargeSummary);
 
-    void update(DischargeSummary dischargeSummary);
+    DischargeSummary updateDischargeSummary(DischargeSummary dischargeSummary,Long dischargeId);
 
     List<DischargeSummary> dischargeSummaryList();
+
+    DischargeSummary findDischargeSummaryById(Long dischargeId);
+
+    String deleteDischargeSummaryById(Long dischargeId);
 }

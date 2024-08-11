@@ -6,9 +6,12 @@ import java.util.List;
 
 public interface DesignationService {
 
-    void save(Designation designation);
+    Designation saveDesignation(Designation designation);
 
-    void update(Designation designation);
+    Designation updateDesignation(Designation designation,Integer designationId);
 
     List<Designation> designationList();
+    Designation findDesignationById(Integer designationId);
+    String deleteDesignationById(Integer designationId);
+
 }

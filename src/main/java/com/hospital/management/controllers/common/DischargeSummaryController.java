@@ -19,24 +19,36 @@ public class DischargeSummaryController {
 
     @GetMapping
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<List<DischargeSummary>> systemParamsList() {
+    public ResponseEntity<List<DischargeSummary>> dischargeSummaryList() {
         List<DischargeSummary> dischargeSummary = dischargeSummaryService.dischargeSummaryList();
-        return  ResponseEntity.ok(dischargeSummary);
+        return ResponseEntity.ok(dischargeSummary);
 
     }
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/save")
-    public ResponseEntity<DischargeSummary> saveSystemParameters(@RequestBody @Validated DischargeSummary dischargeSummary){
-        dischargeSummaryService.save(dischargeSummary);
+    @PostMapping("/saveDischargeSummary")
+    public ResponseEntity<DischargeSummary> saveDischargeSummary(@RequestBody @Validated DischargeSummary dischargeSummary) {
+        dischargeSummaryService.saveDischargeSummary(dischargeSummary);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/update")
-    public ResponseEntity<DischargeSummary> updateAuthorization(@RequestBody @Validated DischargeSummary dischargeSummary){
-        dischargeSummaryService.update(dischargeSummary);
+    @PutMapping("/update/{dischargeId}")
+    public ResponseEntity<DischargeSummary> updateDischargeSummary(@RequestBody @Validated DischargeSummary dischargeSummary, @PathVariable("dischargeId") Long dischargeId) {
+        dischargeSummaryService.updateDischargeSummary(dischargeSummary, dischargeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete/{dischargeId}")
+    public ResponseEntity<String> deleteReferralById(@PathVariable("dischargeId") Long dischargeId) {
+        return new ResponseEntity<>(dischargeSummaryService.deleteDischargeSummaryById(dischargeId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{dischargeId}")
+    public ResponseEntity<DischargeSummary> findReferralById(@PathVariable("dischargeId") Long dischargeId) {
+        DischargeSummary dischargeSummary = dischargeSummaryService.findDischargeSummaryById(dischargeId);
+        return ResponseEntity.ok(dischargeSummary);
+    }
+
 }

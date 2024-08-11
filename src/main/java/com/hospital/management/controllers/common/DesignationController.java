@@ -1,5 +1,6 @@
 package com.hospital.management.controllers.common;
 
+import com.hospital.management.entities.commom.Department;
 import com.hospital.management.entities.commom.Designation;
 import com.hospital.management.service.DesignationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class DesignationController {
 
     @GetMapping
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<List<Designation>> systemParamsList() {
+    public ResponseEntity<List<Designation>> designationList() {
         List<Designation> designation = designationService.designationList();
         return  ResponseEntity.ok(designation);
 
@@ -26,16 +27,30 @@ public class DesignationController {
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
-    public ResponseEntity<Designation> saveSystemParameters(@RequestBody @Validated Designation designation){
-        designationService.save(designation);
+    public ResponseEntity<Designation> saveDesignation(@RequestBody @Validated Designation designation){
+        designationService.saveDesignation(designation);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/update")
-    public ResponseEntity<Designation> updateAuthorization(@RequestBody @Validated Designation designation){
-        designationService.update(designation);
+    @PutMapping ("/update/{designationId}")
+    public ResponseEntity<Designation> updateDesignation(@RequestBody @Validated Designation designation,@PathVariable("designationId") Integer designationId){
+        designationService.updateDesignation(designation,designationId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/{designationId}")
+    @CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<Designation> findDesignationById(@PathVariable("designationId") Integer designationId) {
+        Designation designation = designationService.findDesignationById(designationId);
+        return ResponseEntity.ok(designation);
+
+    }
+
+    @CrossOrigin(origins = "http://localhost:8080")
+    @DeleteMapping("/delete/{designationId}")
+    public ResponseEntity<String> deleteDesignationById(@PathVariable("designationId") Integer designationId) {
+        String successMsg = designationService.deleteDesignationById(designationId);
+        return new ResponseEntity<>(successMsg, HttpStatus.OK);
     }
 }

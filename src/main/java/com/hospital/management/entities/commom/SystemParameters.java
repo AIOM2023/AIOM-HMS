@@ -25,8 +25,8 @@ public class SystemParameters {
     @Column(name= "status")
     private Integer status;
 
-    @OneToOne
-    @JoinColumn(name = "params_main_id")
+    @ManyToOne
+    @JoinColumn(name = "params_main_id",unique = false)
     private SystemParametersMain systemParametersMain;
 
 }

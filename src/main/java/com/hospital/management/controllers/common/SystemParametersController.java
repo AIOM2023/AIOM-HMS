@@ -22,22 +22,22 @@ public class SystemParametersController {
     @CrossOrigin(origins = "http://localhost:8080")
     public ResponseEntity<List<SystemParameters>> systemParamsList() {
         List<SystemParameters> systemParams = systemParametersService.getSystemParametersList();
-        return  ResponseEntity.ok(systemParams);
+        return  new ResponseEntity<>(systemParams,HttpStatus.OK);
 
     }
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
     public ResponseEntity<SystemParameters> saveSystemParameters(@RequestBody @Validated SystemParameters systemParameters){
-        systemParametersService.save(systemParameters);
-        return new ResponseEntity<>(HttpStatus.OK);
+        SystemParameters saveSystemParameters = systemParametersService.save(systemParameters);
+        return new ResponseEntity<>(saveSystemParameters,HttpStatus.OK);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/update")
     public ResponseEntity<SystemParameters> updateAuthorization(@RequestBody @Validated SystemParameters systemParameters){
-        systemParametersService.update(systemParameters);
-        return new ResponseEntity<>(HttpStatus.OK);
+        SystemParameters updateSystemParameters = systemParametersService.update(systemParameters);
+        return new ResponseEntity<>(updateSystemParameters,HttpStatus.OK);
     }
 }

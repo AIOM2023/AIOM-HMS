@@ -16,12 +16,12 @@ public class SystemParamServiceImpl implements SystemParametersService {
     SystemParamsRepo systemParamsRepo;
 
     @Override
-    public void save(SystemParameters systemParameters) {
-        systemParamsRepo.save(systemParameters);
+    public SystemParameters save(SystemParameters systemParameters) {
+        return systemParamsRepo.save(systemParameters);
     }
 
     @Override
-    public void update(SystemParameters systemParameters) { systemParamsRepo.save(systemParameters);}
+    public SystemParameters update(SystemParameters systemParameters) { return systemParamsRepo.save(systemParameters);}
 
     @Override
     public List<SystemParameters> getSystemParametersList() {

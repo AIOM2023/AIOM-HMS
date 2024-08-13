@@ -29,15 +29,15 @@ public class ServiceRequestController {
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
     public ResponseEntity<ServiceRequest> saveServiceRequest(@RequestBody @Validated ServiceRequest serviceRequest){
-        serviceRequestService.save(serviceRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        ServiceRequest saveServiceRequest = serviceRequestService.save(serviceRequest);
+        return new ResponseEntity<>(saveServiceRequest,HttpStatus.OK);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/update")
     public ResponseEntity<ServiceRequest> updateServiceRequest(@RequestBody @Validated ServiceRequest serviceRequest){
-        serviceRequestService.save(serviceRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        ServiceRequest UpdateServiceRequest = serviceRequestService.save(serviceRequest);
+        return new ResponseEntity<>(UpdateServiceRequest,HttpStatus.OK);
     }
 }

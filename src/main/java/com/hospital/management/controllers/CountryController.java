@@ -23,33 +23,32 @@ public class CountryController {
     CountryRepo countryRepo;
 
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:8080")
     public ResponseEntity<List<Country>> getAllCountryNames() {
         List<Country> allCountryNames = countryService.getAllCountryNames();
         return ResponseEntity.ok(allCountryNames);
     }
 
     @GetMapping("/{countryId}")
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Country> findCountryById(@PathVariable("countryId") Long countryId) {
         Country country = countryService.findCountryById(countryId);
         return ResponseEntity.ok(country);
     }
 
     @PostMapping("/save")
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Country> saveCountry(@RequestBody @Validated Country country){
         return new ResponseEntity<>(countryService.saveCountry(country), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{countryId}")
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Country> updateCountry(@RequestBody @Validated Country country, @PathVariable("countryId") Long countryId){
         return new ResponseEntity<>(countryService.updateCountry(country, countryId), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{countryId}")
-    @CrossOrigin(origins = "http://localhost:8080")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> deleteCountryById(@PathVariable("countryId") Long countryId){
         return new ResponseEntity<>(countryService.deleteCountryById(countryId), HttpStatus.OK);
     }

@@ -1,6 +1,7 @@
 package com.hospital.management.controllers.common;
 
 
+import com.hospital.management.entities.commom.DischargeSummary;
 import com.hospital.management.entities.commom.InsuranceComp;
 import com.hospital.management.service.InsuranceCompService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,19 @@ public class InsuranceCompController {
     @Autowired
     InsuranceCompService insuranceCompService;
 
-    @GetMapping
+    /*@GetMapping
     @CrossOrigin(origins = "http://localhost:8080")
     public ResponseEntity<List<InsuranceComp>> systemParamsList() {
         List<InsuranceComp> insuranceCompList = insuranceCompService.insuranceCompList();
         return  ResponseEntity.ok(insuranceCompList);
+
+    }*/
+
+    @GetMapping
+    @CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<List<InsuranceComp>> insuranceComList() {
+        List<InsuranceComp> insuranceComp = insuranceCompService.insuranceCompList();
+        return ResponseEntity.ok(insuranceComp);
 
     }
 
@@ -35,9 +44,19 @@ public class InsuranceCompController {
 
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/update")
-    public ResponseEntity<InsuranceComp> updateAuthorization(@RequestBody @Validated InsuranceComp insuranceComp,@PathVariable("insComId") Integer insComId){
+    @PostMapping("/update/{insComId}")
+    public ResponseEntity<InsuranceComp> updateInsuranceComp(@RequestBody @Validated InsuranceComp insuranceComp,@PathVariable("insComId") Integer insComId){
         insuranceCompService.updateInsuranceComp(insuranceComp,insComId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/{insComId}")
+    public ResponseEntity<InsuranceComp> findInsuranceCompByInsComId(@PathVariable("insComId") Integer insComId) {
+        InsuranceComp insuranceComp = insuranceCompService.findInsuranceCompByInsComId(insComId);
+        return ResponseEntity.ok(insuranceComp);
+    }
+
+    @DeleteMapping("/delete/{insComId}")
+    public ResponseEntity<String> deleteInsuranceCompByInsComId(@PathVariable("insComId") Integer insComId) {
+        return new ResponseEntity<>(insuranceCompService.deleteInsuranceCompByInsComId(insComId), HttpStatus.OK);
     }
 }

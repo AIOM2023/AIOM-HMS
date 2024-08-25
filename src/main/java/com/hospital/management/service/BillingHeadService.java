@@ -6,9 +6,13 @@ import java.util.List;
 
 public interface BillingHeadService {
 
-    void save(BillingHead billingHead);
+    List<BillingHead> getAllBillingHeads();
 
-    void update(BillingHead billingHead);
+    BillingHead findBillingHeadById(Long billingHeadId);
 
-    List<BillingHead> billingHeadList();
+    BillingHead saveBillingHead(BillingHead billingHead);
+
+    BillingHead updateBillingHead(BillingHead billingHead, Long billingHeadId);
+
+    String deleteBillingHeadById(Long billingHeadId);
 }

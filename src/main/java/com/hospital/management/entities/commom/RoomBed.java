@@ -13,10 +13,13 @@ public class RoomBed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "room_bed_id")
-    private Integer roomBedId;
+    private Long roomBedId;
 
     @Column(name= "room_group_code")
     private String roomGroupCode;
+
+    @Column(name= "room_group_name")
+    private String roomGroupName;
 
     @Column(name= "room_code")
     private String roomCode;
@@ -39,8 +42,13 @@ public class RoomBed {
     @Column(name= "room_wing")
     private String roomWing;
 
-    @Column(name= "nurse_station")
-    private String nurseStation;
+    @Column(name= "nurse_station_code")
+    private String nurseStationCode;
+
+    @Column(name= "nurse_station_name")
+    private String nurseStationName;
+
+    private Integer status;
 
     @Column(name="created_date")
     private OffsetDateTime createdDate;
@@ -53,17 +61,4 @@ public class RoomBed {
 
     @Column(name="modified_by")
     private String  modifiedBy;
-
-    @Column(name="created_id")
-    private String  createdId;
-
-    @Column(name="modified_id")
-    private String  modifiedId;
-
-    @Column(name= "del_room_bed")
-    private Integer delRoomBed;
-
-    @Column(name= "in_active")
-    private Integer inActive;
-
 }

@@ -36,10 +36,12 @@ public class NurseStation {
     @Column(name="modified_by")
     private String  modifiedBy;
 
-    @Column(name= "del_nurse_station")
-    private Integer delNurseStation;
+   // @Column(name= "del_nurse_station")
+   // private Integer delNurseStation;
 
-    @Column(name= "in_active")
-    private Integer inActive;
+    @Column(name= "status")
+    private Integer status;
+
+    //9000865648
 
 }

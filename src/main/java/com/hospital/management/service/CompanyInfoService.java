@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface CompanyInfoService {
 
-    void save(CompanyInfo companyInfo);
+    CompanyInfo save(CompanyInfo companyInfo);
 
-    void update(CompanyInfo companyInfo);
+    CompanyInfo update(CompanyInfo companyInfo);
 
     List<CompanyInfo> companyInfoList();
 }

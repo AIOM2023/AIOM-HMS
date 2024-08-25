@@ -19,7 +19,6 @@ public class TariffController {
     TariffService tariffService;
 
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:8080")
     public ResponseEntity<List<Tariff>> tariffList() {
         List<Tariff> tariffList = tariffService.tariffList();
         return  ResponseEntity.ok(tariffList);
@@ -27,29 +26,24 @@ public class TariffController {
     }
 
     @GetMapping("/{tariffId}")
-    @CrossOrigin(origins = "http://localhost:8080")
     public ResponseEntity<Tariff> getTariffById(@PathVariable("tariffId") Long tariffId) {
         Tariff tariff = tariffService.findTariffById(tariffId);
         return ResponseEntity.ok(tariff);
 
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
     public ResponseEntity<Tariff> saveTariff(@RequestBody @Validated Tariff tariff){
         Tariff savedTariff = tariffService.save(tariff);
         return new ResponseEntity<>(savedTariff, HttpStatus.OK);
     }
 
-
-    @CrossOrigin(origins = "http://localhost:8080")
     @PutMapping("/update/{tariffId}")
     public ResponseEntity<Tariff> updateTariffById(@RequestBody @Validated Tariff tariff, @PathVariable("tariffId") Long tariffId){
         Tariff updatedTariff = tariffService.update(tariff, tariffId);
         return new ResponseEntity<>(updatedTariff, HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
     @DeleteMapping("/delete/{tariffId}")
     public ResponseEntity<String> deleteTariffById(@PathVariable("tariffId") Long tariffId){
         String successMsg = tariffService.deleteTariffById(tariffId);

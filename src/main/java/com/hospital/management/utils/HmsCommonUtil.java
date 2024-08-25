@@ -1,5 +1,7 @@
 package com.hospital.management.utils;
 
+import com.hospital.management.entities.commom.MetaData;
+
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -21,5 +23,16 @@ public class HmsCommonUtil {
                 .findFirst()
                 .map((l) -> l.getCountry().toUpperCase())
                 .orElse("UNKNOWN");
+    }
+
+    public static MetaData getMetaData(Long totalRecords, Long totalPages, int currentPage, int pageSize){
+        MetaData metaData = new MetaData();
+
+        metaData.setTotalRecords(totalRecords);
+        metaData.setTotalPages(totalPages);
+        metaData.setCurrentPage(currentPage);
+        metaData.setRecordsPerPage(pageSize);
+
+        return metaData;
     }
 }

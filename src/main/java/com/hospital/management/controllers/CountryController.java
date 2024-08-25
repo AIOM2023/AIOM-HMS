@@ -2,6 +2,7 @@ package com.hospital.management.controllers;
 
 
 import com.hospital.management.entities.Country;
+import com.hospital.management.entities.response.CountrySearchResult;
 import com.hospital.management.repositary.CountryRepo;
 import com.hospital.management.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/country")
+@CrossOrigin(origins = "http://localhost:8080")
 public class CountryController {
 
     @Autowired
@@ -23,9 +23,14 @@ public class CountryController {
     CountryRepo countryRepo;
 
     @GetMapping
-    public ResponseEntity<List<Country>> getAllCountryNames() {
-        List<Country> allCountryNames = countryService.getAllCountryNames();
-        return ResponseEntity.ok(allCountryNames);
+    public ResponseEntity<CountrySearchResult> getAllCountries(
+            @RequestParam(name="search") String search,
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "50") int pageSize,
+            @RequestParam(name="sortBy") String sortBy,
+            @RequestParam(defaultValue = "ASC") String sortOrder ) {
+        CountrySearchResult countrySearchResult = countryService.getAllCountries(search, pageNo, pageSize, sortBy, sortOrder);
+        return ResponseEntity.ok(countrySearchResult);
     }
 
     @GetMapping("/{countryId}")

@@ -7,24 +7,23 @@ import java.time.OffsetDateTime;
 
 @Data
 @Entity
-@Table(name= "room_group")
-public class RoomGroup {
-
+@Table(name= "service_group")
+public class ServiceGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name= "room_group_id")
-    private Long roomGroupId;
+    @Column(name= "service_group_id")
+    private Long serviceGroupId;
 
-    @Column(name= "room_group_code")
-    private String roomGroupCode;
+    @Column(name= "service_group_name")
+    private String serviceGroupName;
 
-    @Column(name= "room_group_name")
-    private String roomGroupName;
+    @Column(name= "service_group_code")
+    private String serviceGroupCode;
 
-    @Column(name= "description")
+    private String department;
+
     private String description;
 
-    @Column(name= "status")
     private Integer status;
 
     @Column(name="created_date")
@@ -38,4 +37,5 @@ public class RoomGroup {
 
     @Column(name="modified_by")
     private String  modifiedBy;
+
 }

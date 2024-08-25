@@ -12,32 +12,47 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/roomGroup")
+@CrossOrigin(origins = "http://localhost:8080")
 public class RoomGroupController {
 
     @Autowired
     RoomGroupService roomGroupService;
 
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<List<RoomGroup>> tariffList() {
-        List<RoomGroup> tariffList = roomGroupService.roomGroupList();
-        return  ResponseEntity.ok(tariffList);
+    public ResponseEntity<List<RoomGroup>> getAllRoomGroups() {
+        List<RoomGroup> roomGroups = roomGroupService.getAllRoomGroups();
+        return  ResponseEntity.ok(roomGroups);
+    }
+
+    @GetMapping("/{roomGroupId}")
+    public ResponseEntity<RoomGroup> getRoomGroupById(@PathVariable("roomGroupId") Long roomGroupId) {
+        RoomGroup roomGroup = roomGroupService.findRoomGroupById(roomGroupId);
+        return ResponseEntity.ok(roomGroup);
 
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
-    public ResponseEntity<RoomGroup> saveInsuranceComp(@RequestBody @Validated RoomGroup roomGroup){
-        roomGroupService.save(roomGroup);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<RoomGroup> saveRoomGroup(@RequestBody @Validated RoomGroup roomGroup){
+        RoomGroup createdRoomGroup = roomGroupService.saveRoomGroup(roomGroup);
+        return new ResponseEntity<>(createdRoomGroup, HttpStatus.OK);
     }
 
 
-    @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/update")
-    public ResponseEntity<RoomGroup> updateAuthorization(@RequestBody @Validated RoomGroup roomGroup){
-        roomGroupService.update(roomGroup);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("/update/{roomGroupId}")
+    public ResponseEntity<RoomGroup> updateRoomGroup(@RequestBody @Validated RoomGroup roomGroup, @PathVariable ("roomGroupId") Long roomGroupId){
+        RoomGroup updatedRoomGroup = roomGroupService.updateRoomGroup(roomGroup, roomGroupId);
+        return new ResponseEntity<>(updatedRoomGroup, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{roomGroupId}")
+    public ResponseEntity<String> deleteRoomGroupById(@PathVariable("roomGroupId") Long roomGroupId){
+        String successMsg = roomGroupService.deleteRoomGroupById(roomGroupId);
+        return new ResponseEntity<>(successMsg, HttpStatus.OK);
+    }
+
+    @GetMapping("/codes")
+    public ResponseEntity<List<String>> getAllRoomGroupCodes() {
+        return  ResponseEntity.ok(roomGroupService.getAllRoomGroupCodes());
     }
 
 }

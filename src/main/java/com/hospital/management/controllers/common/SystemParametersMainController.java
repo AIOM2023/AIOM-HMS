@@ -30,12 +30,20 @@ public class SystemParametersMainController {
         List<SystemParametersMain> systemMainParams = systemParametersMainService.getSystemParametersMainList();
         if (!systemMainParams.isEmpty()) {
             return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), "System Parameters List found", systemMainParams), HttpStatus.OK);
-        } else if (systemMainParams.isEmpty()) {
+        } else {
             return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), "No System Parameters List found", systemMainParams), HttpStatus.NO_CONTENT);
-        }else {
-            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NOT_FOUND.value(), "System Parameters List not found", null), HttpStatus.NOT_FOUND);
         }
+    }
 
+    @GetMapping("/sysParamsMainId")
+    public ResponseEntity<GenericResponse<SystemParametersMain>> systemParamsMainListById(@RequestParam(required = false) Integer paramsMainId) {
+        logger.info("System Parameters List By Id");
+        SystemParametersMain systemMainParams = systemParametersMainService.getSystemParametersMainListById(paramsMainId);
+        if (systemMainParams!=null) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), "System Parameters List found", systemMainParams), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), "No System Parameters List found", systemMainParams), HttpStatus.NO_CONTENT);
+        }
     }
 
     @PostMapping("/save")
@@ -58,11 +66,18 @@ public class SystemParametersMainController {
 
     @PostMapping("/update")
     public ResponseEntity<GenericResponse<SystemParametersMain>> updateSystemParametersMain(@RequestBody @Validated SystemParametersMain systemMainParameters){
-        SystemParametersMain updateSystemParamsMain = systemParametersMainService.update(systemMainParameters);
-        if (updateSystemParamsMain != null) {
-            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), "System Parameter Updated Successfully", updateSystemParamsMain), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), "System Parameter Bad Request", null), HttpStatus.BAD_REQUEST);
+        try {
+            SystemParametersMain updateSystemParamsMain = systemParametersMainService.update(systemMainParameters);
+            if (updateSystemParamsMain != null) {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), "System Parameter Saved Successfully", updateSystemParamsMain), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), "System Parameter Bad Request", null), HttpStatus.BAD_REQUEST);
+            }
+        }catch (DuplicateEntryException exception){
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.CONFLICT.value(), exception.getMessage(), null), HttpStatus.CONFLICT);
+        }catch (Exception ex){
+            System.out.println("EXXXXXXXXXXXXXXX:"+ex.getMessage());
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.CONFLICT.value(), ex.getMessage(), null), HttpStatus.CONFLICT);
         }
     }
 }

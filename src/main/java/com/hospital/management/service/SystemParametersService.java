@@ -11,4 +11,6 @@ public interface SystemParametersService {
     SystemParameters update(SystemParameters systemParameters);
 
     List<SystemParameters> getSystemParametersList();
+
+    List<SystemParameters> getSystemParametersListByMainId(Integer paramsMainId);
 }

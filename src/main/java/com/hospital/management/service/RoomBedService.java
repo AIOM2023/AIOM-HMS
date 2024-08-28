@@ -1,14 +1,22 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.commom.RoomBed;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface RoomBedService {
 
-    void save(RoomBed roomBed);
+    List<RoomBed> getAllRoomBeds();
 
-    void update(RoomBed roomBed);
+    RoomBed findRoomBedById(Long roomBedId);
 
-    List<RoomBed> roomBedList();
+    RoomBed saveRoomBed(RoomBed roomBed);
+
+    RoomBed updateRoomBed(RoomBed roomBed, Long roomBedId);
+
+    @Transactional
+    String deleteRoomBedById(Long roomBedId);
+
+    List<String> getAllRoomGroupCodes();
 }

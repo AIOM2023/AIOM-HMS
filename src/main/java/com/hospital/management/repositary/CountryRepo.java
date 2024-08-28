@@ -1,20 +1,23 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.Country;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface CountryRepo extends JpaRepository<Country, Long > {
 
-    @Query(value = "SELECT * FROM master_country c WHERE c.status = 0", nativeQuery = true)
-    List<Country> findAllCountries();
+    @Query(value = "SELECT * FROM master_country WHERE country_code like %?1% OR country_name like %?1% " +
+            "AND status = 0 ORDER BY ?#{#pageable}",
+            nativeQuery = true)
+    Page<Country> findAllCountries(String search, Pageable pageable);
 
     Optional<Country> findByCountryIdAndStatus(Long countryId, Integer status);
 

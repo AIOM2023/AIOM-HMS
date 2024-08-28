@@ -35,7 +35,7 @@ public class AppointmentTimeController {
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/update")
-    public ResponseEntity<InsuranceComp> updateAuthorization(@RequestBody @Validated InsuranceComp insuranceComp,@PathVariable("insComId") Integer insComId){
+    public ResponseEntity<InsuranceComp> updateAuthorization(@RequestBody @Validated InsuranceComp insuranceComp,@PathVariable("insComId") Long insComId){
         insuranceCompService.updateInsuranceComp(insuranceComp,insComId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

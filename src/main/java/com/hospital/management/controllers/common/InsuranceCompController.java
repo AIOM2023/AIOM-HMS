@@ -44,19 +44,19 @@ public class InsuranceCompController {
 
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/update/{insComId}")
-    public ResponseEntity<InsuranceComp> updateInsuranceComp(@RequestBody @Validated InsuranceComp insuranceComp,@PathVariable("insComId") Integer insComId){
+    @PutMapping("/update/{insComId}")
+    public ResponseEntity<InsuranceComp> updateInsuranceComp(@RequestBody @Validated InsuranceComp insuranceComp,@PathVariable("insComId") Long insComId){
         insuranceCompService.updateInsuranceComp(insuranceComp,insComId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/{insComId}")
-    public ResponseEntity<InsuranceComp> findInsuranceCompByInsComId(@PathVariable("insComId") Integer insComId) {
+    public ResponseEntity<InsuranceComp> findInsuranceCompByInsComId(@PathVariable("insComId") Long insComId) {
         InsuranceComp insuranceComp = insuranceCompService.findInsuranceCompByInsComId(insComId);
         return ResponseEntity.ok(insuranceComp);
     }
 
     @DeleteMapping("/delete/{insComId}")
-    public ResponseEntity<String> deleteInsuranceCompByInsComId(@PathVariable("insComId") Integer insComId) {
+    public ResponseEntity<String> deleteInsuranceCompByInsComId(@PathVariable("insComId") Long insComId) {
         return new ResponseEntity<>(insuranceCompService.deleteInsuranceCompByInsComId(insComId), HttpStatus.OK);
     }
 }

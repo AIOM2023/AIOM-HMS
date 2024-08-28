@@ -13,7 +13,7 @@ public class InsuranceComp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "in_com_id")
-    private Integer insComId;
+    private Long insComId;
 
     @Column(name= "comp_id")
     private String companyId;

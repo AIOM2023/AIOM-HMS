@@ -6,9 +6,15 @@ import java.util.List;
 
 public interface BranchesService {
 
-    void save(Branches branches);
+    Branches saveBranches(Branches branches);
 
-    void update(Branches branches);
+    Branches updateBranche(Branches branches,Long branchId);
 
     List<Branches> branchesList();
+
+    Branches findBranchesById(Long branchId);
+
+    String deleteBranchesById(Long branchId);
+
+
 }

@@ -13,7 +13,7 @@ public class Branches {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "branche_id")
-    private Integer branchId;
+    private Long branchId;
 
     @Column(name="branche_code")
     private String branchCode;
@@ -33,11 +33,11 @@ public class Branches {
     @Column(name="modified_by")
     private String  modifiedBy;
 
-    @Column(name= "del_branch")
-    private Integer delBranch;
+    /*@Column(name= "del_branch")
+    private Integer delBranch;*/
 
-    @Column(name= "in_active")
-    private Integer inActive;
+    @Column(name= "status")
+    private Integer status;
 
 
 }

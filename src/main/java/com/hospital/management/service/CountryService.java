@@ -1,13 +1,11 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.Country;
-
-import java.util.List;
-import java.util.Optional;
+import com.hospital.management.entities.response.CountrySearchResult;
 
 public interface CountryService {
 
-    List<Country> getAllCountryNames();
+    CountrySearchResult getAllCountries(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
     Country findCountryById(Long countryId);
 

@@ -14,16 +14,14 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     @Autowired
     CompanyInfoRepo companyInfoRepo;
     @Override
-    public void save(CompanyInfo companyInfo) {
-
-        companyInfoRepo.save(companyInfo);
-
+    public CompanyInfo save(CompanyInfo companyInfo) {
+        return companyInfoRepo.save(companyInfo);
     }
 
     @Override
-    public void update(CompanyInfo companyInfo) {
+    public CompanyInfo update(CompanyInfo companyInfo) {
 
-        companyInfoRepo.save(companyInfo);
+        return companyInfoRepo.save(companyInfo);
 
     }
 

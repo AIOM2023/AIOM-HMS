@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface ServiceRequestService {
 
-    void save(ServiceRequest serviceRequest);
+    ServiceRequest save(ServiceRequest serviceRequest);
 
-    void update(ServiceRequest serviceRequest);
+    ServiceRequest update(ServiceRequest serviceRequest);
 
     List<ServiceRequest> serviceRequestList();
 }

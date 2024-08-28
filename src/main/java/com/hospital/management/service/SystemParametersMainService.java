@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface SystemParametersMainService {
 
-    void save(SystemParametersMain systemParameters);
+    SystemParametersMain save(SystemParametersMain systemParameters);
 
-    void update(SystemParametersMain systemParameters);
+    SystemParametersMain update(SystemParametersMain systemParameters);
 
     List<SystemParametersMain> getSystemParametersMainList();
+
+    SystemParametersMain getSystemParametersMainListById(Integer paramsMainId);
 }

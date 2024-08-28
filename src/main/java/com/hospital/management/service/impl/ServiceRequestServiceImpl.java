@@ -15,13 +15,13 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     ServiceRequestRepo serviceRequestRepo;
 
     @Override
-    public void save(ServiceRequest serviceRequest) {
-        serviceRequestRepo.save(serviceRequest);
+    public ServiceRequest save(ServiceRequest serviceRequest) {
+       return serviceRequestRepo.save(serviceRequest);
     }
 
     @Override
-    public void update(ServiceRequest serviceRequest) {
-        serviceRequestRepo.save(serviceRequest);
+    public ServiceRequest update(ServiceRequest serviceRequest) {
+        return serviceRequestRepo.save(serviceRequest);
     }
 
     @Override

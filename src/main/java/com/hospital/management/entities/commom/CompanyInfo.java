@@ -3,6 +3,8 @@ package com.hospital.management.entities.commom;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Blob;
+
 @Data
 @Entity
 @Table(name= "company_info")
@@ -23,10 +25,11 @@ public class CompanyInfo {
     private String companyContactNo;
 
     @Column(name= "tin")
-    private String tin;
+    private String tinNo;
 
+    @Lob
     @Column(name= "logo")
-    private String logo;
+    private byte[] logo;
 
 
 }

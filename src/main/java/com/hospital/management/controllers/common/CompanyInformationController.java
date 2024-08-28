@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/company/info")
-public class CompanyInfoController {
+public class CompanyInformationController {
 
     @Autowired
     private CompanyInfoService companyInfoService;
@@ -29,15 +29,15 @@ public class CompanyInfoController {
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
     public ResponseEntity<CompanyInfo> saveSystemParameters(@RequestBody @Validated CompanyInfo companyInfo){
-        companyInfoService.save(companyInfo);
-        return new ResponseEntity<>(HttpStatus.OK);
+        CompanyInfo saveCompanyInfo = companyInfoService.save(companyInfo);
+        return new ResponseEntity<>(saveCompanyInfo,HttpStatus.OK);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/update")
     public ResponseEntity<CompanyInfo> updateAuthorization(@RequestBody @Validated CompanyInfo companyInfo){
-        companyInfoService.update(companyInfo);
-        return new ResponseEntity<>(HttpStatus.OK);
+        CompanyInfo updateCompanyInfo = companyInfoService.update(companyInfo);
+        return new ResponseEntity<>(updateCompanyInfo,HttpStatus.OK);
     }
 }

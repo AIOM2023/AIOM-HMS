@@ -1,7 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.Country;
-import com.hospital.management.entities.commom.Tariff;
+import com.hospital.management.entities.response.CountrySearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -12,10 +12,13 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,9 +31,13 @@ public class CountryServiceImpl implements CountryService {
     private CountryRepo countryRepo;
 
     @Override
-    public List<Country> getAllCountryNames() {
+    public CountrySearchResult getAllCountries(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all countries");
-        return countryRepo.findAllCountries();
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Country> pages = countryRepo.findAllCountries(search, pageable);
+
+        return mapToCountrySearchResult(pageNo, pageSize, pages.getContent());
     }
 
     @Override
@@ -87,5 +94,14 @@ public class CountryServiceImpl implements CountryService {
 
     private boolean isCountryExist(Long countryId){
         return countryRepo.findByCountryIdAndStatus(countryId, 0).isPresent();
+    }
+
+    private CountrySearchResult mapToCountrySearchResult(int pageNo, int pageSize, List<Country> countries) {
+        CountrySearchResult countrySearchResult = new CountrySearchResult();
+        Long totalPages = (long) (countries.size() % pageSize == 0 ? countries.size() / pageSize : countries.size() / pageSize+1);
+        countrySearchResult.setMetaData(HmsCommonUtil.getMetaData((long) countries.size(), totalPages, pageNo, pageSize));
+        countrySearchResult.setData(countries);
+
+        return countrySearchResult;
     }
 }

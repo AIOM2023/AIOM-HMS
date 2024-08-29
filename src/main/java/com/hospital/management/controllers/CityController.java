@@ -48,5 +48,10 @@ public class CityController {
     public ResponseEntity<String> deleteCityById(@PathVariable("cityId") Long cityId){
         return new ResponseEntity<>(cityService.deleteCityById(cityId), HttpStatus.OK);
     }
+
+    @GetMapping("/names/{districtName}")
+    public ResponseEntity<List<String>> getAllCityNamesByDistrict(@PathVariable("districtName") String districtName){
+        return new ResponseEntity<>(cityService.getAllCityNames(districtName), HttpStatus.OK);
+    }
     
 }

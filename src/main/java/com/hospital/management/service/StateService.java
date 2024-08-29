@@ -1,6 +1,5 @@
 package com.hospital.management.service;
 
-import com.hospital.management.entities.Country;
 import com.hospital.management.entities.State;
 
 import java.util.List;
@@ -16,5 +15,7 @@ public interface StateService {
     State updateState(State state, Long stateId);
 
     String deleteStateById(Long stateId);
+
+    List<String> getAllStateNames(String countryName);
 
 }

@@ -1,6 +1,5 @@
 package com.hospital.management.service.impl;
 
-import com.hospital.management.entities.City;
 import com.hospital.management.entities.District;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
@@ -81,6 +80,12 @@ public class DistrictServiceImpl implements DistrictService {
         }
 
         return "District deleted successfully!";
+    }
+
+    @Override
+    public List<String> getAllDistrictNames(String stateName) {
+        LOGGER.info("Fetching all district names");
+        return districtRepo.findAllDistrictNames(stateName);
     }
 
     private boolean isDistrictExist(Long districtId){

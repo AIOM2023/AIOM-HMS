@@ -1,6 +1,5 @@
 package com.hospital.management.controllers;
 
-import com.hospital.management.entities.Country;
 import com.hospital.management.entities.State;
 import com.hospital.management.repositary.StateRepo;
 import com.hospital.management.service.StateService;
@@ -11,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/state")
@@ -54,6 +52,11 @@ public class StateController {
     @CrossOrigin(origins = "http://localhost:8080")
     public ResponseEntity<String> deleteStateById(@PathVariable("stateId") Long stateId){
         return new ResponseEntity<>(stateService.deleteStateById(stateId), HttpStatus.OK);
+    }
+
+    @GetMapping("/names/{countryName}")
+    public ResponseEntity<List<String>> getAllStateNamesByCountry(@PathVariable("countryName") String countryName){
+        return new ResponseEntity<>(stateService.getAllStateNames(countryName), HttpStatus.OK);
     }
 
 }

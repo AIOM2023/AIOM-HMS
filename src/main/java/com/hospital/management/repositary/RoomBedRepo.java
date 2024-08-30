@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface RoomBedRepo extends JpaRepository<RoomBed,Long> {
 
-    @Query(value = "SELECT * FROM room_bed rg WHERE rb.status = 0", nativeQuery = true)
+    @Query(value = "SELECT * FROM room_bed WHERE status = 0", nativeQuery = true)
     List<RoomBed> findAllRoomBeds();
 
 

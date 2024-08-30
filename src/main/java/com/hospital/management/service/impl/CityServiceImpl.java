@@ -1,7 +1,6 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.City;
-import com.hospital.management.entities.Country;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -83,6 +82,12 @@ public class CityServiceImpl implements CityService {
         }
 
         return "City deleted successfully!";
+    }
+
+    @Override
+    public List<String> getAllCityNames(String districtName) {
+        LOGGER.info("Fetching all city names");
+        return cityRepo.findAllCityNames(districtName);
     }
 
 

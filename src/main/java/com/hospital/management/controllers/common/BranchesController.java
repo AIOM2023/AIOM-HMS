@@ -19,24 +19,36 @@ public class BranchesController {
 
     @GetMapping
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<List<Branches>> systemParamsList() {
+    public ResponseEntity<List<Branches>> branchesList() {
         List<Branches> designation = branchesService.branchesList();
         return  ResponseEntity.ok(designation);
 
     }
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/save")
-    public ResponseEntity<Branches> saveSystemParameters(@RequestBody @Validated Branches branches){
-        branchesService.save(branches);
+    @PostMapping("/saveBranches")
+    public ResponseEntity<Branches> saveBranches(@RequestBody @Validated Branches branches){
+        branchesService.saveBranches(branches);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/update")
-    public ResponseEntity<Branches> updateAuthorization(@RequestBody @Validated Branches branches){
-        branchesService.update(branches);
+    @PutMapping("/updateBranches/{branchId}")
+    public ResponseEntity<Branches> updateBranch(@RequestBody @Validated Branches branches,@PathVariable("branchId") Long branchId){
+        branchesService.updateBranche(branches,branchId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @CrossOrigin(origins = "http://localhost:8080")
+    @DeleteMapping("/deleteBranches/{branchId}")
+    public ResponseEntity<String> deleteBranchesById(@PathVariable("branchId") Long branchId) {
+        return new ResponseEntity<>(branchesService.deleteBranchesById(branchId), HttpStatus.OK);
+    }
+    @CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping("/{branchId}")
+    public ResponseEntity<Branches> findBranchesById(@PathVariable("branchId") Long branchId) {
+        Branches branches = branchesService.findBranchesById(branchId);
+        return ResponseEntity.ok(branches);
     }
 }

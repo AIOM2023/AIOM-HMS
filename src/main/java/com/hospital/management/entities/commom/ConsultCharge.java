@@ -77,4 +77,7 @@ public class ConsultCharge {
     
     @Column(name= "in_active")
     private Integer inActive;
+
+    @Column(name= "status")
+    private Integer status;
 }

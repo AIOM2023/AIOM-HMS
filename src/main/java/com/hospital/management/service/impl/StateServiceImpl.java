@@ -1,6 +1,5 @@
 package com.hospital.management.service.impl;
 
-import com.hospital.management.entities.Country;
 import com.hospital.management.entities.State;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
@@ -80,6 +79,12 @@ public class StateServiceImpl implements StateService {
         }
 
         return "State deleted successfully!";
+    }
+
+    @Override
+    public List<String> getAllStateNames(String countryName) {
+        LOGGER.info("Fetching All state names");
+        return stateRepo.findAllStateNames(countryName);
     }
 
     private boolean isSateExist(Long stateId){

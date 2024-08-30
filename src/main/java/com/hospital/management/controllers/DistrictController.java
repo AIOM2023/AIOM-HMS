@@ -43,4 +43,9 @@ public class DistrictController {
     public ResponseEntity<String> deleteDistrictById(@PathVariable("districtId") Long districtId){
         return new ResponseEntity<>(districtService.deleteDistrictById(districtId), HttpStatus.OK);
     }
+
+    @GetMapping("/names/{stateName}")
+    public ResponseEntity<List<String>> getAllDistrictNamesByState(@PathVariable("stateName") String stateName){
+        return new ResponseEntity<>(districtService.getAllDistrictNames(stateName), HttpStatus.OK);
+    }
 }

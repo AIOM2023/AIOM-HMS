@@ -1,7 +1,6 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.City;
-import com.hospital.management.entities.Country;
 
 import java.util.List;
 
@@ -17,5 +16,5 @@ public interface CityService {
 
     String deleteCityById(Long cityId);
 
-
+    List<String> getAllCityNames(String districtName);
 }

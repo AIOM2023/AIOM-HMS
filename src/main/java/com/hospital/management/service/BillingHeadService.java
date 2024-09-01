@@ -1,12 +1,13 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.commom.BillingHead;
+import com.hospital.management.entities.response.BillingHeadSearchResult;
 
 import java.util.List;
 
 public interface BillingHeadService {
 
-    List<BillingHead> getAllBillingHeads();
+    BillingHeadSearchResult getAllBillingHeads(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
     BillingHead findBillingHeadById(Long billingHeadId);
 

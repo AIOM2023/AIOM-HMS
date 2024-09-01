@@ -1,6 +1,7 @@
 package com.hospital.management.controllers.common;
 
 import com.hospital.management.entities.commom.BillingHead;
+import com.hospital.management.entities.response.BillingHeadSearchResult;
 import com.hospital.management.service.BillingHeadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,20 @@ public class BillingHeadController {
     BillingHeadService billingHeadService;
 
     @GetMapping
-    public ResponseEntity<List<BillingHead>> getAllBillingHeads() {
+    /*public ResponseEntity<List<BillingHead>> getAllBillingHeads() {
         List<BillingHead> billingHeads = billingHeadService.getAllBillingHeads();
         return ResponseEntity.ok(billingHeads);
+    }*/
+    public ResponseEntity<BillingHeadSearchResult> getAllBillingHeads(
+            @RequestParam(name="search") String search,
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "50") int pageSize,
+            @RequestParam(name="sortBy") String sortBy,
+            @RequestParam(defaultValue = "ASC") String sortOrder
+    ){
+        BillingHeadSearchResult billingHeadSearchResult=billingHeadService.getAllBillingHeads(search, pageNo, pageSize, sortBy, sortOrder);
+        return ResponseEntity.ok(billingHeadSearchResult);
+
     }
 
     @GetMapping("/{billingHeadId}")

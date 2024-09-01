@@ -1,6 +1,9 @@
 package com.hospital.management.service.impl;
 
+import com.hospital.management.entities.Country;
 import com.hospital.management.entities.commom.BillingHead;
+import com.hospital.management.entities.response.BillingHeadSearchResult;
+import com.hospital.management.entities.response.CountrySearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -10,6 +13,10 @@ import com.hospital.management.utils.HmsCommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,9 +34,12 @@ public class BillingHeadServiceImpl implements BillingHeadService {
 
 
     @Override
-    public List<BillingHead> getAllBillingHeads() {
+    public BillingHeadSearchResult getAllBillingHeads(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all Billing Heads");
-        return billingHeadRepo.findAllBillingHeads();
+        Sort sort=Sort.by(Sort.Direction.fromString(sortOrder),sortBy);
+        Pageable pageable= PageRequest.of(pageNo,pageSize,sort);
+        Page<BillingHead> pages= billingHeadRepo.findAllBillingHeads(search,pageable);
+        return mapToBillingHeadSearchResult(pageNo, pageSize, pages.getContent());
     }
 
     @Override
@@ -85,5 +95,14 @@ public class BillingHeadServiceImpl implements BillingHeadService {
 
     private boolean isBillingHeadExist(Long billingHeadId){
         return billingHeadRepo.findByBillingHeadIdAndStatus(billingHeadId, 0).isPresent();
+    }
+
+    private BillingHeadSearchResult mapToBillingHeadSearchResult(int pageNo, int pageSize, List<BillingHead> billingHeads) {
+        BillingHeadSearchResult billingHeadSearchResult = new BillingHeadSearchResult();
+        Long totalPages = (long) (billingHeads.size() % pageSize == 0 ? billingHeads.size() / pageSize : billingHeads.size() / pageSize+1);
+        billingHeadSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) billingHeads.size(), totalPages, pageNo, pageSize));
+        billingHeadSearchResult.setData(billingHeads);
+
+        return billingHeadSearchResult;
     }
 }

@@ -27,6 +27,7 @@ public class BillingHead {
     @Column(name= "billing_head_desc")
     private String billingHeadDesc;
 
+    @Column(name= "status")
     private Integer status;
 
     @Column(name= "created_date")

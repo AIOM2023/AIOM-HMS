@@ -11,7 +11,7 @@ public interface SystemPagesService {
 
     SystemPages update(SystemPages systemPages);
 
-    SystemPages delete(Integer systemPagesId);
+    SystemPages delete(Long systemPagesId);
 
     List<SystemPages> getSystemPagesList();
 }

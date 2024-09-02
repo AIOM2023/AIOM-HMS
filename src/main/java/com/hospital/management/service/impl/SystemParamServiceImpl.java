@@ -26,8 +26,17 @@ public class SystemParamServiceImpl implements SystemParametersService {
     public SystemParameters update(SystemParameters systemParameters) { return systemParamsRepo.save(systemParameters);}
 
     @Override
+    public SystemParameters delete(Integer paramId) {
+        SystemParameters systemParameters=systemParamsRepo.findById(paramId)
+                .orElseThrow(() -> new RuntimeException("System Params Id Not Found"));
+        systemParameters.setStatus(1);
+        systemParamsRepo.save(systemParameters);
+        return systemParameters;
+    }
+
+    @Override
     public List<SystemParameters> getSystemParametersList() {
-        return systemParamsRepo.findAll();
+        return systemParamsRepo.findAllSystemParams();
     }
 
     @Override
@@ -35,5 +44,12 @@ public class SystemParamServiceImpl implements SystemParametersService {
         Optional<List<SystemParameters>> systemParametersbyMainId = systemParamsRepo.findAllByparamsMainId(paramsMainId);
         return  systemParametersbyMainId.orElseThrow(() ->
                 new ResourceNotFoundException(String.format("sysParamsMainId not found with the given Id: %s", paramsMainId)));
+    }
+
+    @Override
+    public List<SystemParameters> getSystemParametersListById(Integer paramId) {
+        Optional<List<SystemParameters>> systemParametersbyMainId = systemParamsRepo.findAllByparamId(paramId);
+        return  systemParametersbyMainId.orElseThrow(() ->
+                new ResourceNotFoundException(String.format("sysParamsMainId not found with the given Id: %s", paramId)));
     }
 }

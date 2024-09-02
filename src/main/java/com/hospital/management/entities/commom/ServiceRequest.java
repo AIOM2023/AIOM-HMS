@@ -13,7 +13,7 @@ public class ServiceRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "service_request_id")
-    private Integer serviceRequestId;
+    private Long serviceRequestId;
 
     @Column(name= "service_request_code")
     private String serviceRequestCode;

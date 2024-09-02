@@ -33,11 +33,13 @@ public class Designation {
     @Column(name="modified_by")
     private String  modifiedBy;
 
-   /* @Column(name= "del_desig")
-    private Integer delDesignation;*/
-
     @Column(name= "status")
     private Integer status;
 
+    @PrePersist
+    @PreUpdate
+    public void applyUppercase() {
+        this.designation = this.designation != null ? this.designation.toUpperCase() : null;
+    }
 
 }

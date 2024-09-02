@@ -11,7 +11,7 @@ public class SystemParameters {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "param_id")
-    private Integer paramId;
+    private Long paramId;
 
     @Column(name= "comm_code")
     private String commonCode;

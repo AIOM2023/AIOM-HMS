@@ -18,14 +18,12 @@ public class SystemPagesController {
     private SystemPagesService systemPagesService;
 
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:8080")
     public ResponseEntity<List<SystemPages>> systemPagesList() {
         List<SystemPages> systemParams = systemPagesService.getSystemPagesList();
         return  ResponseEntity.ok(systemParams);
 
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
     public ResponseEntity<SystemPages> saveSystemParameters(@RequestBody @Validated SystemPages systemPages){
           SystemPages saveSystemPages = systemPagesService.save(systemPages);
@@ -33,14 +31,12 @@ public class SystemPagesController {
     }
 
 
-    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/update")
     public ResponseEntity<SystemPages> updateAuthorization(@RequestBody @Validated SystemPages systemPages){
         SystemPages updateSystemPages = systemPagesService.update(systemPages);
         return new ResponseEntity<>(updateSystemPages,HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/delete")
     public ResponseEntity<SystemPages> deleteAuthorization(@RequestBody SystemPages systemPages){
         SystemPages deleteSystemPages =systemPagesService.delete(systemPages.getSystemPagesId());

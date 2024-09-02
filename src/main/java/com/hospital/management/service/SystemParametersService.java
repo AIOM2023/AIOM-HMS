@@ -10,7 +10,13 @@ public interface SystemParametersService {
 
     SystemParameters update(SystemParameters systemParameters);
 
+    SystemParameters delete(Integer paramId);
+
     List<SystemParameters> getSystemParametersList();
 
     List<SystemParameters> getSystemParametersListByMainId(Integer paramsMainId);
+
+    List<SystemParameters> getSystemParametersListById(Integer paramId);
+
+
 }

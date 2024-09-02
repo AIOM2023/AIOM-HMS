@@ -23,10 +23,36 @@ public class SystemParametersController {
     private SystemParametersService systemParametersService;
 
     @GetMapping
-    public ResponseEntity<List<SystemParameters>> systemParamsList() {
+    public ResponseEntity<GenericResponse<List<SystemParameters>>> systemParamsList() {
         List<SystemParameters> systemParams = systemParametersService.getSystemParametersList();
-        return  new ResponseEntity<>(systemParams,HttpStatus.OK);
+        if (!systemParams.isEmpty()) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), "System Parameters List found", systemParams), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), "No System Parameters List found with this ID", null), HttpStatus.OK);
+        }
 
+    }
+
+    @GetMapping("/sysParamByMainId")
+    public ResponseEntity<GenericResponse<List<SystemParameters>>> systemParamsMainListById(@RequestParam(required = false) Integer paramsMainId){
+        logger.info("System Parameters List By Main Id");
+        List<SystemParameters> systemParamsByMainId = systemParametersService.getSystemParametersListByMainId(paramsMainId);
+        if (!systemParamsByMainId.isEmpty()) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), "System Parameters List found", systemParamsByMainId), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), "No System Parameters List found with this ID", systemParamsByMainId), HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/sysParamById")
+    public ResponseEntity<GenericResponse<List<SystemParameters>>> systemParamsListById(@RequestParam(required = false) Integer paramId){
+        logger.info("System Parameters List By Id");
+        List<SystemParameters> systemParamsById = systemParametersService.getSystemParametersListById(paramId);
+        if (!systemParamsById.isEmpty()) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), "System Parameters List found", systemParamsById), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), "No System Parameters List found with this ID", systemParamsById), HttpStatus.OK);
+        }
     }
 
     @PostMapping("/save")
@@ -36,21 +62,17 @@ public class SystemParametersController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<SystemParameters> updateAuthorization(@RequestBody @Validated SystemParameters systemParameters){
+    public ResponseEntity<SystemParameters> updateSystemParameters(@RequestBody @Validated SystemParameters systemParameters){
         SystemParameters updateSystemParameters = systemParametersService.update(systemParameters);
         return new ResponseEntity<>(updateSystemParameters,HttpStatus.OK);
     }
 
-    @GetMapping("/sysParamByMainId")
-    public ResponseEntity<GenericResponse<List<SystemParameters>>> systemParamsMainListById(@RequestParam(required = false) Integer paramsMainId){
-        logger.info("System Parameters List By Id");
-        List<SystemParameters> systemParamsByMainId = systemParametersService.getSystemParametersListByMainId(paramsMainId);
-        if (!systemParamsByMainId.isEmpty()) {
-            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), "System Parameters List found", systemParamsByMainId), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), "No System Parameters List found with this ID", systemParamsByMainId), HttpStatus.OK);
-        }
-    }
 
+
+    @PostMapping("/delete")
+    public ResponseEntity<SystemParameters> deleteSystemParameters(@RequestParam Integer paramId){
+        SystemParameters deleteSystemParameters = systemParametersService.delete(paramId);
+        return new ResponseEntity<>(deleteSystemParameters,HttpStatus.OK);
+    }
 
 }

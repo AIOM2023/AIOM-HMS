@@ -27,7 +27,7 @@ public class SystemPagesServiceImpl implements SystemPagesService {
     }
 
     @Override
-    public SystemPages delete(Integer systemPagesId) {
+    public SystemPages delete(Long systemPagesId) {
         SystemPages systemPages = systemPagesRepo.findById(systemPagesId).
                 orElseThrow(() -> new RuntimeException("SystemPageId Not Found"));
         systemPages.setStatus(1);

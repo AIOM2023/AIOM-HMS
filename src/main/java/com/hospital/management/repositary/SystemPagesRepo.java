@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface SystemPagesRepo extends JpaRepository<SystemPages, Integer> {
+public interface SystemPagesRepo extends JpaRepository<SystemPages, Long> {
 
     @Query("SELECT a FROM SystemPages a WHERE a.status = 0")
     List<SystemPages> getSystemPagesList();

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/consult/charge")
+@RequestMapping("/consult-charge")
 public class ConsultChargeController {
 
     @Autowired
@@ -26,17 +26,28 @@ public class ConsultChargeController {
     }
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/save")
-    public ResponseEntity<ConsultCharge> saveInsuranceComp(@RequestBody @Validated ConsultCharge consultCharge){
-        consultChargeService.save(consultCharge);
+    @PostMapping("/saveConsultCharge")
+    public ResponseEntity<ConsultCharge> saveConsultCharge(@RequestBody @Validated ConsultCharge consultCharge){
+        consultChargeService.saveConsultCharge(consultCharge);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/update")
-    public ResponseEntity<ConsultCharge> updateAuthorization(@RequestBody @Validated ConsultCharge consultCharge){
-        consultChargeService.save(consultCharge);
+    @PutMapping("/update/{consultId}")
+    public ResponseEntity<ConsultCharge> updateConsultCharge(@RequestBody @Validated ConsultCharge consultCharge,@PathVariable("consultId") Long consultId){
+        consultChargeService.updateConsultCharge(consultCharge,consultId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{consultId}")
+    public ResponseEntity<String> deleteConsultChargeById(@PathVariable("consultId") Long consultId) {
+        return new ResponseEntity<>(consultChargeService.deleteConsultChargeById(consultId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{consultId}")
+    public ResponseEntity<ConsultCharge> findConsultChargeById(@PathVariable("consultId") Long consultId) {
+        ConsultCharge consultCharge = consultChargeService.findConsultChargeById(consultId);
+        return ResponseEntity.ok(consultCharge);
     }
 }

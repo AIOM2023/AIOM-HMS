@@ -18,7 +18,6 @@ public class DesignationController {
     DesignationService designationService;
 
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:8080")
     public ResponseEntity<List<Designation>> designationList() {
         List<Designation> designation = designationService.designationList();
         return  ResponseEntity.ok(designation);

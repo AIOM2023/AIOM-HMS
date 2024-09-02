@@ -11,7 +11,7 @@ public class SystemPages {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "system_pages_id")
-    private Integer systemPagesId;
+    private Long systemPagesId;
 
     @Column(name="page_module")
     private String pageModule;

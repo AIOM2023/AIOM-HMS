@@ -1,7 +1,6 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.City;
-import com.hospital.management.entities.response.CitySearchResult;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

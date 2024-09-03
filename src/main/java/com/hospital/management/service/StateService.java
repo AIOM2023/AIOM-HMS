@@ -3,6 +3,8 @@ package com.hospital.management.service;
 import com.hospital.management.entities.State;
 import com.hospital.management.entities.response.StateSearchResult;
 
+import java.util.List;
+
 public interface StateService {
 
     StateSearchResult getAllStates(String search, int pageNo, int pageSize, String sortBy, String sortOrder);

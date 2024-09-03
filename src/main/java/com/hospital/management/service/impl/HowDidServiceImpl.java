@@ -1,7 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.HowDid;
-import com.hospital.management.entities.commom.Tariff;
+import com.hospital.management.entities.response.HowDidSearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -12,6 +12,10 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,8 @@ public class HowDidServiceImpl implements HowDidService {
     @Override
     public HowDid saveHowDid(HowDid howDid) {
         LOGGER.info("Creating a new HowDid");
+        Long maxId = howDidRepo.getMaxId();
+
         howDid.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         howDid.setCreatedBy("System");
         howDid.setStatus(0);
@@ -36,7 +42,7 @@ public class HowDidServiceImpl implements HowDidService {
     }
 
     @Override
-    public HowDid updateHowDid(HowDid howDid,Integer howDidId) {
+    public HowDid updateHowDid(HowDid howDid,Long howDidId) {
         LOGGER.info("Updating an existing Tariff");
         if(!isHowDidExist(howDidId)) {
             LOGGER.error("update() - HowDid not found with the given Id: {} ", howDidId);
@@ -48,13 +54,25 @@ public class HowDidServiceImpl implements HowDidService {
     }
 
     @Override
-    public List<HowDid> howDidList() {
+    public HowDidSearchResult howDidList(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all HowDidList");
-        return howDidRepo.findAllHowDidList();
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<HowDid> howDidPages = howDidRepo.findAllHowDidList(search, pageable);
+        return mapToHowDidSearchResult(pageNo, pageSize, howDidPages.getContent());
     }
+    private HowDidSearchResult mapToHowDidSearchResult(int pageNo, int pageSize, List<HowDid> howDid) {
+        HowDidSearchResult howDidSearchResult = new HowDidSearchResult();
+        Long totalPages = (long) (howDid.size() % pageSize == 0 ? howDid.size() / pageSize : howDid.size() / pageSize+1);
+        howDidSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) howDid.size(), totalPages, pageNo, pageSize));
+        howDidSearchResult.setData(howDid);
+        return howDidSearchResult;
+        }
+
+
 
     @Override
-    public HowDid findHowDidByHowDidId(Integer howDidId) {
+    public HowDid findHowDidByHowDidId(Long howDidId) {
         LOGGER.info("Fetching howDidId by id");
         Optional<HowDid> howDid = howDidRepo.findByHowDidIdAndStatus(howDidId, 0);
         return howDid.orElseThrow(() ->
@@ -63,7 +81,7 @@ public class HowDidServiceImpl implements HowDidService {
 
     @Transactional
     @Override
-    public String deleteHowDidByHowDidId(Integer howDidId) {
+    public String deleteHowDidByHowDidId(Long howDidId) {
         if(!isHowDidExist(howDidId)) {
             LOGGER.error("deleteHowDidById() - HowDid not found with the given Id: {} ", howDidId);
             throw new ResourceNotFoundException(String.format("HowDid not found with the given Id: %s", howDidId));
@@ -81,7 +99,7 @@ public class HowDidServiceImpl implements HowDidService {
 
 
 
-    private boolean isHowDidExist(Integer howDidId){
+    private boolean isHowDidExist(Long howDidId){
         return howDidRepo.findByHowDidIdAndStatus(howDidId, 0).isPresent();
     }
 }

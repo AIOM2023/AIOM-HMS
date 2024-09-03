@@ -1,15 +1,21 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.Branches;
+import com.hospital.management.entities.response.BranchesSearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
 import com.hospital.management.repositary.BranchesRepo;
 import com.hospital.management.service.BranchesService;
+import com.hospital.management.utils.HmsCommonUtil;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +35,8 @@ public class BranchesServiceImpl implements BranchesService {
 
         Long maxId = branchesRepo.getMaxId();
         branches.setBranchCode("BR-"+(maxId == null ? 1 : maxId+1));
-
+        branches.setCreatedBy("System");
+        branches.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         branches.setStatus(0);
         return branchesRepo.save(branches);
     }
@@ -41,15 +48,29 @@ public class BranchesServiceImpl implements BranchesService {
             throw new ResourceNotFoundException(String.format(REFERRAL_NOT_FOUND, branchId));
         }
         branches.setModifiedBy("System");
-        // dischargeSummary.setModifiedDate();
+        branches.setModifiedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         return branchesRepo.save(branches);
     }
 
     @Override
-    public List<Branches> branchesList() {
+    public BranchesSearchResult branchesList(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("find all Branches List");
-        return branchesRepo.findAll();
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Branches> pages = branchesRepo.findAllBranches(search, pageable);
+
+        return mapToBranchesSearchResult(pageNo, pageSize, pages.getContent());
+
     }
+    private BranchesSearchResult mapToBranchesSearchResult(int pageNo, int pageSize, List<Branches> branches) {
+        BranchesSearchResult branchesSearchResult = new BranchesSearchResult();
+        Long totalPages = (long) (branches.size() % pageSize == 0 ? branches.size() / pageSize : branches.size() / pageSize+1);
+        branchesSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) branches.size(), totalPages, pageNo, pageSize));
+        branchesSearchResult.setData(branches);
+
+        return branchesSearchResult;
+    }
+
 
     @Override
     public Branches findBranchesById(Long branchId) {

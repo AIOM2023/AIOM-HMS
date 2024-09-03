@@ -1,6 +1,7 @@
 package com.hospital.management.controllers.common;
 
 import com.hospital.management.entities.commom.Branches;
+import com.hospital.management.entities.response.BranchesSearchResult;
 import com.hospital.management.service.BranchesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,13 @@ public class BranchesController {
 
     @GetMapping
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<List<Branches>> branchesList() {
-        List<Branches> designation = branchesService.branchesList();
-        return  ResponseEntity.ok(designation);
+    public ResponseEntity<BranchesSearchResult> branchesList(@RequestParam(name="search") String search,
+                                                             @RequestParam(defaultValue = "0") int pageNo,
+                                                             @RequestParam(defaultValue = "50") int pageSize,
+                                                             @RequestParam(name="sortBy") String sortBy,
+                                                             @RequestParam(defaultValue = "ASC") String sortOrder) {
+        BranchesSearchResult branchesSearchResult = branchesService.branchesList(search, pageNo, pageSize, sortBy, sortOrder);
+        return  ResponseEntity.ok(branchesSearchResult);
 
     }
 

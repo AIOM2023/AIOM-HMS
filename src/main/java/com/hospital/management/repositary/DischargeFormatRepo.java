@@ -1,18 +1,23 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.commom.DischargeFormat;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface DischargeFormatRepo extends JpaRepository<DischargeFormat, Integer > {
 
-    @Query(value = "SELECT * FROM dischrg_fmt r WHERE r.status = 0", nativeQuery = true)
-    List<DischargeFormat> findAllDischargeFormat();
+
+  @Query(value = "SELECT * FROM dischrg_fmt WHERE dis_fmt_code like %?1% OR dis_fmt_name like %?1% " +
+          "AND status = 0 ORDER BY ?#{#pageable}",
+          nativeQuery = true)
+  Page<DischargeFormat> findAllDischargeFormat(String search, Pageable pageable);
+
 
 
     Optional<DischargeFormat> findByDiscFmtIdAndStatus(Long dischargeId, Integer status);

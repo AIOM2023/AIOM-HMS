@@ -3,6 +3,8 @@ package com.hospital.management.entities.admin;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.OffsetDateTime;
+
 @Data
 @Entity
 @Table(name= "master_referral")
@@ -69,5 +71,18 @@ public class Referral {
     @Column(name= "address")
     private String address;
 
+    @Column(name= "status")
     private Integer status;
+
+    @Column(name="created_date")
+    private OffsetDateTime createdDate;
+
+    @Column(name="created_by")
+    private String  createdBy;
+
+    @Column(name="modified_date")
+    private OffsetDateTime modifiedDate;
+
+    @Column(name="modified_by")
+    private String  modifiedBy;
 }

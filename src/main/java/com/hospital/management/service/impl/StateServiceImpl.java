@@ -1,6 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.State;
+import com.hospital.management.entities.response.StateSearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -11,6 +12,10 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +31,22 @@ public class StateServiceImpl implements StateService {
     private StateRepo stateRepo;
 
     @Override
-    public List<State> getAllStates() {
+    public StateSearchResult getAllStates(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all countries");
-        return stateRepo.findAllStates();
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<State> pages = stateRepo.findAllStates(search, pageable);
+        return mapToStateSearchResult(pageNo, pageSize, pages.getContent());
     }
+
+private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, List<State> states) {
+    StateSearchResult stateSearchResult = new StateSearchResult();
+        Long totalPages = (long) (states.size() % pageSize == 0 ? states.size() / pageSize : states.size() / pageSize+1);
+    stateSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) states.size(), totalPages, pageNo, pageSize));
+    stateSearchResult.setData(states);
+
+        return stateSearchResult;
+}
 
     @Override
     public State findStateById(Long stateId) {

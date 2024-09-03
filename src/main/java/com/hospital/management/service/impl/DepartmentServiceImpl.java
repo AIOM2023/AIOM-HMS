@@ -1,6 +1,8 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.Department;
+import com.hospital.management.entities.response.DepartmentSearchResult;
+import com.hospital.management.entities.response.HowDidSearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -11,6 +13,10 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +33,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public Department saveDepartment(Department department) {
         LOGGER.info("Creating a new HowDid");
+        Long maxId = departmentRepo.getMaxId();
+
+        department.setDepartmentCode("DEP"
+                +(maxId == null ? 1 : maxId+1));
         department.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         department.setCreatedBy("System");
         department.setStatus(0);
@@ -47,10 +57,24 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public List<Department> departmentList() {
+    public DepartmentSearchResult departmentList(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all DepartmentList");
-               return departmentRepo.findAllDepartment();
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Department> pages = departmentRepo.findAllDepartment(search, pageable);
+               return mapToDepartmentSearchResult(pageNo, pageSize, pages.getContent());
     }
+    private DepartmentSearchResult mapToDepartmentSearchResult(int pageNo, int pageSize, List<Department> departments) {
+        DepartmentSearchResult departmentSearchResult = new DepartmentSearchResult();
+        Long totalPages = (long) (departments.size() % pageSize == 0 ? departments.size() / pageSize : departments.size() / pageSize+1);
+        departmentSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) departments.size(), totalPages, pageNo, pageSize));
+        departmentSearchResult.setData(departments);
+
+        return departmentSearchResult;
+    }
+
+
+
 
     @Override
     public Department findDepartmentById(Integer departmentId) {

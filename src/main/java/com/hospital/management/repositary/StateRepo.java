@@ -1,6 +1,8 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.State;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,8 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StateRepo extends JpaRepository<State, Long> {
-    @Query(value = "SELECT * FROM master_state c WHERE c.status = 0", nativeQuery = true)
-    List<State> findAllStates();
+    @Query(value = "SELECT * FROM master_state WHERE STATE_CODE like %?1% OR STATE_NAME like %?1% " +
+            "AND status = 0 ORDER BY ?#{#pageable}",
+            nativeQuery = true)
+    Page<State> findAllStates(String search, Pageable pageable);
 
     Optional<State> findByStateIdAndStatus(Long stateId, Integer status);
 

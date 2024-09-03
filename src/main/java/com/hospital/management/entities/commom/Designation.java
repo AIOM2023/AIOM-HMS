@@ -13,7 +13,7 @@ public class Designation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "designation_id")
-    private Integer designationId;
+    private Long designationId;
 
     @Column(name="designation")
     private String designation;

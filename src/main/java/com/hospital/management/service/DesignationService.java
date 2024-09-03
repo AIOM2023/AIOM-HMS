@@ -1,17 +1,16 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.commom.Designation;
-
-import java.util.List;
+import com.hospital.management.entities.response.DesignationSearchResult;
 
 public interface DesignationService {
 
     Designation saveDesignation(Designation designation);
 
-    Designation updateDesignation(Designation designation,Integer designationId);
+    Designation updateDesignation(Designation designation,Long designationId);
 
-    List<Designation> designationList();
-    Designation findDesignationById(Integer designationId);
-    String deleteDesignationById(Integer designationId);
+   DesignationSearchResult designationList(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
+    Designation findDesignationById(Long designationId);
+    String deleteDesignationById(Long designationId);
 
 }

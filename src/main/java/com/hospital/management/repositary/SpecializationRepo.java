@@ -1,6 +1,8 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.commom.Specialization;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,8 +15,10 @@ import java.util.Optional;
 @Repository
 public interface SpecializationRepo extends JpaRepository<Specialization, Long> {
 
-    @Query(value = "SELECT * FROM specialization_master sp WHERE sp.status = 0", nativeQuery = true)
-    List<Specialization> findAllSpecializations();
+    @Query(value = "SELECT * FROM specialization_master WHERE specialization_code like %?1% OR specialization_val like %?1% " +
+            "AND status = 0 ORDER BY ?#{#pageable}",
+            nativeQuery = true)
+    Page<Specialization> findAllSpecializations(String search, Pageable pageable);
 
     Optional<Specialization> findBySpecializationIdAndStatus(Long specializationId, Integer status);
 

@@ -1,6 +1,8 @@
 package com.hospital.management.controllers.admin;
 
 import com.hospital.management.entities.admin.Referral;
+import com.hospital.management.entities.response.ReferralSearchResult;
+import com.hospital.management.repositary.ReferralRepo;
 import com.hospital.management.service.ReferralService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +21,17 @@ public class ReferralController {
     private ReferralService referralService;
 
     @Autowired
+    ReferralRepo referralRepo;
+
+
     @GetMapping
-    public ResponseEntity<List<Referral>> getAllReferrals() {
-        List<Referral> referrals = referralService.getAllReferrals();
-        return ResponseEntity.ok(referrals);
+    public ResponseEntity<ReferralSearchResult> getAllReferrals(@RequestParam(name="search") String search,
+                                                                @RequestParam(defaultValue = "0") int pageNo,
+                                                                @RequestParam(defaultValue = "50") int pageSize,
+                                                                @RequestParam(name="sortBy") String sortBy,
+                                                                @RequestParam(defaultValue = "ASC") String sortOrder ) {
+        ReferralSearchResult referralSearchResult = referralService.getAllReferrals(search, pageNo, pageSize, sortBy, sortOrder);
+        return ResponseEntity.ok(referralSearchResult);
     }
 
     @GetMapping("/{referralId}")

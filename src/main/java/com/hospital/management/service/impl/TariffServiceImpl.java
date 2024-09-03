@@ -1,6 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.Tariff;
+import com.hospital.management.entities.response.TariffSearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -11,6 +12,10 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -50,10 +55,22 @@ public class TariffServiceImpl implements TariffService {
     }
 
     @Override
-    public List<Tariff> tariffList() {
+    public TariffSearchResult tariffList(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all Tariffs");
-        return tariffRepo.findAllTariffs();
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Tariff> pages = tariffRepo.findAllTariffs(search, pageable);
+        return mapToTariffSearchResult(pageNo, pageSize, pages.getContent());
     }
+    private TariffSearchResult mapToTariffSearchResult(int pageNo, int pageSize, List<Tariff> tariffs) {
+        TariffSearchResult tariffSearchResult = new TariffSearchResult();
+        Long totalPages = (long) (tariffs.size() % pageSize == 0 ? tariffs.size() / pageSize : tariffs.size() / pageSize+1);
+        tariffSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) tariffs.size(), totalPages, pageNo, pageSize));
+        tariffSearchResult.setData(tariffs);
+
+        return tariffSearchResult;
+    }
+
 
     @Override
     public Tariff findTariffById(Long tariffId) {

@@ -2,13 +2,14 @@ package com.hospital.management.service;
 
 
 import com.hospital.management.entities.commom.RoomGroup;
+import com.hospital.management.entities.response.RoomGroupSearchResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface RoomGroupService {
 
-    List<RoomGroup> getAllRoomGroups();
+    RoomGroupSearchResult getAllRoomGroups(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
     RoomGroup findRoomGroupById(Long roomGroupId);
 

@@ -13,7 +13,7 @@ public class RegistrationFees {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "reg_fees_id")
-    private Integer regFeesId;
+    private Long regFeesId;
 
     @Column(name= "reg_fee_code")
     private String regFeeCode;

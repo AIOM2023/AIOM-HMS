@@ -1,14 +1,13 @@
 package com.hospital.management.controllers.common;
 
 import com.hospital.management.entities.commom.ServiceGroup;
+import com.hospital.management.entities.response.ServiceGroupSearchResult;
 import com.hospital.management.service.ServiceGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/serviceGroup")
@@ -19,9 +18,13 @@ public class ServiceGroupController {
     private ServiceGroupService serviceGroupService;
 
     @GetMapping
-    public ResponseEntity<List<ServiceGroup>> getAllServiceGroups() {
-        List<ServiceGroup> serviceGroups = serviceGroupService.getAllServiceGroups();
-        return  ResponseEntity.ok(serviceGroups);
+    public ResponseEntity<ServiceGroupSearchResult> getAllServiceGroups(@RequestParam(name="search") String search,
+                                                                        @RequestParam(defaultValue = "0") int pageNo,
+                                                                        @RequestParam(defaultValue = "50") int pageSize,
+                                                                        @RequestParam(name="sortBy") String sortBy,
+                                                                        @RequestParam(defaultValue = "ASC") String sortOrder) {
+        ServiceGroupSearchResult serviceGroupSearchResult = serviceGroupService.getAllServiceGroups(search, pageNo, pageSize, sortBy, sortOrder);
+        return  ResponseEntity.ok(serviceGroupSearchResult);
     }
 
     @GetMapping("/{serviceGroupId}")

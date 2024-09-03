@@ -29,7 +29,11 @@ public class InsuranceCompController {
 
     @GetMapping
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<List<InsuranceComp>> insuranceComList() {
+    public ResponseEntity<List<InsuranceComp>> insuranceComList(@RequestParam(name="search") String search,
+                                                                @RequestParam(defaultValue = "0") int pageNo,
+                                                                @RequestParam(defaultValue = "50") int pageSize,
+                                                                @RequestParam(name="sortBy") String sortBy,
+                                                                @RequestParam(defaultValue = "ASC") String sortOrder) {
         List<InsuranceComp> insuranceComp = insuranceCompService.insuranceCompList();
         return ResponseEntity.ok(insuranceComp);
 

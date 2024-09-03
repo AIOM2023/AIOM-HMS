@@ -1,9 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.DischargeFormat;
-import com.hospital.management.entities.commom.DischargeSummary;
-
-import java.util.List;
+import com.hospital.management.entities.response.DischargeFormatSearchResult;
 
 public interface DischargeFormatService {
 
@@ -11,7 +9,7 @@ public interface DischargeFormatService {
 
     DischargeFormat updateDischargeFormat(DischargeFormat dischargeFormat,Long discFmtId);
 
-    List<DischargeFormat> dischargeFormatList();
+    DischargeFormatSearchResult dischargeFormatList(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
     DischargeFormat findDischargeFromatById(Long discFmtId);
 

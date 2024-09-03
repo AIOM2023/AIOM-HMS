@@ -1,7 +1,10 @@
 package com.hospital.management.repositary;
 
+import com.hospital.management.entities.Country;
 import com.hospital.management.entities.admin.Referral;
 import com.hospital.management.entities.commom.Tariff;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,8 +17,13 @@ import java.util.Optional;
 @Repository
 public interface ReferralRepo extends JpaRepository<Referral, Long> {
 
-    @Query(value = "SELECT * FROM master_referral r WHERE r.status = 0", nativeQuery = true)
-    List<Referral> findAllReferrals();
+    @Query(value = "SELECT * FROM master_referral WHERE referral_code like %?1% OR referral_name like %?1% " +
+            "AND status = 0 ORDER BY ?#{#pageable}",
+            nativeQuery = true)
+    Page<Referral> findAllReferrals(String search, Pageable pageable);
+
+   /* @Query(value = "SELECT * FROM master_referral r WHERE r.status = 0", nativeQuery = true)
+    List<Referral> findAllReferrals();*/
 
 
     Optional<Referral> findByReferralIdAndStatus(Long referralId, Integer status);

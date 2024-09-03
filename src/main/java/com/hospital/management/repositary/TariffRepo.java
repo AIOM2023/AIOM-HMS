@@ -1,6 +1,8 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.commom.Tariff;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,8 +14,10 @@ import java.util.Optional;
 
 @Repository
 public interface TariffRepo extends JpaRepository<Tariff, Long> {
-    @Query(value = "SELECT * FROM tariff t WHERE t.status = 0", nativeQuery = true)
-    List<Tariff> findAllTariffs();
+    @Query(value = "SELECT * FROM tariff WHERE tariff_code like %?1% OR tariff_name like %?1% " +
+            "AND status = 0 ORDER BY ?#{#pageable}",
+            nativeQuery = true)
+    Page<Tariff> findAllTariffs(String search, Pageable pageable);
 
 
     Optional<Tariff> findByTariffIdAndStatus(Long tariffId, Integer status);

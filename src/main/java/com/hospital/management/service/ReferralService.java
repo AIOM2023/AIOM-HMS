@@ -1,6 +1,7 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.admin.Referral;
+import com.hospital.management.entities.response.ReferralSearchResult;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface ReferralService {
 
     Referral updateReferral(Referral referral, Long referralId);
 
-    List<Referral> getAllReferrals();
+    ReferralSearchResult getAllReferrals(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
     Referral findReferralById(Long referralId);
 

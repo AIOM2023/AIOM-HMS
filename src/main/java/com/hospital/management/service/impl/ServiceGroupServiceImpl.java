@@ -1,6 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.ServiceGroup;
+import com.hospital.management.entities.response.ServiceGroupSearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -10,6 +11,10 @@ import com.hospital.management.utils.HmsCommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +31,22 @@ public class ServiceGroupServiceImpl implements ServiceGroupService {
     private ServiceGroupRepo serviceGroupRepo;
 
     @Override
-    public List<ServiceGroup> getAllServiceGroups() {
+    public ServiceGroupSearchResult getAllServiceGroups(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all Service Groups");
-        return serviceGroupRepo.findAllServiceGroups();
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<ServiceGroup> pages = serviceGroupRepo.findAllServiceGroups(search, pageable);
+
+        return mapToServiceGroupSearchResult(pageNo, pageSize, pages.getContent());
+
+    }
+    private ServiceGroupSearchResult mapToServiceGroupSearchResult(int pageNo, int pageSize, List<ServiceGroup> serviceGroups) {
+        ServiceGroupSearchResult serviceGroupSearchResult = new ServiceGroupSearchResult();
+        Long totalPages = (long) (serviceGroups.size() % pageSize == 0 ? serviceGroups.size() / pageSize : serviceGroups.size() / pageSize+1);
+        serviceGroupSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) serviceGroups.size(), totalPages, pageNo, pageSize));
+        serviceGroupSearchResult.setData(serviceGroups);
+
+        return serviceGroupSearchResult;
     }
 
     @Override

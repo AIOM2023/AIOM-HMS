@@ -1,6 +1,8 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.RegistrationFees;
+import com.hospital.management.entities.response.ReferralSearchResult;
+import com.hospital.management.entities.response.RegistrationFeesSearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -11,6 +13,10 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +32,10 @@ public class RegistrationFeesServiceImpl implements RegistrationFeesService {
     @Override
     public RegistrationFees saveregistrationFees(RegistrationFees registrationFees) {
         LOGGER.info("Creating a new RegistrationFees");
+        Long maxId = registrationFeesRepo.getMaxId();
+        registrationFees.setRegFeeCode("RF"
+                +(maxId == null ? 1 : maxId+1));
+
         registrationFees.setCreatedBy("System");
         registrationFees.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         registrationFees.setStatus(0);
@@ -33,7 +43,7 @@ public class RegistrationFeesServiceImpl implements RegistrationFeesService {
     }
 
     @Override
-    public RegistrationFees updateregistrationFees(RegistrationFees registrationFees,Integer regFeesId) {
+    public RegistrationFees updateregistrationFees(RegistrationFees registrationFees,Long regFeesId) {
         LOGGER.info("Updating an existing RegistrationFees");
         if(!isRegistrationExist(regFeesId)) {
             LOGGER.error("update() - Tariff not found with the given Id: {} ", regFeesId);
@@ -45,13 +55,19 @@ public class RegistrationFeesServiceImpl implements RegistrationFeesService {
     }
 
     @Override
-    public List<RegistrationFees> registrationFeesList() {
+    public RegistrationFeesSearchResult registrationFeesList(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all RegistrationFees");
-        return registrationFeesRepo.findAllRegistrationFees();
+            Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+            Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+            Page<RegistrationFees> pages = registrationFeesRepo.findAllRegistrationFees(search, pageable);
+
+            return mapToRegistrationFeesSearchResult(pageNo, pageSize, pages.getContent());
+
+
     }
 
     @Override
-    public RegistrationFees findRegistrationFeesId(Integer regFeesId) {
+    public RegistrationFees findRegistrationFeesId(Long regFeesId) {
         LOGGER.info("Fetching RegistrationFees by id");
         Optional<RegistrationFees> registrationFees = registrationFeesRepo.findByRegFeesIdAndStatus(regFeesId, 0);
         return registrationFees.orElseThrow(() ->
@@ -65,7 +81,7 @@ public class RegistrationFeesServiceImpl implements RegistrationFeesService {
     }*/
     @Transactional
     @Override
-    public String deleteRegistrationFeesById(Integer regFeesId) {
+    public String deleteRegistrationFeesById(Long regFeesId) {
         if(!isRegistrationExist(regFeesId)) {
             LOGGER.error("deleteRegistrationFeesById() - regFeeCode not found with the given Id: {} ", regFeesId);
             throw new ResourceNotFoundException(String.format("RegistrationFees not found with the given Id: %s", regFeesId));
@@ -81,7 +97,16 @@ public class RegistrationFeesServiceImpl implements RegistrationFeesService {
         return "RegistrationFees deleted successfully!";
     }
 
-    private boolean isRegistrationExist(Integer regFeesId){
+    private boolean isRegistrationExist(Long regFeesId){
         return registrationFeesRepo.findByRegFeesIdAndStatus(regFeesId, 0).isPresent();
+    }
+
+    private RegistrationFeesSearchResult mapToRegistrationFeesSearchResult(int pageNo, int pageSize, List<RegistrationFees> registrationFeesList) {
+        RegistrationFeesSearchResult registrationFeesSearchResult = new RegistrationFeesSearchResult();
+        Long totalPages = (long) (registrationFeesList.size() % pageSize == 0 ? registrationFeesList.size() / pageSize : registrationFeesList.size() / pageSize + 1);
+        registrationFeesSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) registrationFeesList.size(), totalPages, pageNo, pageSize));
+        registrationFeesSearchResult.setData(registrationFeesList);
+
+        return registrationFeesSearchResult;
     }
 }

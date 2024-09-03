@@ -1,19 +1,17 @@
 package com.hospital.management.service;
 
-import com.hospital.management.entities.Country;
 import com.hospital.management.entities.commom.NurseStation;
-
-import java.util.List;
+import com.hospital.management.entities.response.NurseStationSearchResult;
 
 public interface NurseStationService {
 
-    List<NurseStation> getAllNurseStation();
+    NurseStationSearchResult getAllNurseStation(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
-    NurseStation findNurseStationId(Integer nurseStationId);
+    NurseStation findNurseStationId(Long nurseStationId);
 
     NurseStation saveNurseStation(NurseStation nurseStation);
 
-    NurseStation updatenurseStation(NurseStation nurseStation, Integer nurseStationId);
+    NurseStation updatenurseStation(NurseStation nurseStation, Long nurseStationId);
 
-    String deleteNurseStationById(Integer nurseStationId);
+    String deleteNurseStationById(Long nurseStationId);
 }

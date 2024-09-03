@@ -1,13 +1,11 @@
 package com.hospital.management.service;
 
-import com.hospital.management.entities.Country;
 import com.hospital.management.entities.State;
-
-import java.util.List;
+import com.hospital.management.entities.response.StateSearchResult;
 
 public interface StateService {
 
-    List<State> getAllStates();
+    StateSearchResult getAllStates(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
     State findStateById(Long stateId);
 

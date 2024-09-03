@@ -1,6 +1,9 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.City;
+import com.hospital.management.entities.response.CitySearchResult;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,8 +15,10 @@ import java.util.Optional;
 
 @Repository
 public interface CityRepo extends JpaRepository<City, Long> {
-    @Query(value = "SELECT * FROM master_city c WHERE c.status = 0", nativeQuery = true)
-    List<City> findAllCities();
+    @Query(value = "SELECT * FROM master_city WHERE CITY_CODE like %?1% OR CITY_NAME like %?1% " +
+            "AND status = 0 ORDER BY ?#{#pageable}",
+            nativeQuery = true)
+    Page<City> findAllCities(String search, Pageable pageable);
 
     Optional<City> findByCityIdAndStatus(Long cityId, Integer status);
 

@@ -1,7 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.City;
-import com.hospital.management.entities.Country;
+import com.hospital.management.entities.response.CitySearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -11,6 +11,10 @@ import com.hospital.management.utils.HmsCommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +32,39 @@ public class CityServiceImpl implements CityService {
 
 
     @Override
-    public List<City> getAllCities() {
+    public CitySearchResult getAllCities(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all cities");
-        return cityRepo.findAllCities();
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<City> pages = cityRepo.findAllCities(search, pageable);
+        return mapToCitySearchResult(pageNo, pageSize, pages.getContent());
     }
+    private CitySearchResult mapToCitySearchResult(int pageNo, int pageSize, List<City> citys) {
+        CitySearchResult citySearchResult = new CitySearchResult();
+        Long totalPages = (long) (citys.size() % pageSize == 0 ? citys.size() / pageSize : citys.size() / pageSize+1);
+        citySearchResult.setMetaData(HmsCommonUtil.getMetaData((long) citys.size(), totalPages, pageNo, pageSize));
+        citySearchResult.setData(citys);
+
+        return citySearchResult;
+    }
+    /*@Override
+    public CountrySearchResult getAllCountries(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
+        LOGGER.info("Fetching all countries");
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Country> pages = countryRepo.findAllCountries(search, pageable);
+
+        return mapToCountrySearchResult(pageNo, pageSize, pages.getContent());
+    }
+
+private CountrySearchResult mapToCountrySearchResult(int pageNo, int pageSize, List<Country> countries) {
+        CountrySearchResult countrySearchResult = new CountrySearchResult();
+        Long totalPages = (long) (countries.size() % pageSize == 0 ? countries.size() / pageSize : countries.size() / pageSize+1);
+        countrySearchResult.setMetaData(HmsCommonUtil.getMetaData((long) countries.size(), totalPages, pageNo, pageSize));
+        countrySearchResult.setData(countries);
+
+        return countrySearchResult;
+}*/
 
     @Override
     public City findCityById(Long cityId) {

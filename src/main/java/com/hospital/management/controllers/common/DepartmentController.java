@@ -1,6 +1,7 @@
 package com.hospital.management.controllers.common;
 
 import com.hospital.management.entities.commom.Department;
+import com.hospital.management.entities.response.DepartmentSearchResult;
 import com.hospital.management.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,11 +20,16 @@ public class DepartmentController {
 
     @GetMapping
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<List<Department>> departmentList() {
-        List<Department> department = departmentService.departmentList();
-        return  ResponseEntity.ok(department);
+    public ResponseEntity<DepartmentSearchResult> departmentList(@RequestParam(name="search") String search,
+                                                                 @RequestParam(defaultValue = "0") int pageNo,
+                                                                 @RequestParam(defaultValue = "50") int pageSize,
+                                                                 @RequestParam(name="sortBy") String sortBy,
+                                                                 @RequestParam(defaultValue = "ASC") String sortOrder ) {
+        DepartmentSearchResult departmentSearchResult = departmentService.departmentList(search, pageNo, pageSize, sortBy, sortOrder);
+        return  ResponseEntity.ok(departmentSearchResult);
 
     }
+
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")

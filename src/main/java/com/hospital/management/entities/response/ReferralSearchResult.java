@@ -1,13 +1,13 @@
 package com.hospital.management.entities.response;
 
-import com.hospital.management.entities.Country;
+import com.hospital.management.entities.admin.Referral;
 import com.hospital.management.entities.commom.MetaData;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class CountrySearchResult {
+public class ReferralSearchResult {
     private MetaData metaData;
-    private List<Country> data;
+    private List<Referral> data;
 }

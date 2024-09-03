@@ -1,6 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.RoomGroup;
+import com.hospital.management.entities.response.RoomGroupSearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -10,6 +11,10 @@ import com.hospital.management.utils.HmsCommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +31,41 @@ public class RoomGroupServiceImpl implements RoomGroupService {
     private RoomGroupRepo roomGroupRepo;
 
     @Override
-    public List<RoomGroup> getAllRoomGroups() {
+    public RoomGroupSearchResult getAllRoomGroups(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all RoomGroups");
-        return roomGroupRepo.findAllRoomGroups();
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<RoomGroup> pages = roomGroupRepo.findAllRoomGroups(search, pageable);
+
+        return mapToRoomGroupSearchResult(pageNo, pageSize, pages.getContent());
     }
+
+    private RoomGroupSearchResult mapToRoomGroupSearchResult(int pageNo, int pageSize, List<RoomGroup> roomGroups) {
+        RoomGroupSearchResult roomGroupSearchResult = new RoomGroupSearchResult();
+        Long totalPages = (long) (roomGroups.size() % pageSize == 0 ? roomGroups.size() / pageSize : roomGroups.size() / pageSize+1);
+        roomGroupSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) roomGroups.size(), totalPages, pageNo, pageSize));
+        roomGroupSearchResult.setData(roomGroups);
+
+        return roomGroupSearchResult;
+    }
+    /*@Override
+    public CountrySearchResult getAllCountries(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
+        LOGGER.info("Fetching all countries");
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Country> pages = countryRepo.findAllCountries(search, pageable);
+
+        return mapToCountrySearchResult(pageNo, pageSize, pages.getContent());
+    }
+
+private CountrySearchResult mapToCountrySearchResult(int pageNo, int pageSize, List<Country> countries) {
+        CountrySearchResult countrySearchResult = new CountrySearchResult();
+        Long totalPages = (long) (countries.size() % pageSize == 0 ? countries.size() / pageSize : countries.size() / pageSize+1);
+        countrySearchResult.setMetaData(HmsCommonUtil.getMetaData((long) countries.size(), totalPages, pageNo, pageSize));
+        countrySearchResult.setData(countries);
+
+        return countrySearchResult;
+}*/
 
     @Override
     public RoomGroup findRoomGroupById(Long roomGroupId) {

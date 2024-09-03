@@ -1,18 +1,21 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.commom.ServiceGroup;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface ServiceGroupRepo extends JpaRepository<ServiceGroup, Long> {
 
-    @Query(value = "SELECT * FROM service_group sg WHERE sg.status = 0", nativeQuery = true)
-    List<ServiceGroup> findAllServiceGroups();
+    @Query(value = "SELECT * FROM service_group WHERE service_group_code like %?1% OR service_group_name like %?1% " +
+            "AND status = 0 ORDER BY ?#{#pageable}",
+            nativeQuery = true)
+    Page<ServiceGroup> findAllServiceGroups(String search, Pageable pageable);
 
     Optional<ServiceGroup> findByServiceGroupIdAndStatus(Long serviceGroupId, Integer status);
 

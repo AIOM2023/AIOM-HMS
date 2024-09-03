@@ -1,13 +1,12 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.commom.ServiceGroup;
+import com.hospital.management.entities.response.ServiceGroupSearchResult;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 public interface ServiceGroupService {
 
-    List<ServiceGroup> getAllServiceGroups();
+    ServiceGroupSearchResult getAllServiceGroups(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
     ServiceGroup findServiceGroupById(Long serviceGroupId);
 

@@ -13,7 +13,7 @@ public class NurseStation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "nurse_station_id")
-    private Integer nurseStationId;
+    private Long nurseStationId;
 
     @Column(name= "nurse_station_code")
     private String nurseStationCode;

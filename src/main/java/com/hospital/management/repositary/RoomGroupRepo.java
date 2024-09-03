@@ -1,6 +1,8 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.commom.RoomGroup;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,8 +15,10 @@ import java.util.Optional;
 @Repository
 public interface RoomGroupRepo extends JpaRepository<RoomGroup,Long> {
 
-    @Query(value = "SELECT * FROM room_group rg WHERE rg.status = 0", nativeQuery = true)
-    List<RoomGroup> findAllRoomGroups();
+    @Query(value = "SELECT * FROM room_group WHERE room_group_code like %?1% OR room_group_name like %?1% " +
+            "AND status = 0 ORDER BY ?#{#pageable}",
+            nativeQuery = true)
+    Page<RoomGroup> findAllRoomGroups(String search, Pageable pageable);
 
     Optional<RoomGroup> findByRoomGroupIdAndStatus(Long roomGroupId, Integer status);
 

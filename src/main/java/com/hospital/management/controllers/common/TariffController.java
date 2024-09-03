@@ -2,6 +2,7 @@ package com.hospital.management.controllers.common;
 
 
 import com.hospital.management.entities.commom.Tariff;
+import com.hospital.management.entities.response.TariffSearchResult;
 import com.hospital.management.service.TariffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,11 +20,16 @@ public class TariffController {
     TariffService tariffService;
 
     @GetMapping
-    public ResponseEntity<List<Tariff>> tariffList() {
-        List<Tariff> tariffList = tariffService.tariffList();
-        return  ResponseEntity.ok(tariffList);
+    public ResponseEntity<TariffSearchResult> tariffList(@RequestParam(name="search") String search,
+                                                         @RequestParam(defaultValue = "0") int pageNo,
+                                                         @RequestParam(defaultValue = "50") int pageSize,
+                                                         @RequestParam(name="sortBy") String sortBy,
+                                                         @RequestParam(defaultValue = "ASC") String sortOrder) {
+        TariffSearchResult tariffSearchResult = tariffService.tariffList(search, pageNo, pageSize, sortBy, sortOrder);
+        return  ResponseEntity.ok(tariffSearchResult);
 
     }
+
 
     @GetMapping("/{tariffId}")
     public ResponseEntity<Tariff> getTariffById(@PathVariable("tariffId") Long tariffId) {

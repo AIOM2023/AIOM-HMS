@@ -1,13 +1,13 @@
 package com.hospital.management.entities.response;
 
-import com.hospital.management.entities.commom.Department;
+import com.hospital.management.entities.commom.Branches;
 import com.hospital.management.entities.commom.MetaData;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class DepartmentSearchResult {
+public class BranchesSearchResult {
     private MetaData metaData;
-    private List<Department> data;
+    private List<Branches> data;
 }

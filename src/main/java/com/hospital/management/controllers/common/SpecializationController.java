@@ -1,6 +1,7 @@
 package com.hospital.management.controllers.common;
 
 import com.hospital.management.entities.commom.Specialization;
+import com.hospital.management.entities.response.SpecializationSearchResult;
 import com.hospital.management.service.SpecializationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,24 @@ public class SpecializationController {
     private SpecializationService specializationService;
 
     @GetMapping
-    public ResponseEntity<List<Specialization>> getAllSpecializations() {
-        List<Specialization> specializations = specializationService.getAllSpecializations();
-        return  ResponseEntity.ok(specializations);
+    public ResponseEntity<SpecializationSearchResult> getAllSpecializations(@RequestParam(name="search") String search,
+                                                                            @RequestParam(defaultValue = "0") int pageNo,
+                                                                            @RequestParam(defaultValue = "50") int pageSize,
+                                                                            @RequestParam(name="sortBy") String sortBy,
+                                                                            @RequestParam(defaultValue = "ASC") String sortOrder) {
+        SpecializationSearchResult specializationSearchResult = specializationService.getAllSpecializations(search, pageNo, pageSize, sortBy, sortOrder);
+        return  ResponseEntity.ok(specializationSearchResult);
     }
+    /*@GetMapping
+    public ResponseEntity<CountrySearchResult> getAllCountries(
+            @RequestParam(name="search") String search,
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "50") int pageSize,
+            @RequestParam(name="sortBy") String sortBy,
+            @RequestParam(defaultValue = "ASC") String sortOrder ) {
+        CountrySearchResult countrySearchResult = countryService.getAllCountries(search, pageNo, pageSize, sortBy, sortOrder);
+        return ResponseEntity.ok(countrySearchResult);
+    }*/
 
     @GetMapping("/{specializationId}")
     public ResponseEntity<Specialization> getSpecializationById(@PathVariable("specializationId") Long specializationId) {

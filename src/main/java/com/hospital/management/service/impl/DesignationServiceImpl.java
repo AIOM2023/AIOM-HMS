@@ -1,16 +1,21 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.Designation;
+import com.hospital.management.entities.response.DesignationSearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
+import com.hospital.management.payload.ErrorResponse;
 import com.hospital.management.repositary.DesignationRepo;
 import com.hospital.management.service.DesignationService;
 import com.hospital.management.utils.HmsCommonUtil;
-import com.hospital.management.payload.ErrorResponse;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +31,8 @@ public class DesignationServiceImpl implements DesignationService {
     @Override
     public Designation saveDesignation(Designation designation) {
         LOGGER.info("Creating a new HowDid");
+       // Long maxId = designationRepo.getMaxId();
+
         designation.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         designation.setCreatedBy("System");
         designation.setStatus(0);
@@ -33,7 +40,7 @@ public class DesignationServiceImpl implements DesignationService {
     }
 
     @Override
-    public Designation updateDesignation(Designation designation,Integer designationId) {
+    public Designation updateDesignation(Designation designation,Long designationId) {
         LOGGER.info("Updating an existing Designation");
         if(!isDesignationExist(designationId)) {
             LOGGER.error("update() - Designation not found with the given Id: {} ", designationId);
@@ -45,14 +52,24 @@ public class DesignationServiceImpl implements DesignationService {
     }
 
     @Override
-    public List<Designation> designationList() {
+    public DesignationSearchResult designationList(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all DesignationList");
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Designation>  designationPages = designationRepo.findAllDesignations(search, pageable);
+        return mapToDesignationSearchResult(pageNo, pageSize, designationPages.getContent());
+    }
+    private DesignationSearchResult mapToDesignationSearchResult(int pageNo, int pageSize, List<Designation> designations) {
+        DesignationSearchResult designationSearchResult = new DesignationSearchResult();
+        Long totalPages = (long) (designations.size() % pageSize == 0 ? designations.size() / pageSize : designations.size() / pageSize + 1);
+        designationSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) designations.size(), totalPages, pageNo, pageSize));
+        designationSearchResult.setData(designations);
 
-        return designationRepo.findAllDesignation();
+        return designationSearchResult;
     }
 
     @Override
-    public Designation findDesignationById(Integer designationId) {
+    public Designation findDesignationById(Long designationId) {
         LOGGER.info("Fetching howDidId by id");
         Optional<Designation> designation = designationRepo.findByDesignationIdAndStatus(designationId, 0);
         return designation.orElseThrow(() ->
@@ -61,7 +78,7 @@ public class DesignationServiceImpl implements DesignationService {
 
     @Transactional
     @Override
-    public String deleteDesignationById(Integer designationId) {
+    public String deleteDesignationById(Long designationId) {
         if(!isDesignationExist(designationId)) {
             LOGGER.error("deleteDesignationById() - Designation not found with the given Id: {} ", designationId);
             throw new ResourceNotFoundException(String.format("Designation not found with the given Id: %s", designationId));
@@ -77,7 +94,7 @@ public class DesignationServiceImpl implements DesignationService {
         return "Designation deleted successfully!";
     }
 
-    private boolean isDesignationExist(Integer designationId){
+    private boolean isDesignationExist(Long designationId){
         return designationRepo.findByDesignationIdAndStatus(designationId, 0).isPresent();
     }
 

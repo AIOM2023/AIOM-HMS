@@ -1,14 +1,13 @@
 package com.hospital.management.controllers;
 
 import com.hospital.management.entities.City;
+import com.hospital.management.entities.response.CitySearchResult;
 import com.hospital.management.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/city")
@@ -19,9 +18,13 @@ public class CityController {
 
     @GetMapping
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<List<City>> getAllCities() {
-        List<City> cities = cityService.getAllCities();
-        return ResponseEntity.ok(cities);
+    public ResponseEntity<CitySearchResult> getAllCities(@RequestParam(name="search") String search,
+                                                         @RequestParam(defaultValue = "0") int pageNo,
+                                                         @RequestParam(defaultValue = "50") int pageSize,
+                                                         @RequestParam(name="sortBy") String sortBy,
+                                                         @RequestParam(defaultValue = "ASC") String sortOrder ) {
+        CitySearchResult citySearchResult = cityService.getAllCities(search, pageNo, pageSize, sortBy, sortOrder);
+        return ResponseEntity.ok(citySearchResult);
     }
 
     @GetMapping("/{cityId}")

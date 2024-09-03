@@ -1,14 +1,20 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.DischargeFormat;
+import com.hospital.management.entities.response.DischargeFormatSearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
 import com.hospital.management.repositary.DischargeFormatRepo;
+import com.hospital.management.utils.HmsCommonUtil;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +24,7 @@ import java.util.Optional;
 @Service
 public class DischargeFormatImpl implements DischargeFormatService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DischargeFormatImpl.class);
-    private static final String REFERRAL_NOT_FOUND = "DischargeSummary not found with the given Id: %s";
+    private static final String REFERRAL_NOT_FOUND = "DischargeFormat not found with the given Id: %s";
     @Autowired
     DischargeFormatRepo dischargeFormatRepo;
 
@@ -28,16 +34,13 @@ public class DischargeFormatImpl implements DischargeFormatService {
 
         Long maxId = dischargeFormatRepo.getMaxId();
         dischargeFormat.setDisfmtCode("DF-"+(maxId == null ? 1 : maxId+1));
-
+        dischargeFormat.setCreatedBy("System");
+        dischargeFormat.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         dischargeFormat.setStatus(0);
         return dischargeFormatRepo.save(dischargeFormat);
     }
 
-  /*  @Override
-    public void save(DischargeSummary dischargeSummary) {
-        dischargeSummaryRepo.save(dischargeSummary);
-    }
-*/
+
     @Override
     public DischargeFormat updateDischargeFormat(DischargeFormat dischargeFormat,Long discFmtId) {
         LOGGER.info("Updating an existing DischargeFormat");
@@ -46,15 +49,27 @@ public class DischargeFormatImpl implements DischargeFormatService {
             throw new ResourceNotFoundException(String.format(REFERRAL_NOT_FOUND, discFmtId));
         }
         dischargeFormat.setModifiedBy("System");
-       // dischargeSummary.setModifiedDate();
+        dischargeFormat.setModifiedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         return dischargeFormatRepo.save(dischargeFormat);
     }
 
     @Override
-    public List<DischargeFormat> dischargeFormatList() {
+    public DischargeFormatSearchResult dischargeFormatList(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("find all dischargeFormat List");
-        return dischargeFormatRepo.findAll();
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<DischargeFormat> dischargeFormatPages = dischargeFormatRepo.findAllDischargeFormat(search, pageable);
+        return mapToDischargeFormatSearchResult(pageNo, pageSize, dischargeFormatPages.getContent());
     }
+    private DischargeFormatSearchResult mapToDischargeFormatSearchResult(int pageNo, int pageSize, List<DischargeFormat> dischargeFormat) {
+        DischargeFormatSearchResult dischargeFormatSearchResult = new DischargeFormatSearchResult();
+        Long totalPages = (long) (dischargeFormat.size() % pageSize == 0 ? dischargeFormat.size() / pageSize : dischargeFormat.size() / pageSize+1);
+        dischargeFormatSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) dischargeFormat.size(), totalPages, pageNo, pageSize));
+        dischargeFormatSearchResult.setData(dischargeFormat);
+
+        return dischargeFormatSearchResult;
+    }
+
     @Override
     public DischargeFormat findDischargeFromatById(Long discFmtId) {
         LOGGER.info("Fetching DischargeFormat by id");

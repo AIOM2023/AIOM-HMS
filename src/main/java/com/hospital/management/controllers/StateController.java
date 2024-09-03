@@ -2,6 +2,7 @@ package com.hospital.management.controllers;
 
 import com.hospital.management.entities.Country;
 import com.hospital.management.entities.State;
+import com.hospital.management.entities.response.StateSearchResult;
 import com.hospital.management.repositary.StateRepo;
 import com.hospital.management.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,13 @@ public class StateController {
 
     @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping
-    public ResponseEntity<List<State>> getAllStates() {
-        List<State> states = stateService.getAllStates();
-        return ResponseEntity.ok(states);
+    public ResponseEntity<StateSearchResult> getAllStates( @RequestParam(name="search") String search,
+                                                           @RequestParam(defaultValue = "0") int pageNo,
+                                                           @RequestParam(defaultValue = "50") int pageSize,
+                                                           @RequestParam(name="sortBy") String sortBy,
+                                                           @RequestParam(defaultValue = "ASC") String sortOrder ) {
+        StateSearchResult stateSearchResult = stateService.getAllStates(search, pageNo, pageSize, sortBy, sortOrder);
+        return ResponseEntity.ok(stateSearchResult);
     }
 
     @GetMapping("/{stateId}")

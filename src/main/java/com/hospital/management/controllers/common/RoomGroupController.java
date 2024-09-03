@@ -1,6 +1,7 @@
 package com.hospital.management.controllers.common;
 
 import com.hospital.management.entities.commom.RoomGroup;
+import com.hospital.management.entities.response.RoomGroupSearchResult;
 import com.hospital.management.service.RoomGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,13 @@ public class RoomGroupController {
     RoomGroupService roomGroupService;
 
     @GetMapping
-    public ResponseEntity<List<RoomGroup>> getAllRoomGroups() {
-        List<RoomGroup> roomGroups = roomGroupService.getAllRoomGroups();
-        return  ResponseEntity.ok(roomGroups);
+    public ResponseEntity<RoomGroupSearchResult> getAllRoomGroups( @RequestParam(name="search") String search,
+                                                                   @RequestParam(defaultValue = "0") int pageNo,
+                                                                   @RequestParam(defaultValue = "50") int pageSize,
+                                                                   @RequestParam(name="sortBy") String sortBy,
+                                                                   @RequestParam(defaultValue = "ASC") String sortOrder ) {
+        RoomGroupSearchResult roomGroupSearchResult = roomGroupService.getAllRoomGroups(search, pageNo, pageSize, sortBy, sortOrder);
+        return  ResponseEntity.ok(roomGroupSearchResult);
     }
 
     @GetMapping("/{roomGroupId}")

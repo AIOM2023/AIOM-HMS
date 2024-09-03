@@ -1,6 +1,8 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.commom.Branches;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +25,8 @@ public interface BranchesRepo extends JpaRepository<Branches, Integer > {
 
     @Query(value = "SELECT max(branche_id) FROM branches", nativeQuery = true)
     Long getMaxId();
+    @Query(value = "SELECT * FROM branches WHERE branche_code like %?1% OR branche_name like %?1% " +
+            "AND status = 0 ORDER BY ?#{#pageable}",
+            nativeQuery = true)
+    Page<Branches> findAllBranches(String search, Pageable pageable);
 }

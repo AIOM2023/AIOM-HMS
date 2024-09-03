@@ -14,7 +14,7 @@ public class SystemParametersMain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "params_main_id")
-    private Integer paramsMainId;
+    private Long paramsMainId;
 
     @Column(name= "param_name",unique = true)
     @NotNull(message = "paramName is mandatory")

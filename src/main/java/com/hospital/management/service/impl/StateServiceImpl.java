@@ -98,6 +98,12 @@ private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, List<
         return "State deleted successfully!";
     }
 
+    @Override
+    public List<String> getAllStateNames(String countryName) {
+        LOGGER.info("Fetching All state names");
+        return stateRepo.findAllStateNames(countryName);
+    }
+
     private boolean isSateExist(Long stateId){
         return stateRepo.findByStateIdAndStatus(stateId, 0).isPresent();
     }

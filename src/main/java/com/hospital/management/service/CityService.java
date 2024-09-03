@@ -1,11 +1,13 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.City;
-import com.hospital.management.entities.response.CitySearchResult;
+import com.hospital.management.entities.Country;
+
+import java.util.List;
 
 public interface CityService {
 
-    CitySearchResult getAllCities(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
+    List<City> getAllCities();
 
     City findCityById(Long cityId);
 

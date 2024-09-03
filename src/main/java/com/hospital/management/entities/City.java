@@ -27,6 +27,9 @@ public class City {
     @Column(name= "STATE_NAME")
     private String stateName;
 
+    @Column(name= "DISTRICT_NAME")
+    private String districtName;
+
     private Integer status;
 
     @Column(name="created_by")

@@ -1,6 +1,5 @@
 package com.hospital.management.service;
 
-import com.hospital.management.entities.City;
 import com.hospital.management.entities.District;
 
 import java.util.List;
@@ -15,4 +14,7 @@ public interface DistrictService {
     District updateDistrict(District district, Long districtId);
 
     String deleteDistrictById(Long districtId);
+
+    List<String> getAllDistrictNames(String stateName);
+
 }

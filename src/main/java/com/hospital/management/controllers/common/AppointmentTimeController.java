@@ -18,14 +18,12 @@ public class AppointmentTimeController {
     InsuranceCompService insuranceCompService;
 
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:8080")
     public ResponseEntity<List<InsuranceComp>> systemParamsList() {
         List<InsuranceComp> insuranceCompList = insuranceCompService.insuranceCompList();
         return  ResponseEntity.ok(insuranceCompList);
 
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
     public ResponseEntity<InsuranceComp> saveInsuranceComp(@RequestBody @Validated InsuranceComp insuranceComp){
         insuranceCompService.saveInsuranceComp(insuranceComp);
@@ -33,7 +31,6 @@ public class AppointmentTimeController {
     }
 
 
-    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/update")
     public ResponseEntity<InsuranceComp> updateAuthorization(@RequestBody @Validated InsuranceComp insuranceComp,@PathVariable("insComId") Long insComId){
         insuranceCompService.updateInsuranceComp(insuranceComp,insComId);

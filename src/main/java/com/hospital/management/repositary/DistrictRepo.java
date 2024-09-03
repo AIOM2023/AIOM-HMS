@@ -24,4 +24,7 @@ public interface DistrictRepo extends JpaRepository<District, Long> {
 
     @Query(value = "SELECT max(district_id) FROM master_district", nativeQuery = true)
     Long getMaxId();
+
+    @Query(value = "SELECT district_name FROM master_district WHERE state_name = :stateName", nativeQuery = true)
+    List<String> findAllDistrictNames(String stateName);
 }

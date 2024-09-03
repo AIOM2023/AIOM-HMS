@@ -25,4 +25,7 @@ public interface StateRepo extends JpaRepository<State, Long> {
 
     @Query(value = "SELECT max(STATE_ID) FROM master_state", nativeQuery = true)
     Long getMaxId();
+
+    @Query(value = "SELECT STATE_NAME FROM master_state WHERE COUNTRY_NAME = :countryName", nativeQuery = true)
+    List<String> findAllStateNames(String countryName);
 }

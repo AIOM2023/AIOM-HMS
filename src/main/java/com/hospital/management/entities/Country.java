@@ -37,4 +37,7 @@ public class Country {
     @Column(name="modified_date")
     private OffsetDateTime modifiedDate;
 
+    @Column(name="country_phone_code")
+    private String  countryPhoneCode;
+
 }

@@ -15,4 +15,6 @@ public interface StateService {
 
     String deleteStateById(Long stateId);
 
+    List<String> getAllStateNames(String countryName);
+
 }

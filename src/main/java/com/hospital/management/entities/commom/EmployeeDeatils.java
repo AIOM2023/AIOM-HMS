@@ -2,10 +2,8 @@ package com.hospital.management.entities.commom;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
-import java.util.Date;
 
 @Data
 @Entity
@@ -15,59 +13,55 @@ public class EmployeeDeatils {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "employee_id")
-    private Long employee_id;
+    private Long employeeId;
 
     @Column(name= "employee_code")
     private Integer employeeCode;
-
-    @Column(name="pf_no")
-    private String pfNo;
-
-    @Column(name="pay_mode")
-    private String paymentMode;
-
-    @Column(name="ledger_no")
-    private String ledgerNo;
-
-    @Column(name="probation_dt")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date probationDt;
-
-    @Column(name="permanent_on_date")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date permanentOnDate;
-
-    @Column(name="relieve_on_date")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date relieveOnDate;
-
-    @Column(name="resigned_dt")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date resignedDt;
-
-    @Column(name="pan_number")
-    private String panNumber;
-
-    @Column(name="blood_group")
-    private String bloodGroup;
-
-    @Column(name="gender")
-    private String gender;
-
-    @Column(name="religion")
-    private String religion;
-
-    @Column(name="civil_status")
-    private String civilStatus;
 
     @Column(name="department")
     private String department;
 
     @Column(name="designation")
-    private String  designation;
+    private String designation;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name ="personal_info_id")
+    private PersonalInformation personalInformation;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private FinancialDetails financialDetails;
+
+
+    @Column(name="employment_type")
+    private String employmentType;
+
+    @Column(name="prohibition_dt")
+   // @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private OffsetDateTime prohibitionDt;
+
+    @Column(name="permanent_on_date")
+  //  @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private OffsetDateTime permanentOnDate;
+
+    @Column(name="relieve_on_date")
+ //   @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private OffsetDateTime relieveOnDate;
+
+    @Column(name="resigned_dt")
+  //  @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private OffsetDateTime resignedDt;
 
     @Column(name="user_role")
     private String userRole;
+
+    @Column(name="user_name")
+    private String userName;
+
+    @Column(name="password")
+    private String password;
+
+    @Column(name="profile_pic")
+    private String profilePic;
 
     @Column(name="created_date")
     private OffsetDateTime createdDate;
@@ -81,6 +75,7 @@ public class EmployeeDeatils {
     @Column(name="modified_by")
     private String  modifiedBy;
 
-   @Column(name= "status")
+    @Column(name= "status")
     private Integer status;
+
 }

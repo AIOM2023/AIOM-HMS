@@ -18,9 +18,6 @@ public class RegistrationFees {
     @Column(name= "reg_fee_code")
     private String regFeeCode;
 
-    @Column(name= "reg_fees_name")
-    private String regFeesName;
-
     @Column(name= "reg_fees")
     private float regFees;
 
@@ -30,8 +27,6 @@ public class RegistrationFees {
     @Column(name= "reg_valid_to")
     private OffsetDateTime regValidTo;
 
-    @Column(name= "reg_fees_desc")
-    private String regFeesDesc;
 
     @Column(name= "created_date")
     private OffsetDateTime createdDate;

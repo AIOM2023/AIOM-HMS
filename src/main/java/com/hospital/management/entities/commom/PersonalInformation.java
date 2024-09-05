@@ -2,26 +2,20 @@ package com.hospital.management.entities.commom;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
-import java.util.Date;
 
 @Data
 @Entity
 @Table(name= "personal_information")
 public class PersonalInformation {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name= "employee_id")
-    private Long employee_id;
+    @Column(name= "personal_info_id")
+    private Long personalInfoId;
 
-    @Column(name= "employee_code")
-    private Integer employeeCode;
-
-    @Column(name="tittle")
-    private String tittle;
+    @Column(name="first_name")
+    private String firstName;
 
     @Column(name="last_name")
     private String lastNmae;
@@ -29,22 +23,16 @@ public class PersonalInformation {
     @Column(name="middle_name")
     private String middleName;
 
-    @Column(name="father_name")
-    private String fatherName;
+    @Column(name="id_type")
+    private String idType;
 
-    @Column(name="employee_type")
-    private String employeeType;
+    @Column(name="id_number")
+    private String idNumber;
 
     @Column(name="date_of_birth")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date dateOfBirth;
+   // @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private OffsetDateTime dateOfBirth;
 
-    @Column(name="date_of_join")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date dateOfJoin;
-
-    @Column(name="birth_place")
-    private String birthPlace;
 
     @Column(name="blood_group")
     private String bloodGroup;
@@ -55,19 +43,22 @@ public class PersonalInformation {
     @Column(name="religion")
     private String religion;
 
-    @Column(name="civil_status")
-    private String civilStatus;
+    @Column(name="martial_status")
+    private String martialStatus;
 
-    @Column(name="department")
-    private String department;
+    @Column(name="email_id")
+    private String emailId;
 
-    @Column(name="designation")
-    private String  designation;
+    @Column(name="country")
+    private String  country;
 
-    @Column(name="user_role")
-    private String userRole;
+    @Column(name="state")
+    private String state;
 
-    @Column(name="created_date")
+    @Column(name="city")
+    private String city;
+
+    @Column(name="create_dDate")
     private OffsetDateTime createdDate;
 
     @Column(name="created_by")

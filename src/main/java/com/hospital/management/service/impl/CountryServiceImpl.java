@@ -33,11 +33,12 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public CountrySearchResult getAllCountries(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all countries");
+        int actualPage = pageNo - 1; // Pages in Spring Data start from 0
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Pageable pageable = PageRequest.of(actualPage, pageSize,sort);
         Page<Country> pages = countryRepo.findAllCountries(search, pageable);
 
-        return mapToCountrySearchResult(pageNo, pageSize, pages.getContent());
+        return mapToCountrySearchResult(pageNo, pageSize,pages);
     }
 
     @Override
@@ -96,12 +97,10 @@ public class CountryServiceImpl implements CountryService {
         return countryRepo.findByCountryIdAndStatus(countryId, 0).isPresent();
     }
 
-    private CountrySearchResult mapToCountrySearchResult(int pageNo, int pageSize, List<Country> countries) {
+    private CountrySearchResult mapToCountrySearchResult(int pageNo, int pageSize,Page<Country> pages) {
         CountrySearchResult countrySearchResult = new CountrySearchResult();
-        Long totalPages = (long) (countries.size() % pageSize == 0 ? countries.size() / pageSize : countries.size() / pageSize+1);
-        countrySearchResult.setMetaData(HmsCommonUtil.getMetaData((long) countries.size(), totalPages, pageNo, pageSize));
-        countrySearchResult.setData(countries);
-
+        countrySearchResult.setMetaData(HmsCommonUtil.getMetaData((long) pages.getTotalElements(), (long) pages.getTotalPages(), pageNo, pageSize));
+        countrySearchResult.setData(pages.getContent());
         return countrySearchResult;
     }
 }

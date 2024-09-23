@@ -27,7 +27,7 @@ public class CountryController {
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "50") int pageSize,
             @RequestParam(name="sortBy") String sortBy,
-            @RequestParam(defaultValue = "ASC") String sortOrder ) {
+            @RequestParam(defaultValue = "DESC") String sortOrder ) {
         CountrySearchResult countrySearchResult = countryService.getAllCountries(search, pageNo, pageSize, sortBy, sortOrder);
         return ResponseEntity.ok(countrySearchResult);
     }

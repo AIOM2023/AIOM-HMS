@@ -30,7 +30,6 @@ public class PersonalInformation {
     private String idNumber;
 
     @Column(name="date_of_birth")
-   // @DateTimeFormat(pattern = "dd/MM/yyyy")
     private OffsetDateTime dateOfBirth;
 
 
@@ -58,7 +57,7 @@ public class PersonalInformation {
     @Column(name="city")
     private String city;
 
-    @Column(name="create_dDate")
+    @Column(name="create_date")
     private OffsetDateTime createdDate;
 
     @Column(name="created_by")

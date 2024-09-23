@@ -39,4 +39,7 @@ public class Tariff {
 
     @Column(name="modified_by")
     private String  modifiedBy;
+
+    @Column(name="tariff_color")
+    private String  tariffColor;
 }

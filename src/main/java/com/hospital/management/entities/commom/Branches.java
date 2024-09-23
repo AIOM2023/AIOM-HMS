@@ -39,5 +39,19 @@ public class Branches {
     @Column(name= "status")
     private Integer status;
 
+    @Column(name= "country")
+    private String country;
+
+    @Column(name= "state")
+    private String state;
+
+    @Column(name= "city")
+    private String city;
+
+    @Column(name= "pin_code")
+    private String pinCode;
+
+    @Column(name= "district")
+    private String district;
 
 }

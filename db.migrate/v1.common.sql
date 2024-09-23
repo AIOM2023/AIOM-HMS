@@ -30,7 +30,7 @@ CREATE TABLE `common_authorization` (
 
 CREATE TABLE `common_system_parameters` (
   `param_id` int NOT NULL AUTO_INCREMENT,
-  `params_main_id` int NOT NULL,
+  `params_main_id` bigint NOT NULL,
   `comm_code` varchar(50) NOT NULL,
   `comm_value` varchar(50) NOT NULL,
   `comm_desc` varchar(150) NOT NULL,
@@ -556,7 +556,7 @@ CREATE TABLE `patient_appointment` (
 
 CREATE TABLE `system_pages` (
   `system_pages_id` int NOT NULL AUTO_INCREMENT,
-  `params_main_id` int NOT NULL,
+  `params_main_id` bigint NOT NULL,
   `page_module` varchar(50) NOT NULL,
   `page_name` varchar(50) NOT NULL,
   `page_link` varchar(150) NOT NULL,

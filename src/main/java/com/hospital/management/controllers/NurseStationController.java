@@ -31,7 +31,7 @@ public class NurseStationController {
                                                                               @RequestParam(defaultValue = "0") int pageNo,
                                                                               @RequestParam(defaultValue = "50") int pageSize,
                                                                               @RequestParam(name="sortBy") String sortBy,
-                                                                              @RequestParam(defaultValue = "ASC") String sortOrder ) {
+                                                                              @RequestParam(defaultValue = "DESC") String sortOrder ) {
         NurseStationSearchResult nurseStationSearchResult = nurseStationService.getAllNurseStation(search, pageNo, pageSize, sortBy, sortOrder);
         return ResponseEntity.ok(nurseStationSearchResult);
 

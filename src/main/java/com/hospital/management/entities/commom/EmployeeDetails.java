@@ -7,8 +7,8 @@ import java.time.OffsetDateTime;
 
 @Data
 @Entity
-@Table(name= "employee_deatils")
-public class EmployeeDeatils {
+@Table(name= "employee_details")
+public class EmployeeDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +16,7 @@ public class EmployeeDeatils {
     private Long employeeId;
 
     @Column(name= "employee_code")
-    private Integer employeeCode;
+    private String employeeCode;
 
     @Column(name="department")
     private String department;
@@ -29,6 +29,7 @@ public class EmployeeDeatils {
     private PersonalInformation personalInformation;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name ="financial_id")
     private FinancialDetails financialDetails;
 
 

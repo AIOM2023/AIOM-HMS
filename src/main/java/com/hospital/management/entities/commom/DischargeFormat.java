@@ -39,12 +39,6 @@ public class DischargeFormat {
     @Column(name="modified_by")
     private String  modifiedBy;
 
-    @Column(name="createdID")
-    private String  createdID;
-
-    @Column(name="modifiedID")
-    private String  modifiedID;
-
    @Column(name= "status")
     private Integer status;
 }

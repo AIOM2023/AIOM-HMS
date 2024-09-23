@@ -37,19 +37,31 @@ public class NurseStationServiceImpl implements NurseStationService {
     @Override
     public NurseStationSearchResult getAllNurseStation(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all NurseStatioms");
+        int actualPage = pageNo - 1;
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Pageable pageable = PageRequest.of(actualPage, pageSize, sort);
         Page<NurseStation> nurseStationPages = nurseStationRepo.findAllNurseStations(search, pageable);
 
-        return mapToNurseStationSearchResult(pageNo, pageSize, nurseStationPages.getContent());
+        return mapToNurseStationSearchResult(pageNo, pageSize, nurseStationPages);
+        /*LOGGER.info("Fetching all countries");
+        int actualPage = pageNo - 1; // Pages in Spring Data start from 0
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(actualPage, pageSize,sort);
+        Page<Country> pages = countryRepo.findAllCountries(search, pageable);
+
+        return mapToCountrySearchResult(pageNo, pageSize,pages);*/
     }
-    private NurseStationSearchResult mapToNurseStationSearchResult(int pageNo, int pageSize, List<NurseStation> nurseStations) {
+    private NurseStationSearchResult mapToNurseStationSearchResult(int pageNo, int pageSize, Page<NurseStation> nurseStations) {
         NurseStationSearchResult nurseStationSearchResult = new NurseStationSearchResult();
-        Long totalPages = (long) (nurseStations.size() % pageSize == 0 ? nurseStations.size() / pageSize : nurseStations.size() / pageSize+1);
-        nurseStationSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) nurseStations.size(), totalPages, pageNo, pageSize));
-        nurseStationSearchResult.setData(nurseStations);
+        nurseStationSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) nurseStations.getTotalElements(), (long) nurseStations.getTotalPages(), pageNo, pageSize));
+
+       // Long totalPages = (long) (nurseStations.size() % pageSize == 0 ? nurseStations.size() / pageSize : nurseStations.size() / pageSize+1);
+     //   nurseStationSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) nurseStations.size(), totalPages, pageNo, pageSize));
+        nurseStationSearchResult.setData(nurseStations.getContent());
 
         return nurseStationSearchResult;
+
+
     }
 
     @Override

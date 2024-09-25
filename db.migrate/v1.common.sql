@@ -415,10 +415,7 @@ CREATE TABLE service_charge (
   created_by varchar(155) NOT NULL,
   modified_date datetime NOT NULL,
   modified_by varchar(155) NOT NULL,
-  created_id varchar(30) NOT NULL,
-  modified_id varchar(30) NOT NULL,
-  del_service_request int NOT NULL,
-  in_active int NOT NULL
+  status int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE corp_quick_entry (

@@ -54,4 +54,7 @@ public class Branches {
     @Column(name= "district")
     private String district;
 
+    @Column(name= "street")
+    private String street;
+
 }

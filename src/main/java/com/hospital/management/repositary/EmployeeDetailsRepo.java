@@ -12,10 +12,17 @@ import java.util.Optional;
 
 public interface EmployeeDetailsRepo extends JpaRepository<EmployeeDetails, Integer > {
 
-    @Query(value = "SELECT * FROM employee_details WHERE employee_code like %?1% OR employment_type like %?1% " +
+   /* @Query(value = "SELECT * FROM employee_details WHERE employee_code like %?1% OR employment_type like %?1% " +
             "AND status = 0 ORDER BY ?#{#pageable}",
-            nativeQuery = true)
+            nativeQuery = true)*/
+   @Query("SELECT c FROM EmployeeDetails c WHERE (c.employeeCode LIKE CONCAT('%', ?1, '%') OR c.employmentType LIKE CONCAT('%', ?1, '%')) AND c.status = 0")
     Page<EmployeeDetails> findAllEmployeeDetails(String search, Pageable pageable);
+
+
+
+
+
+
 
     Optional<EmployeeDetails> findByEmployeeIdAndStatus(Long employeeId, Integer status);
 

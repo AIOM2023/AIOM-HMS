@@ -6,6 +6,7 @@ import com.hospital.management.entities.commom.NurseStation;
 import com.hospital.management.entities.response.NurseStationSearchResult;
 import com.hospital.management.repositary.NurseStationRepo;
 
+import com.hospital.management.service.NurseStationService;
 import com.hospital.management.service.impl.NurseStationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ import java.util.List;
 public class NurseStationController {
 
     @Autowired
-    private NurseStationServiceImpl nurseStationService;
+    private NurseStationService nurseStationService;
 
     @Autowired
     NurseStationRepo nurseStationRepo;

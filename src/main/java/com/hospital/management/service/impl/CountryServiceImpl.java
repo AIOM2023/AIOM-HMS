@@ -53,8 +53,7 @@ public class CountryServiceImpl implements CountryService {
         LOGGER.info("Creating a new country");
 
         Long maxId = countryRepo.getMaxId();
-        country.setCountryCode(HmsCommonUtil.getCountryCodeFromName(country.getCountryName())
-                +(maxId == null ? 1 : maxId+1));
+        country.setCountryCode(HmsCommonUtil.getCountryCodeFromName(country.getCountryName()));
 
         country.setCreatedBy("System");
         country.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());

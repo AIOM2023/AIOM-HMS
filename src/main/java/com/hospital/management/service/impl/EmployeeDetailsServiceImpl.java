@@ -32,13 +32,15 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService {
 
     @Override
     public EmployeeDetailsSearchResult getAllEmployeeDetails(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
-        LOGGER.info("Fetching all countries");
+        LOGGER.info("Fetching all Employee");
+        int actualPage = pageNo - 1;
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Pageable pageable = PageRequest.of(actualPage, pageSize, sort);
         Page<EmployeeDetails> pages = employeeDetailsRepo.findAllEmployeeDetails(search, pageable);
 
-        return mapToEmployeeDetailsSearchResult(pageNo, pageSize, pages.getContent());
+        return mapToEmployeeDetailsSearchResult(pageNo, pageSize, pages);
     }
+
 
     @Override
     public EmployeeDetails findEmployeeDetailsById(Long employeeId) {
@@ -95,12 +97,13 @@ public class EmployeeDetailsServiceImpl implements EmployeeDetailsService {
         return employeeDetailsRepo.findByEmployeeIdAndStatus(employeeId, 0).isPresent();
     }
 
-    private EmployeeDetailsSearchResult mapToEmployeeDetailsSearchResult (int pageNo, int pageSize, List<EmployeeDetails> employeeDetails) {
+    private EmployeeDetailsSearchResult mapToEmployeeDetailsSearchResult (int pageNo, int pageSize, Page<EmployeeDetails> employeeDetails) {
         EmployeeDetailsSearchResult employeeDetailsSearchResult = new EmployeeDetailsSearchResult();
-        Long totalPages = (long) (employeeDetails.size() % pageSize == 0 ? employeeDetails.size() / pageSize : employeeDetails.size() / pageSize+1);
-        employeeDetailsSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) employeeDetails.size(), totalPages, pageNo, pageSize));
-        employeeDetailsSearchResult.setData(employeeDetails);
+       // Long totalPages = (long) (employeeDetails.size() % pageSize == 0 ? employeeDetails.size() / pageSize : employeeDetails.size() / pageSize+1);
+        employeeDetailsSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) employeeDetails.getTotalElements(), (long) employeeDetails.getTotalPages(), pageNo, pageSize));
+        employeeDetailsSearchResult.setData(employeeDetails.getContent());
 
         return employeeDetailsSearchResult;
     }
+
 }

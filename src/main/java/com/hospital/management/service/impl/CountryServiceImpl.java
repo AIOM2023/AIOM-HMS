@@ -54,7 +54,7 @@ public class CountryServiceImpl implements CountryService {
     public Country saveCountry(Country country) {
         LOGGER.info("Creating a new country");
 
-        countryRepo.findByCountryNameIdAndStatus(country.getCountryName(), 0)
+        countryRepo.findByCountryNameAndStatus(country.getCountryName(), 0)
                 .ifPresent(cn -> {
             throw new DuplicateEntryException("A County with the name '" + cn.getCountryName() + "' already exists.");
         });

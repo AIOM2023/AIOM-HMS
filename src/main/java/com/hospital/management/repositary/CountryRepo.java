@@ -26,7 +26,7 @@ public interface CountryRepo extends JpaRepository<Country, Long > {
     @Modifying
     void deleteCountryById(@Param("countryId") Long countryId);
 
-    Optional<Country> findByCountryNameIdAndStatus(String countryName, Integer status);
+    Optional<Country> findByCountryNameAndStatus(String countryName, Integer status);
 
     @Query(value = "SELECT max(country_id) FROM master_country", nativeQuery = true)
     Long getMaxId();

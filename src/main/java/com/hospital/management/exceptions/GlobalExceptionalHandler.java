@@ -18,18 +18,18 @@ import java.util.Map;
 public class GlobalExceptionalHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ServiceResponse> handlerResourecNotFoundException(ResourceNotFoundException ex){
+    public ResponseEntity<ServiceResponse> handlerResourceNotFoundException(ResourceNotFoundException ex){
 
         String message = ex.getMessage();
         ServiceResponse response= ServiceResponse.builder().message(message).success(false).httpStatus(HttpStatus.NOT_FOUND).build();
 
-        return new ResponseEntity<ServiceResponse>(response,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(HmsBusinessException.class)
     public ResponseEntity<ErrorResponse> handleHmsBusinessException(HmsBusinessException ex, WebRequest req){
         ErrorResponse errorResponse = ex.getErrorResponse();
-        return new ResponseEntity<ErrorResponse>(errorResponse, errorResponse.getHttpStatus());
+        return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
     }
 
     @ExceptionHandler(DuplicateEntryException.class)

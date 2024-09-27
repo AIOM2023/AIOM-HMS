@@ -1,7 +1,9 @@
 package com.hospital.management.service.impl;
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.hospital.management.entities.Country;
 import com.hospital.management.entities.response.CountrySearchResult;
+import com.hospital.management.exceptions.DuplicateEntryException;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -52,10 +54,14 @@ public class CountryServiceImpl implements CountryService {
     public Country saveCountry(Country country) {
         LOGGER.info("Creating a new country");
 
-        Long maxId = countryRepo.getMaxId();
-        country.setCountryCode(HmsCommonUtil.getCountryCodeFromName(country.getCountryName())
-                +(maxId == null ? 1 : maxId+1));
+        countryRepo.findByCountryNameIdAndStatus(country.getCountryName(), 0)
+                .ifPresent(cn -> {
+            throw new DuplicateEntryException("A County with the name '" + cn.getCountryName() + "' already exists.");
+        });
 
+        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+        country.setCountryCode(HmsCommonUtil.getCountryCodeFromName(country.getCountryName()));
+        country.setCountryPhoneCode("+"+ phoneNumberUtil.getCountryCodeForRegion(country.getCountryCode()));
         country.setCreatedBy("System");
         country.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         country.setStatus(0);

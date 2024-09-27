@@ -1,13 +1,14 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.commom.RoomBed;
+import com.hospital.management.entities.response.RoomBedSearchResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface RoomBedService {
 
-    List<RoomBed> getAllRoomBeds();
+    RoomBedSearchResult getAllRoomBeds(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
     RoomBed findRoomBedById(Long roomBedId);
 

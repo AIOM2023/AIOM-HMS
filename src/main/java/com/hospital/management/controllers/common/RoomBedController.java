@@ -1,6 +1,7 @@
 package com.hospital.management.controllers.common;
 
 import com.hospital.management.entities.commom.RoomBed;
+import com.hospital.management.entities.response.RoomBedSearchResult;
 import com.hospital.management.service.RoomBedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,19 +9,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/room/bed")
+@RequestMapping("/room-bed")
 public class RoomBedController {
 
     @Autowired
     private RoomBedService roomBedService;
 
     @GetMapping
-    public ResponseEntity<List<RoomBed>> getAllRoomBeds() {
-        List<RoomBed> roomBeds = roomBedService.getAllRoomBeds();
-        return  ResponseEntity.ok(roomBeds);
+    public ResponseEntity<RoomBedSearchResult> getAllRoomBeds(
+            @RequestParam(name="search", required = false) String search,
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "50") int pageSize,
+            @RequestParam(name="sortBy", required = false) String sortBy,
+            @RequestParam(defaultValue = "DESC") String sortOrder) {
+        RoomBedSearchResult roomBedSearchResult = roomBedService.getAllRoomBeds(search, pageNo, pageSize, sortBy, sortOrder);
+        return  ResponseEntity.ok(roomBedSearchResult);
     }
 
     @GetMapping("/{roomBedId}")

@@ -1,6 +1,8 @@
 package com.hospital.management.service.impl;
 
+import com.hospital.management.entities.commom.Bed;
 import com.hospital.management.entities.commom.RoomBed;
+import com.hospital.management.entities.response.RoomBedSearchResult;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -10,6 +12,10 @@ import com.hospital.management.utils.HmsCommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +32,14 @@ public class RoomBedServiceImpl implements RoomBedService {
     private RoomBedRepo roomBedRepo;
 
     @Override
-    public List<RoomBed> getAllRoomBeds() {
+    public RoomBedSearchResult getAllRoomBeds(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all RoomBeds");
-        return roomBedRepo.findAllRoomBeds();
+        int actualPage = pageNo - 1; // Pages in Spring Data start from 0
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(actualPage, pageSize,sort);
+        Page<RoomBed> pages = roomBedRepo.findAllRoomBeds(search, pageable);
+
+        return mapToRoomBedSearchResult(pageNo, pageSize,pages);
     }
 
     @Override
@@ -49,6 +60,9 @@ public class RoomBedServiceImpl implements RoomBedService {
         roomBed.setCreatedBy("System");
         roomBed.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         roomBed.setStatus(0);
+        for (Bed bed : roomBed.getBedDetails()) {
+            bed.setRoomCode(roomBed.getRoomCode());
+        }
         return roomBedRepo.save(roomBed);
     }
 
@@ -57,6 +71,9 @@ public class RoomBedServiceImpl implements RoomBedService {
         if(!isRoomBedExist(roomBedId)) {
             LOGGER.error("updateRoomBed() - Given roomBedId is not exist");
             throw new ResourceNotFoundException(String.format("RoomBed not found with the given Id: %s", roomBedId));
+        }
+        for (Bed bed : roomBed.getBedDetails()) {
+            bed.setRoomCode(roomBed.getRoomCode());
         }
         roomBed.setModifiedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         roomBed.setModifiedBy("System");
@@ -89,5 +106,12 @@ public class RoomBedServiceImpl implements RoomBedService {
 
     private boolean isRoomBedExist(Long roomBedId){
         return roomBedRepo.findByRoomBedIdAndStatus(roomBedId, 0).isPresent();
+    }
+
+    private RoomBedSearchResult mapToRoomBedSearchResult(int pageNo, int pageSize, Page<RoomBed> pages) {
+        RoomBedSearchResult roomBedSearchResult = new RoomBedSearchResult();
+        roomBedSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) pages.getTotalElements(), (long) pages.getTotalPages(), pageNo, pageSize));
+        roomBedSearchResult.setData(pages.getContent());
+        return roomBedSearchResult;
     }
 }

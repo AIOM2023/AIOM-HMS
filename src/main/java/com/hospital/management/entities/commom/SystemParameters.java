@@ -1,10 +1,16 @@
 package com.hospital.management.entities.commom;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name= "common_system_parameters")
 public class SystemParameters {
 
@@ -23,7 +29,8 @@ public class SystemParameters {
     private String commonDesc;
 
     @Column(name= "status")
-    private Integer status;
+    @Builder.Default
+    private Integer status = 0;
 
     @ManyToOne
     @JoinColumn(name = "params_main_id")

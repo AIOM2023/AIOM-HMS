@@ -1,8 +1,8 @@
 package com.hospital.management.service.impl;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.hospital.management.entities.commom.SystemParametersMain;
-import com.hospital.management.entities.commom.Tariff;
 import com.hospital.management.exceptions.DuplicateEntryException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.repositary.SystemParamsMainRepo;
@@ -16,6 +16,8 @@ import java.util.Optional;
 
 @Service
 public class SystemParametersMainServiceImpl implements SystemParametersMainService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SystemParametersMainServiceImpl.class);
 
     @Autowired
     SystemParamsMainRepo systemParamsMainRepo;
@@ -37,11 +39,15 @@ public class SystemParametersMainServiceImpl implements SystemParametersMainServ
     @Override
     public SystemParametersMain update(SystemParametersMain systemParametersMain) {
         try {
-            SystemParametersMain systemParametersMainExisting = systemParamsMainRepo.findByParamName(systemParametersMain.getParamName());
-            if (systemParametersMainExisting != null) {
+            Long paramsMainId = systemParametersMain.getParamsMainId();
+            SystemParametersMain systemParametersMainExisting = systemParamsMainRepo.findByParamsMainId(paramsMainId);
+            if (systemParametersMainExisting != null && systemParametersMainExisting.getParamName().equals(systemParametersMain.getParamName())) {
                 throw new DuplicateEntryException("A system parameter with the name '" + systemParametersMainExisting.getParamName() + "' already exists.");
             }
-            return  systemParamsMainRepo.save(systemParametersMain);
+            assert systemParametersMainExisting != null;
+            systemParametersMainExisting.setParamName(systemParametersMain.getParamName());
+            return systemParamsMainRepo.save(systemParametersMainExisting);
+
         } catch (DataIntegrityViolationException ex) {
             throw new DuplicateEntryException("System Parameter with the same name already exists", ex);
         }
@@ -49,12 +55,13 @@ public class SystemParametersMainServiceImpl implements SystemParametersMainServ
 
     @Override
     public List<SystemParametersMain> getSystemParametersMainList() {
-        return systemParamsMainRepo.findAll();
+        logger.info("Fetching System parameters Main Search List");
+        return systemParamsMainRepo.findAllSysMainList();
     }
 
     @Override
-    public SystemParametersMain getSystemParametersMainListById(Integer paramsMainId) {
-        Optional<SystemParametersMain> systemParametersMain = systemParamsMainRepo.findAllByparamsMainId(paramsMainId);
+    public SystemParametersMain getSystemParametersMainListById(Long paramsMainId) {
+        Optional<SystemParametersMain> systemParametersMain = systemParamsMainRepo.findAllByParamsMainId(paramsMainId);
         return  systemParametersMain.orElseThrow(() ->
                 new ResourceNotFoundException(String.format("sysParamsMainId not found with the given Id: %s", paramsMainId)));
     }

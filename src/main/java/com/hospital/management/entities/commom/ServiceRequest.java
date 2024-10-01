@@ -18,7 +18,7 @@ public class ServiceRequest {
     @Column(name= "service_request_code")
     private String serviceRequestCode;
 
-    @Column(name= "service_request_name")
+    @Column(name= "serviceRequestName")
     private String serviceRequestName;
 
     @ManyToOne
@@ -43,7 +43,7 @@ public class ServiceRequest {
     @Column(name= "modified_id")
     private String modifiedId;
 
-    @Column(name= "status")
+    @Column(name= "in_active")
     private Integer status;
 }
 

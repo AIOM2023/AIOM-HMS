@@ -47,6 +47,9 @@ public class Referral {
     @Column(name= "country_name")
     private String countryName;
 
+    @Column(name= "referral_percentage")
+    private String referralPercentage;
+
     @Column(name= "in_patient")
     private String inPatient;
 

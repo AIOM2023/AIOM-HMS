@@ -1,7 +1,9 @@
 package com.hospital.management.repositary;
 
-import com.hospital.management.entities.commom.BedDetails;
+import com.hospital.management.entities.commom.Bed;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface BedDetailsRepo extends JpaRepository<BedDetails,Integer> {
+@Repository
+public interface BedDetailsRepo extends JpaRepository<Bed,Long> {
 }

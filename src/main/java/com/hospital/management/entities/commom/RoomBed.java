@@ -1,13 +1,21 @@
 package com.hospital.management.entities.commom;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name= "room_bed")
+@JsonInclude(Include.NON_NULL)
 public class RoomBed {
 
     @Id
@@ -49,6 +57,10 @@ public class RoomBed {
     private String nurseStationName;
 
     private Integer status;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="rb_id")
+    private List<Bed> bedDetails;
 
     @Column(name="created_date")
     private OffsetDateTime createdDate;

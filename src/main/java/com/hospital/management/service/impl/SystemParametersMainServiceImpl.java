@@ -39,15 +39,13 @@ public class SystemParametersMainServiceImpl implements SystemParametersMainServ
     @Override
     public SystemParametersMain update(SystemParametersMain systemParametersMain) {
         try {
-            Long paramsMainId = systemParametersMain.getParamsMainId();
-            SystemParametersMain systemParametersMainExisting = systemParamsMainRepo.findByParamsMainId(paramsMainId);
-            if (systemParametersMainExisting != null && systemParametersMainExisting.getParamName().equals(systemParametersMain.getParamName())) {
-                throw new DuplicateEntryException("A system parameter with the name '" + systemParametersMainExisting.getParamName() + "' already exists.");
+            SystemParametersMain systemParametersMainExisting = systemParamsMainRepo.findByParamsMainId(systemParametersMain.getParamsMainId());
+            if (systemParametersMainExisting != null && !(systemParametersMainExisting.getParamsMainId().equals(systemParametersMain.getParamsMainId()))){
+                if (systemParametersMainExisting.getParamName().equals(systemParametersMain.getParamName())) {
+                    throw new DuplicateEntryException("A system parameter with the name '" + systemParametersMainExisting.getParamName() + "' already exists.");
+                }
             }
-            assert systemParametersMainExisting != null;
-            systemParametersMainExisting.setParamName(systemParametersMain.getParamName());
-            return systemParamsMainRepo.save(systemParametersMainExisting);
-
+            return systemParamsMainRepo.save(systemParametersMain);
         } catch (DataIntegrityViolationException ex) {
             throw new DuplicateEntryException("System Parameter with the same name already exists", ex);
         }

@@ -39,9 +39,12 @@ public class SystemParamServiceImpl implements SystemParametersService {
 
     @Override
     public SystemParameters update(SystemParameters systemParameters) {
+        log.info("Info");
         SystemParameters systemParameterExisting = systemParamsRepo.findByCommonValue(systemParameters.getCommonValue());
-        if (systemParameterExisting != null) {
-            throw new DuplicateEntryException("A system parameter with the name '" + systemParameterExisting.getCommonValue() + "' already exists.");
+        if(systemParameterExisting != null && !(systemParameterExisting.getParamId().equals(systemParameters.getParamId()))){
+            if (systemParameterExisting.getCommonValue().equals(systemParameters.getCommonValue())){
+                throw new DuplicateEntryException("A system parameter with the name '" + systemParameterExisting.getCommonValue() + "' already exists.");
+            }
         }
         return systemParamsRepo.save(systemParameters);
     }
@@ -67,9 +70,9 @@ public class SystemParamServiceImpl implements SystemParametersService {
     }
 
     @Override
-    public List<SystemParameters> getSystemParametersListByMainId(Long paramsMainId) {
-        Optional<List<SystemParameters>> systemParametersbyMainId = systemParamsRepo.findAllByParamsMainId(paramsMainId);
-        return  systemParametersbyMainId.orElseThrow(() ->
+    public List<SystemParameters> getSystemParametersListByMainId(List<Long> paramsMainId) {
+        Optional<List<SystemParameters>> systemParametersByMainId = systemParamsRepo.findAllByParamsMainId(paramsMainId);
+        return  systemParametersByMainId.orElseThrow(() ->
                 new ResourceNotFoundException(String.format("sysParamsMainId not found with the given Id: %s", paramsMainId)));
     }
 

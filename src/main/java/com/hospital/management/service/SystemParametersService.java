@@ -15,7 +15,7 @@ public interface SystemParametersService {
 
     SystemParametersSearchList getSystemParametersList(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
-    List<SystemParameters> getSystemParametersListByMainId(Long paramsMainId);
+    List<SystemParameters> getSystemParametersListByMainId(List<Long> paramsMainId);
 
     List<SystemParameters> getSystemParametersListById(Long paramId);
 

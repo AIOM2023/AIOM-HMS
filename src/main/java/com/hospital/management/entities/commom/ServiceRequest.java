@@ -31,19 +31,13 @@ public class ServiceRequest {
     @Column(name= "created_by")
     private String createdBy;
 
-    @Column(name= "created_id")
-    private String createdId;
-
     @Column(name= "modified_date")
     private OffsetDateTime modifiedDate;
 
     @Column(name= "modified_by")
     private String modifiedBy;
 
-    @Column(name= "modified_id")
-    private String modifiedId;
-
-    @Column(name= "in_active")
+     @Column(name= "status")
     private Integer status;
 }
 

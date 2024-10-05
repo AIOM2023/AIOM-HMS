@@ -17,7 +17,7 @@ public interface CountryRepo extends JpaRepository<Country, Long > {
     /*@Query(value = "SELECT * FROM master_country WHERE country_code like %?1% OR country_name like %?1% AND status = 0",
             countQuery = "SELECT * FROM master_country WHERE country_code like %?1% OR country_name like %?1% AND status = 0",
             nativeQuery = true)*/
-    @Query("SELECT c FROM Country c WHERE (c.countryCode LIKE CONCAT('%', ?1, '%') OR c.countryName LIKE CONCAT('%', ?1, '%')) AND c.status = 0")
+    @Query(value = "SELECT c FROM Country c WHERE (c.countryCode LIKE CONCAT('%', ?1, '%') OR c.countryName LIKE CONCAT('%', ?1, '%')) AND c.status = 0")
     Page<Country> findAllCountries(String search, Pageable pageable);
 
     Optional<Country> findByCountryIdAndStatus(Long countryId, Integer status);

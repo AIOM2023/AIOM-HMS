@@ -49,7 +49,7 @@ public class SystemParametersController {
     }
 
     @GetMapping("/sysParamByMainId")
-    public ResponseEntity<GenericResponse<List<SystemParameters>>> systemParamsMainListById(@RequestParam(required = false) Long paramsMainId) {
+    public ResponseEntity<GenericResponse<List<SystemParameters>>> systemParamsMainListById(@RequestParam(required = false) List<Long> paramsMainId) {
         logger.info("System Parameters List By Main Id");
 
         List<SystemParameters> listSystemParamsMainId = new ArrayList<>();

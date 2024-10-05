@@ -16,14 +16,16 @@ public interface SystemParamsRepo extends JpaRepository<SystemParameters, Long> 
     @Query(value = "SELECT cs FROM SystemParameters cs where cs.status=0")
     Page<SystemParameters> findAllSystemParams(String search, Pageable pageable);
 
-    @Query(value = "SELECT * FROM common_system_parameters c where c.params_main_id = :paramsMainId and c.status=0", nativeQuery = true)
-    Optional<List<SystemParameters>> findAllByParamsMainId(Long paramsMainId);
+    @Query(value = "SELECT c FROM SystemParameters c where c.status=0 and c.systemParametersMain.paramsMainId IN :paramsMainId Order by c.systemParametersMain.paramName ASC")
+    Optional<List<SystemParameters>> findAllByParamsMainId(List<Long> paramsMainId);
 
-    @Query(value = "SELECT * FROM common_system_parameters c where c.param_id = :paramId and c.status=0", nativeQuery = true)
-    Optional<List<SystemParameters>> findAllByParamId(Long paramId);
+    @Query(value = "SELECT c FROM SystemParameters c where c.paramId IN :paramIds and c.status=0")
+    Optional<List<SystemParameters>> findAllByParamId(Long paramIds);
 
     SystemParameters findByCommonValue(String commonValue);
 
     @Query(value="SELECT cs FROM SystemParameters cs where cs.status=0 and cs.paramId IN :sysParamIds")
     Optional<List<SystemParameters>> findAllByParamsIds(List<Long> sysParamIds);
+
+    SystemParameters findByParamIdAndCommonValue(Long paramId,String commonValue);
 }

@@ -9,7 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GenericResponse<T> {
-    private int status;
+    private int httpStatus;
+    private boolean success;
     private String message;
     private T data;
 

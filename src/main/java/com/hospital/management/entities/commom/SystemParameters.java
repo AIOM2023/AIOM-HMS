@@ -22,7 +22,7 @@ public class SystemParameters {
     @Column(name= "comm_code")
     private String commonCode;
 
-    @Column(name= "comm_value")
+    @Column(name= "comm_value",unique = true)
     private String commonValue;
 
     @Column(name= "comm_desc")

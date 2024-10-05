@@ -1,7 +1,10 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.City;
+import com.hospital.management.entities.response.CityNameId;
 import com.hospital.management.entities.response.CitySearchResult;
+
+import java.util.List;
 
 public interface CityService {
 
@@ -16,4 +19,5 @@ public interface CityService {
     String deleteCityById(Long cityId);
 
 
+    List<CityNameId> getAllCityNames(Long districtId);
 }

@@ -1,6 +1,10 @@
 package com.hospital.management.service.impl;
 
+import com.hospital.management.entities.City;
 import com.hospital.management.entities.District;
+import com.hospital.management.entities.response.DistrictNameId;
+import com.hospital.management.entities.response.DistrictSearchResult;
+import com.hospital.management.exceptions.DuplicateEntryException;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -10,6 +14,10 @@ import com.hospital.management.utils.HmsCommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +34,20 @@ public class DistrictServiceImpl implements DistrictService {
     private DistrictRepo districtRepo;
 
     @Override
-    public List<District> getAllDistricts() {
-        LOGGER.info("Fetching all Districts");
-        return districtRepo.findAllDistricts();
+    public DistrictSearchResult getAllDistricts(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
+        int actualPage = pageNo - 1; // Pages in Spring Data start from 0
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(actualPage, pageSize,sort);
+       // Page<Country> pages = countryRepo.findAllCountries(search, pageable);
+        Page<District> pages = districtRepo.findAllDistricts(search, pageable);
+        return mapToDistrictSearchResult(pageNo, pageSize,pages);
     }
-
+    private DistrictSearchResult mapToDistrictSearchResult(int pageNo, int pageSize, Page<District> pages) {
+        DistrictSearchResult districtSearchResult = new DistrictSearchResult();
+        districtSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) pages.getTotalElements(), (long) pages.getTotalPages(), pageNo, pageSize));
+        districtSearchResult.setData(pages.getContent());
+        return districtSearchResult;
+    }
     @Override
     public District findDistrictById(Long districtId) {
         LOGGER.info("Fetching District by id");
@@ -42,7 +59,10 @@ public class DistrictServiceImpl implements DistrictService {
     @Override
     public District saveDistrict(District district) {
         LOGGER.info("Creating a new district");
-
+        District districtExisting = districtRepo.findByDistrictName(district.getDistrictName());
+        if (districtExisting != null) {
+            throw new DuplicateEntryException("A City with the name '" + districtExisting.getDistrictName() + "' already exists.");
+        }
         Long maxId = districtRepo.getMaxId();
         district.setDistrictCode("DT-"+(maxId == null ? 1 : maxId+1));
 
@@ -83,9 +103,9 @@ public class DistrictServiceImpl implements DistrictService {
     }
 
     @Override
-    public List<String> getAllDistrictNames(String stateName) {
+    public List<DistrictNameId> getAllDistrictNames(Long stateId) {
         LOGGER.info("Fetching all district names");
-        return districtRepo.findAllDistrictNames(stateName);
+        return districtRepo.findAllDistrictNamesAndDistrictId(stateId);
     }
 
     private boolean isDistrictExist(Long districtId){

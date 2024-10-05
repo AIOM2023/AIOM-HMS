@@ -1,7 +1,11 @@
 package com.hospital.management.controllers;
 
 import com.hospital.management.entities.State;
+import com.hospital.management.entities.response.CountrySearchResult;
+import com.hospital.management.entities.response.StateNameId;
 import com.hospital.management.entities.response.StateSearchResult;
+import com.hospital.management.exceptions.DuplicateEntryException;
+import com.hospital.management.model.GenericResponse;
 import com.hospital.management.repositary.StateRepo;
 import com.hospital.management.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +28,22 @@ public class StateController {
 
     @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping
-    public ResponseEntity<StateSearchResult> getAllStates( @RequestParam(name="search") String search,
+    public ResponseEntity<GenericResponse<StateSearchResult>> getAllStates( @RequestParam(name="search") String search,
                                                            @RequestParam(defaultValue = "0") int pageNo,
                                                            @RequestParam(defaultValue = "50") int pageSize,
                                                            @RequestParam(name="sortBy") String sortBy,
-                                                           @RequestParam(defaultValue = "ASC") String sortOrder ) {
+                                                           @RequestParam(defaultValue = "DESC") String sortOrder) {
+        try{
         StateSearchResult stateSearchResult = stateService.getAllStates(search, pageNo, pageSize, sortBy, sortOrder);
-        return ResponseEntity.ok(stateSearchResult);
+            if(!stateSearchResult.getData().isEmpty()){
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(),true ,"State Records found", stateSearchResult), HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(),true, "State Records not found", stateSearchResult), HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception ex){
+            StateSearchResult StateSearchResultList = new StateSearchResult();
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(),false, "Something went wrong",StateSearchResultList),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{stateId}")
@@ -42,15 +55,41 @@ public class StateController {
 
     @PostMapping("/save")
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<State> saveState(@RequestBody State saveState){
+    public ResponseEntity<GenericResponse<State>> saveState(@RequestBody State saveState){
 
-        return new ResponseEntity<>(stateService.saveState(saveState), HttpStatus.CREATED);
+        State state = new State();
+        try {
+            state = stateService.saveState(saveState);
+            if (state != null) {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.CREATED.value(), true, "state Created Successfully", state), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "state Not Created", state), HttpStatus.OK);
+            }
+        } catch (DuplicateEntryException exception) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.CONFLICT.value(), true, "state Name Already Exists", saveState), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "Something Wrong", state), HttpStatus.OK);
+
+        }
     }
 
     @PutMapping("/update/{stateId}")
     @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<State> updateState(@RequestBody @Validated State state, @PathVariable("stateId") Long stateId){
-        return new ResponseEntity<>(stateService.updateState(state, stateId), HttpStatus.OK);
+    public ResponseEntity<GenericResponse<State>> updateState(@RequestBody @Validated State state, @PathVariable("stateId") Long stateId){
+        State updateState = new State();
+        try {
+            updateState= stateService.updateState(state, stateId);
+            if (updateState != null) {
+                    return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), true, "city Updated Successfully", updateState), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "city Not Updated", updateState), HttpStatus.OK);
+                }
+            } catch (DuplicateEntryException exception) {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.CONFLICT.value(), true, "city Name Already Exists", state), HttpStatus.OK);
+            } catch (Exception ex) {
+                System.out.println("EXXXXXXXXXXXXXXX:" + ex.getMessage());
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "Something Wrong", updateState), HttpStatus.OK);
+            }
     }
 
     @DeleteMapping("/delete/{stateId}")
@@ -59,9 +98,9 @@ public class StateController {
         return new ResponseEntity<>(stateService.deleteStateById(stateId), HttpStatus.OK);
     }
 
-    @GetMapping("/names/{countryName}")
-    public ResponseEntity<List<String>> getAllStateNamesByCountry(@PathVariable("countryName") String countryName){
-        return new ResponseEntity<>(stateService.getAllStateNames(countryName), HttpStatus.OK);
+    @GetMapping("/names/{countryId}")
+    public ResponseEntity<List<StateNameId>> getAllStateNamesByCountry(@PathVariable("countryId") Long countryId){
+        return new ResponseEntity<>(stateService.getAllStateNames(countryId), HttpStatus.OK);
     }
 
 }

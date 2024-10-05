@@ -1,7 +1,11 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.City;
+import com.hospital.management.entities.State;
+import com.hospital.management.entities.response.CityNameId;
 import com.hospital.management.entities.response.CitySearchResult;
+import com.hospital.management.entities.response.DistrictNameId;
+import com.hospital.management.exceptions.DuplicateEntryException;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -60,7 +64,10 @@ public class CityServiceImpl implements CityService {
     @Override
     public City saveCity(City city) {
         LOGGER.info("Creating a new city");
-
+        City cityExisting = cityRepo.findByCityName(city.getCityName());
+        if (cityExisting != null) {
+            throw new DuplicateEntryException("A City with the name '" + cityExisting.getCityName() + "' already exists.");
+        }
         Long maxId = cityRepo.getMaxId();
         city.setCityCode("CT-"+(maxId == null ? 1 : maxId+1));
 
@@ -101,7 +108,11 @@ public class CityServiceImpl implements CityService {
         return "City deleted successfully!";
     }
 
-
+    @Override
+    public List<CityNameId> getAllCityNames(Long districtId) {
+        LOGGER.info("Fetching all City names");
+        return cityRepo.findAllCityNamesAndDistrictId(districtId);
+    }
     private boolean isCityExist(Long cityId){
         return cityRepo.findByCityIdAndStatus(cityId, 0).isPresent();
     }

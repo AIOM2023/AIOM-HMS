@@ -1,7 +1,10 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.State;
+import com.hospital.management.entities.commom.SystemParameters;
+import com.hospital.management.entities.response.StateNameId;
 import com.hospital.management.entities.response.StateSearchResult;
+import com.hospital.management.exceptions.DuplicateEntryException;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.payload.ErrorResponse;
@@ -32,19 +35,19 @@ public class StateServiceImpl implements StateService {
 
     @Override
     public StateSearchResult getAllStates(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
-        LOGGER.info("Fetching all countries");
+        LOGGER.info("Fetching all States");
+        int actualPage = pageNo - 1; // Pages in Spring Data start from 0
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Pageable pageable = PageRequest.of(actualPage, pageSize,sort);
         Page<State> pages = stateRepo.findAllStates(search, pageable);
-        return mapToStateSearchResult(pageNo, pageSize, pages.getContent());
+        return mapToStateSearchResult(pageNo, pageSize, pages);
     }
 
-private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, List<State> states) {
+private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, Page<State> states) {
     StateSearchResult stateSearchResult = new StateSearchResult();
-        Long totalPages = (long) (states.size() % pageSize == 0 ? states.size() / pageSize : states.size() / pageSize+1);
-    stateSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) states.size(), totalPages, pageNo, pageSize));
-    stateSearchResult.setData(states);
-
+       // Long totalPages = (long) (states.size() % pageSize == 0 ? states.size() / pageSize : states.size() / pageSize+1);
+    stateSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) states.getTotalElements(), (long) states.getTotalPages(), pageNo, pageSize));
+    stateSearchResult.setData(states.getContent());
         return stateSearchResult;
 }
 
@@ -59,7 +62,10 @@ private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, List<
     @Override
     public State saveState(State state) {
         LOGGER.info("Creating a new state");
-
+        State stateExisting = stateRepo.findByStateName(state.getStateName());
+        if (stateExisting != null) {
+            throw new DuplicateEntryException("A State with the name '" + stateExisting.getStateName() + "' already exists.");
+        }
         Long maxId = stateRepo.getMaxId();
         state.setStateCode("ST-"+(maxId == null ? 1 : maxId+1));
 
@@ -99,9 +105,9 @@ private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, List<
     }
 
     @Override
-    public List<String> getAllStateNames(String countryName) {
+    public List<StateNameId> getAllStateNames(Long countryId) {
         LOGGER.info("Fetching All state names");
-        return stateRepo.findAllStateNames(countryName);
+        return stateRepo.findAllStateNamesAndStateId(countryId);
     }
 
     private boolean isSateExist(Long stateId){

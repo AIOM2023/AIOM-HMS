@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.hospital.management.entities.commom.SystemParametersMain;
 import com.hospital.management.service.SystemParametersMainService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -92,7 +93,9 @@ public class SystemParametersMainController {
             }
         } catch (DuplicateEntryException exception) {
             return new ResponseEntity<>(new GenericResponse<>(HttpStatus.CONFLICT.value(), true, "System Parameter with this Name Already Exists", updateSystemParamsMain), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (DataIntegrityViolationException ex) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.CONFLICT.value(), true, "System Parameter with this Name Already Exists", updateSystemParamsMain), HttpStatus.CONFLICT);
+        }catch (Exception ex) {
             System.out.println("EXXXXXXXXXXXXXXX:" + ex.getMessage());
             return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "Something Wrong", updateSystemParamsMain), HttpStatus.OK);
         }

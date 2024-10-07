@@ -1,4 +1,4 @@
-package com.hospital.management.entities.response;
+package com.hospital.management.entities.search;
 
 import com.hospital.management.entities.commom.Department;
 import com.hospital.management.entities.commom.MetaData;

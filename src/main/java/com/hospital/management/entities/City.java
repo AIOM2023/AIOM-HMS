@@ -6,7 +6,10 @@ import lombok.*;
 import java.time.OffsetDateTime;
 
 @Data
+@Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name= "master_city")
 public class City {
 

@@ -15,7 +15,8 @@ import java.util.Optional;
 
 @Repository
 public interface CityRepo extends JpaRepository<City, Long> {
-    @Query(value = "SELECT c FROM City c WHERE (c.cityCode LIKE CONCAT('%', ?1, '%') OR c.cityName LIKE CONCAT('%', ?1, '%')) AND status = 0 ORDER BY ?#{#pageable}")
+   // @Query(value = "SELECT c FROM City c WHERE (c.cityCode LIKE CONCAT('%', ?1, '%') OR c.cityName LIKE CONCAT('%', ?1, '%')) AND status = 0 ORDER BY ?#{#pageable}")
+   @Query(value = "SELECT c FROM City c where c.status=0")
     Page<City> findAllCities(String search, Pageable pageable);
     /*  @Query("SELECT c FROM Country c WHERE (c.countryCode LIKE CONCAT('%', ?1, '%') OR c.countryName LIKE CONCAT('%', ?1, '%')) AND c.status = 0")
     Page<Country> findAllCountries(String search, Pageable pageable);*/
@@ -31,4 +32,12 @@ public interface CityRepo extends JpaRepository<City, Long> {
 
     @Query(value = "SELECT CITY_NAME,CITY_ID FROM master_city WHERE district_id = :districtId", nativeQuery = true)
     List<CityNameId> findAllCityNamesAndDistrictId(Long districtId);
+
+   @Query(value = "SELECT d FROM City d where d.status=0 and d.cityId = :cityId")
+   List<City> findByCityIdAndStatus(Long cityId);
+
+ @Query(value = "SELECT d FROM City d where d.status=0 ORDER BY d.cityName ASC")
+ List<City> findAllCityList();
+
+
 }

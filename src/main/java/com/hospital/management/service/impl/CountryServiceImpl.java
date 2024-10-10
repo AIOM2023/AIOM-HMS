@@ -21,7 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class CountryServiceImpl implements CountryService {
@@ -43,11 +43,13 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public Country findCountryById(Long countryId) {
+    public List<Country> findCountryById(Long countryId) {
         LOGGER.info("Fetching country by id");
-        Optional<Country> country = countryRepo.findByCountryIdAndStatus(countryId, 0);
-        return country.orElseThrow(() ->
-                new ResourceNotFoundException(String.format("Country not found with the given Id: %s", countryId)));
+        return countryRepo.findByCountryId(countryId);
+
+    }
+    public List<Country> countryListAll() {
+        return countryRepo.findAllCountryList();
     }
 
     @Override
@@ -108,4 +110,5 @@ public class CountryServiceImpl implements CountryService {
         countrySearchResult.setData(pages.getContent());
         return countrySearchResult;
     }
+
 }

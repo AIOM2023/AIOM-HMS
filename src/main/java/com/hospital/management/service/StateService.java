@@ -10,7 +10,9 @@ public interface StateService {
 
     StateSearchResult getAllStates(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
-    State findStateById(Long stateId);
+    List<State> findStateById(Long stateId);
+
+    List<State> stateListAll();
 
     State saveState(State state);
 

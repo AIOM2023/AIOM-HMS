@@ -9,7 +9,7 @@ import java.util.List;
 public interface DistrictService {
     DistrictSearchResult getAllDistricts(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
-    District findDistrictById(Long districtId);
+    List<District> findDistrictById(Long districtId);
 
     District saveDistrict(District district);
 
@@ -18,5 +18,7 @@ public interface DistrictService {
     String deleteDistrictById(Long districtId);
 
     List<DistrictNameId> getAllDistrictNames(Long stateId);
+
+    List<District> districtListAll();
 
 }

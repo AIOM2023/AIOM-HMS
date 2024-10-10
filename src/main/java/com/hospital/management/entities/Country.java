@@ -23,6 +23,7 @@ public class Country {
     private  String countryName;
 
     @Column(name="STATUS")
+
     private Integer status;
 
     @Column(name="created_by")

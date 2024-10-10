@@ -1,6 +1,5 @@
 package com.hospital.management.repositary;
 
-import com.hospital.management.entities.City;
 import com.hospital.management.entities.District;
 import com.hospital.management.entities.response.DistrictNameId;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,8 @@ import java.util.Optional;
 @Repository
 public interface DistrictRepo extends JpaRepository<District, Long> {
     //@Query("SELECT c FROM Country c WHERE (c.countryCode LIKE CONCAT('%', ?1, '%') OR c.countryName LIKE CONCAT('%', ?1, '%')) AND c.status = 0")
-    @Query(value = "SELECT d FROM District d WHERE (d.districtCode LIKE CONCAT('%', ?1, '%') OR d.districtName LIKE CONCAT('%', ?1, '%')) AND d.status = 0")
+   // @Query(value = "SELECT d FROM District d WHERE (d.districtCode LIKE CONCAT('%', ?1, '%') OR d.districtName LIKE CONCAT('%', ?1, '%')) AND d.status = 0")
+    @Query(value = "SELECT d FROM District d where d.status=0")
     Page<District> findAllDistricts(String search, Pageable pageable);
 
     Optional<District> findByDistrictIdAndStatus(Long districtId, Integer status);
@@ -32,4 +32,12 @@ public interface DistrictRepo extends JpaRepository<District, Long> {
 
     @Query(value = "SELECT district_name,district_id FROM master_district WHERE STATE_ID = :stateId", nativeQuery = true)
     List<DistrictNameId> findAllDistrictNamesAndDistrictId(Long stateId);
+
+    @Query(value = "SELECT d FROM District d where d.status=0 and d.districtId = :districtId")
+    List<District> findByDistrictId(Long districtId);
+
+    @Query(value = "SELECT d FROM District d where d.status=0 ORDER BY d.districtName ASC")
+    List<District> findAllDistrictList();
+
+
 }

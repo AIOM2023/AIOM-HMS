@@ -1,6 +1,5 @@
 package com.hospital.management.service.impl;
 
-import com.hospital.management.entities.City;
 import com.hospital.management.entities.District;
 import com.hospital.management.entities.response.DistrictNameId;
 import com.hospital.management.entities.response.DistrictSearchResult;
@@ -11,6 +10,7 @@ import com.hospital.management.payload.ErrorResponse;
 import com.hospital.management.repositary.DistrictRepo;
 import com.hospital.management.service.DistrictService;
 import com.hospital.management.utils.HmsCommonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Slf4j
 public class DistrictServiceImpl implements DistrictService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DistrictServiceImpl.class);
@@ -49,11 +49,15 @@ public class DistrictServiceImpl implements DistrictService {
         return districtSearchResult;
     }
     @Override
-    public District findDistrictById(Long districtId) {
+    public List<District> findDistrictById(Long districtId) {
         LOGGER.info("Fetching District by id");
-        Optional<District> district = districtRepo.findByDistrictIdAndStatus(districtId, 0);
-        return district.orElseThrow(() ->
-                new ResourceNotFoundException(String.format("District not found with the given Id: %s", districtId)));
+        return districtRepo.findByDistrictId(districtId);
+    }
+
+
+    @Override
+    public List<District> districtListAll() {
+        return districtRepo.findAllDistrictList();
     }
 
     @Override
@@ -64,7 +68,7 @@ public class DistrictServiceImpl implements DistrictService {
             throw new DuplicateEntryException("A City with the name '" + districtExisting.getDistrictName() + "' already exists.");
         }
         Long maxId = districtRepo.getMaxId();
-        district.setDistrictCode("DT-"+(maxId == null ? 1 : maxId+1));
+       // district.setDistrictCode("DT-"+(maxId == null ? 1 : maxId+1));
 
         district.setCreatedBy("System");
         district.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
@@ -74,9 +78,11 @@ public class DistrictServiceImpl implements DistrictService {
 
     @Override
     public District updateDistrict(District district, Long districtId) {
-        if(!isDistrictExist(districtId)) {
-            LOGGER.error("updateDistrict() - Given districtId is not exist");
-            throw new ResourceNotFoundException(String.format("District not found with the given Id: %s", districtId));
+        District districtExisting = districtRepo.findByDistrictName(district.getDistrictName());
+        if(districtExisting != null && !(districtExisting.getDistrictId().equals(district.getDistrictId()))){
+            if (districtExisting.getDistrictName().equals(district.getDistrictName())){
+                throw new DuplicateEntryException("Department with the name '" + districtExisting.getDistrictName() + "' already exists.");
+            }
         }
         district.setModifiedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         district.setModifiedBy("System");

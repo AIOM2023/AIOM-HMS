@@ -3,18 +3,23 @@ package com.hospital.management.controllers;
 
 import com.hospital.management.entities.Country;
 import com.hospital.management.entities.response.CountrySearchResult;
-import com.hospital.management.entities.search.SystemParametersSearchList;
 import com.hospital.management.exceptions.DuplicateEntryException;
+import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.model.GenericResponse;
 import com.hospital.management.repositary.CountryRepo;
 import com.hospital.management.service.CountryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
+@Slf4j
 @RequestMapping("/country")
 public class CountryController {
 
@@ -23,14 +28,14 @@ public class CountryController {
 
     @Autowired
     CountryRepo countryRepo;
-
+/* */
     @GetMapping
     public ResponseEntity<GenericResponse<CountrySearchResult>> getAllCountries(
-            @RequestParam(name="search") String search,
-            @RequestParam(defaultValue = "0") int pageNo,
-            @RequestParam(defaultValue = "50") int pageSize,
-            @RequestParam(name="sortBy") String sortBy,
-            @RequestParam(defaultValue = "DESC") String sortOrder ) {
+                @RequestParam(name="search", required = false) String search,
+                @RequestParam(defaultValue = "0",required = false) int pageNo,
+                @RequestParam(defaultValue = "50",required = false) int pageSize,
+                @RequestParam(name="sortBy",required = false) String sortBy,
+                @RequestParam(defaultValue = "DESC",required = false) String sortOrder){
         try{
         CountrySearchResult countrySearchResult = countryService.getAllCountries(search, pageNo, pageSize, sortBy, sortOrder);
             if(!countrySearchResult.getData().isEmpty()){
@@ -45,9 +50,40 @@ public class CountryController {
     }
 
     @GetMapping("/{countryId}")
-    public ResponseEntity<Country> findCountryById(@PathVariable("countryId") Long countryId) {
-        Country country = countryService.findCountryById(countryId);
-        return ResponseEntity.ok(country);
+    public ResponseEntity<GenericResponse<List<Country>>> findCountryById(@RequestParam(required = false) Long countryId) {
+      //  Country country = countryService.findCountryById(countryId);
+
+        log.info("Country List By Id");
+
+        List<Country> countryList = new ArrayList<>();
+        try {
+            countryList = countryService.findCountryById(countryId);
+            if (!countryList.isEmpty()) {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), true, "Country List By Id", countryList), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), true, "No Country List with this Id", countryList), HttpStatus.OK);
+            }
+        } catch (ResourceNotFoundException ex) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), true, "No Country found with the given Id", countryList), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "Something went wrong", countryList), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("/list")
+    public ResponseEntity<GenericResponse<List<Country>>> getAllSystemRequestList(){
+        try {
+            List<Country> countryList = countryService.countryListAll();
+
+            if (!countryList.isEmpty()) {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), true, "Country Records found", countryList), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), true, "Country Records not found", countryList), HttpStatus.NOT_FOUND);
+            }
+
+        }catch (Exception ex) {
+            List<Country> countryList = new ArrayList<>();
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "Something went wrong", countryList), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/save")
@@ -67,6 +103,7 @@ public class CountryController {
 
         }
     }
+
 
     @PutMapping("/update/{countryId}")
     public ResponseEntity<GenericResponse<Country>> updateCountry(@RequestBody @Validated Country country, @PathVariable("countryId") Long countryId){
@@ -88,6 +125,8 @@ public class CountryController {
 
     @DeleteMapping("/delete/{countryId}")
     public ResponseEntity<String> deleteCountryById(@PathVariable("countryId") Long countryId){
+
         return new ResponseEntity<>(countryService.deleteCountryById(countryId), HttpStatus.OK);
     }
+
 }

@@ -1,7 +1,6 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.State;
-import com.hospital.management.entities.commom.SystemParameters;
 import com.hospital.management.entities.response.StateNameId;
 import com.hospital.management.entities.response.StateSearchResult;
 import com.hospital.management.exceptions.DuplicateEntryException;
@@ -23,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StateServiceImpl implements StateService {
@@ -52,11 +50,15 @@ private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, Page<
 }
 
     @Override
-    public State findStateById(Long stateId) {
+    public List<State> findStateById(Long stateId) {
         LOGGER.info("Fetching state by id");
-        Optional<State> state = stateRepo.findByStateIdAndStatus(stateId, 0);
-        return state.orElseThrow(() ->
-                new ResourceNotFoundException(String.format("Satate not found with the given Id: %s", stateId)));
+        return stateRepo.findByStateId(stateId);
+
+    }
+
+    @Override
+    public List<State> stateListAll() {
+        return stateRepo.findAllStateList();
     }
 
     @Override
@@ -77,9 +79,11 @@ private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, Page<
 
     @Override
     public State updateState(State state, Long stateId) {
-        if(!isSateExist(stateId)) {
-            LOGGER.error("updateState() - Given stateId is not exist");
-            throw new ResourceNotFoundException(String.format("State not found with the given Id: %s", stateId));
+        State stateExisting = stateRepo.findByStateName(state.getStateName());
+        if(stateExisting != null && !(stateExisting.getStateId().equals(state.getStateId()))){
+            if (stateExisting.getStateName().equals(state.getStateName())){
+                throw new DuplicateEntryException("Department with the name '" + stateExisting.getStateName() + "' already exists.");
+            }
         }
         state.setModifiedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         state.setModifiedBy("System");

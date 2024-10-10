@@ -1,10 +1,8 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.City;
-import com.hospital.management.entities.State;
 import com.hospital.management.entities.response.CityNameId;
 import com.hospital.management.entities.response.CitySearchResult;
-import com.hospital.management.entities.response.DistrictNameId;
 import com.hospital.management.exceptions.DuplicateEntryException;
 import com.hospital.management.exceptions.HmsBusinessException;
 import com.hospital.management.exceptions.ResourceNotFoundException;
@@ -12,6 +10,7 @@ import com.hospital.management.payload.ErrorResponse;
 import com.hospital.management.repositary.CityRepo;
 import com.hospital.management.service.CityService;
 import com.hospital.management.utils.HmsCommonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Slf4j
 public class CityServiceImpl implements CityService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CityServiceImpl.class);
@@ -52,13 +51,10 @@ public class CityServiceImpl implements CityService {
         return citySearchResult;
     }
 
-
     @Override
-    public City findCityById(Long cityId) {
-        LOGGER.info("Fetching city by id");
-        Optional<City> city = cityRepo.findByCityIdAndStatus(cityId, 0);
-        return city.orElseThrow(() ->
-                new ResourceNotFoundException(String.format("City not found with the given Id: %s", cityId)));
+    public List<City> findCityById(Long cityId) {
+        log.info("Fetching City by id");
+        return cityRepo.findByCityIdAndStatus(cityId);
     }
 
     @Override
@@ -69,7 +65,7 @@ public class CityServiceImpl implements CityService {
             throw new DuplicateEntryException("A City with the name '" + cityExisting.getCityName() + "' already exists.");
         }
         Long maxId = cityRepo.getMaxId();
-        city.setCityCode("CT-"+(maxId == null ? 1 : maxId+1));
+      //  city.setCityCode("CT-"+(maxId == null ? 1 : maxId+1));
 
         city.setCreatedBy("System");
         city.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
@@ -79,16 +75,23 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public City updateCity(City city, Long cityId) {
-        if(!isCityExist(cityId)) {
-            LOGGER.error("updateCity() - Given cityId is not exist");
-            throw new ResourceNotFoundException(String.format("City not found with the given Id: %s", cityId));
+        City cityExisting = cityRepo.findByCityName(city.getCityName());
+        if(cityExisting != null && !(cityExisting.getCityId().equals(city.getCityId()))){
+            if (cityExisting.getCityName().equals(city.getCityName())){
+                throw new DuplicateEntryException("City with the name '" + cityExisting.getCityName() + "' already exists.");
+            }
         }
+
         city.setModifiedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         city.setModifiedBy("System");
 
         return cityRepo.save(city);
     }
 
+    @Override
+    public List<City> cityListAll() {
+        return cityRepo.findAllCityList();
+    }
 
     @Transactional
     @Override

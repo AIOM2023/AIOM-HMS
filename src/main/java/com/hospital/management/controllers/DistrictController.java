@@ -4,17 +4,21 @@ import com.hospital.management.entities.District;
 import com.hospital.management.entities.response.DistrictNameId;
 import com.hospital.management.entities.response.DistrictSearchResult;
 import com.hospital.management.exceptions.DuplicateEntryException;
+import com.hospital.management.exceptions.ResourceNotFoundException;
 import com.hospital.management.model.GenericResponse;
 import com.hospital.management.service.DistrictService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/district")
 public class DistrictController {
 
@@ -22,11 +26,11 @@ public class DistrictController {
     private DistrictService districtService;
 
     @GetMapping
-    public ResponseEntity<GenericResponse<DistrictSearchResult>> getAllDistricts(@RequestParam(name="search") String search,
-                                                                      @RequestParam(defaultValue = "0") int pageNo,
-                                                                      @RequestParam(defaultValue = "50") int pageSize,
-                                                                      @RequestParam(name="sortBy") String sortBy,
-                                                                      @RequestParam(defaultValue = "DESC") String sortOrder) {
+    public ResponseEntity<GenericResponse<DistrictSearchResult>> getAllDistricts(@RequestParam(name="search", required = false) String search,
+                                                                                 @RequestParam(defaultValue = "0",required = false) int pageNo,
+                                                                                 @RequestParam(defaultValue = "50",required = false) int pageSize,
+                                                                                 @RequestParam(name="sortBy",required = false) String sortBy,
+                                                                                 @RequestParam(defaultValue = "DESC",required = false) String sortOrder) {
 
         try{
            // List<District> districts = districtService.getAllDistricts();
@@ -42,11 +46,47 @@ public class DistrictController {
         }
     }
 
-    @GetMapping("/{districtId}")
+   /* @GetMapping("/{districtId}")
     public ResponseEntity<District> findDistrictById(@PathVariable("districtId") Long districtId) {
         District district = districtService.findDistrictById(districtId);
         return ResponseEntity.ok(district);
+    }*/
+    @GetMapping("/districtId")
+    public ResponseEntity<GenericResponse<List<District>>> findDistrictById(@RequestParam(required = false) Long districtId){
+        log.info("District List By Id");
+
+        List<District> districtList = new ArrayList<>();
+        try {
+            districtList = districtService.findDistrictById(districtId);
+            if (!districtList.isEmpty()) {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), true, "District List By Id", districtList), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), true, "No District List with this Id", districtList), HttpStatus.OK);
+            }
+        } catch (ResourceNotFoundException ex) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), true, "No District found with the given Id", districtList), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "Something went wrong", districtList), HttpStatus.BAD_REQUEST);
+        }
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<GenericResponse<List<District>>> getAllDistrictList(){
+        try {
+            List<District> districtList = districtService.districtListAll();
+
+            if (!districtList.isEmpty()) {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), true, "District Records found", districtList), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), true, "District Records not found", districtList), HttpStatus.NOT_FOUND);
+            }
+
+        }catch (Exception ex) {
+            List<District> districtEmptyList = new ArrayList<>();
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "Something went wrong", districtEmptyList), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     @PostMapping("/save")
     public ResponseEntity<GenericResponse<District>> saveDistrict(@RequestBody @Validated District district){

@@ -120,7 +120,7 @@ public class DepartmentController {
 
     @PostMapping("/delete")
     public ResponseEntity<GenericResponse<Department>> deleteDepartment(@RequestParam Long departmentId){
-        Department deleteDepartment= new Department();
+        Department deleteDepartment;
         try{
             deleteDepartment= departmentService.delete(departmentId);
             if (deleteDepartment != null) {
@@ -130,9 +130,6 @@ public class DepartmentController {
             }
         }catch (RuntimeException runtimeException){
             return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NOT_FOUND.value(), true, "Department With that Id Doesn't Exists", new Department()), HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "Something Wrong", deleteDepartment), HttpStatus.OK);
         }
     }
 

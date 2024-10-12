@@ -1,17 +1,21 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.DischargeFormat;
-import com.hospital.management.entities.response.DischargeFormatSearchResult;
+import com.hospital.management.entities.search.DischargeFormatSearchResult;
+
+import java.util.List;
 
 public interface DischargeFormatService {
 
-    DischargeFormat saveDischargeFormat(DischargeFormat dischargeFormat);
-
-    DischargeFormat updateDischargeFormat(DischargeFormat dischargeFormat,Long discFmtId);
-
     DischargeFormatSearchResult dischargeFormatList(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
-    DischargeFormat findDischargeFromatById(Long discFmtId);
+    List<DischargeFormat> findDischargeFormatById(Long discFmtId);
 
-    String deleteDischargeFormatById(Long discFmtId);
+    List<DischargeFormat> dischargeFormatListAll();
+
+    DischargeFormat saveDischargeFormat(DischargeFormat dischargeFormat);
+
+    DischargeFormat updateDischargeFormat(DischargeFormat dischargeFormat);
+
+    DischargeFormat deleteDischargeFormatById(Long discFmtId);
 }

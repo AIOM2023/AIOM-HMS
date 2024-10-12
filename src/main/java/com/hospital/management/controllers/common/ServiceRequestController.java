@@ -1,7 +1,6 @@
 package com.hospital.management.controllers.common;
 
 import com.hospital.management.entities.commom.ServiceRequest;
-import com.hospital.management.entities.commom.SystemParameters;
 import com.hospital.management.entities.search.ServiceRequestSearchList;
 import com.hospital.management.exceptions.DuplicateEntryException;
 import com.hospital.management.model.GenericResponse;
@@ -115,7 +114,7 @@ public class ServiceRequestController {
 
     @PostMapping("/delete")
     public ResponseEntity<GenericResponse<ServiceRequest>> deleteSystemParameters(@RequestParam Long serviceRequestId){
-        ServiceRequest deleteServiceRequest= new ServiceRequest();
+        ServiceRequest deleteServiceRequest;
         try{
             deleteServiceRequest= serviceRequestService.delete(serviceRequestId);
             if (deleteServiceRequest != null) {
@@ -125,9 +124,6 @@ public class ServiceRequestController {
             }
         }catch (RuntimeException runtimeException){
             return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NOT_FOUND.value(), true, "Service Request With that Id Doesn't Exists", new ServiceRequest()), HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "Something Wrong", deleteServiceRequest), HttpStatus.OK);
         }
     }
 

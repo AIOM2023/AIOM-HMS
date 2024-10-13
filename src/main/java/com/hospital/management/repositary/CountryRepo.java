@@ -1,6 +1,8 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.Country;
+import com.hospital.management.entities.State;
+import com.hospital.management.entities.commom.SystemParameters;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,11 +24,11 @@ public interface CountryRepo extends JpaRepository<Country, Long > {
     @Query(value = "SELECT c FROM Country c where c.status=0")
   //  @Query(value = "SELECT c FROM Country c WHERE (c.countryCode LIKE CONCAT('%', ?1, '%') OR c.countryName LIKE CONCAT('%', ?1, '%')) AND c.status = 0")
     Page<Country> findAllCountries(String search, Pageable pageable);
-
+    Country findByCountryName(String countryName);
     Optional<Country> findByCountryIdAndStatus(Long countryId, Integer status);
 
-    @Query(value = "SELECT c FROM Country c where c.status=0 and c.countryId = :countryId")
-    List<Country> findByCountryId(Long countryId);
+    @Query(value = "SELECT c FROM Country c where c.status=0 and c.countryId IN :countryId")
+    Optional<List<Country>> findByCountryId(Long countryId);
 
     @Query(value = "UPDATE master_country SET status = 1 WHERE country_id = :countryId", nativeQuery = true)
     @Modifying

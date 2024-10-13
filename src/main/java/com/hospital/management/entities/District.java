@@ -26,6 +26,7 @@ public class District {
     @Column(name= "country_name")
     private String countryName;
 
+    @Column(name= "status")
     private Integer status;
 
     @Column(name="created_by")
@@ -39,4 +40,8 @@ public class District {
 
     @Column(name="modified_date")
     private OffsetDateTime modifiedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "STATE_ID")
+    private State state;
 }

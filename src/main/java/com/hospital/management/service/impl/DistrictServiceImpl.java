@@ -1,6 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.District;
+import com.hospital.management.entities.State;
 import com.hospital.management.entities.response.DistrictNameId;
 import com.hospital.management.entities.response.DistrictSearchResult;
 import com.hospital.management.exceptions.DuplicateEntryException;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -109,9 +111,13 @@ public class DistrictServiceImpl implements DistrictService {
     }
 
     @Override
-    public List<DistrictNameId> getAllDistrictNames(Long stateId) {
+    public List<District> getAllDistrictNames(List<Long> stateId) {
         LOGGER.info("Fetching all district names");
-        return districtRepo.findAllDistrictNamesAndDistrictId(stateId);
+        Optional<List<District>> districtByIds  = districtRepo.findAllDistrictNamesAndDistrictId(stateId);
+        return districtByIds.orElseThrow(()->
+                new ResourceNotFoundException("districtByIds not found with the given Ids:"));
+
+
     }
 
     private boolean isDistrictExist(Long districtId){

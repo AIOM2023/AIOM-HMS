@@ -1,6 +1,7 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.District;
+import com.hospital.management.entities.State;
 import com.hospital.management.entities.response.DistrictNameId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,8 +31,8 @@ public interface DistrictRepo extends JpaRepository<District, Long> {
     @Query(value = "SELECT max(district_id) FROM master_district", nativeQuery = true)
     Long getMaxId();
 
-    @Query(value = "SELECT district_name,district_id FROM master_district WHERE STATE_ID = :stateId", nativeQuery = true)
-    List<DistrictNameId> findAllDistrictNamesAndDistrictId(Long stateId);
+    @Query(value = "SELECT c FROM District c WHERE c.status=0 and c.state.stateId IN :stateId Order by c.state.stateName ASC")
+    Optional<List<District>> findAllDistrictNamesAndDistrictId(List<Long> stateId);
 
     @Query(value = "SELECT d FROM District d where d.status=0 and d.districtId = :districtId")
     List<District> findByDistrictId(Long districtId);

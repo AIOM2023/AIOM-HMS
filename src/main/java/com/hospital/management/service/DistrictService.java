@@ -17,7 +17,7 @@ public interface DistrictService {
 
     String deleteDistrictById(Long districtId);
 
-    List<DistrictNameId> getAllDistrictNames(Long stateId);
+    List<District> getAllDistrictNames(List<Long> stateId);
 
     List<District> districtListAll();
 

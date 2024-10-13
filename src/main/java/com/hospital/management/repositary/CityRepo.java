@@ -1,7 +1,6 @@
 package com.hospital.management.repositary;
 
 import com.hospital.management.entities.City;
-import com.hospital.management.entities.response.CityNameId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,8 +29,9 @@ public interface CityRepo extends JpaRepository<City, Long> {
     @Query(value = "SELECT max(city_id) FROM master_city", nativeQuery = true)
     Long getMaxId();
 
-    @Query(value = "SELECT CITY_NAME,CITY_ID FROM master_city WHERE district_id = :districtId", nativeQuery = true)
-    List<CityNameId> findAllCityNamesAndDistrictId(Long districtId);
+    @Query(value = "SELECT c FROM City c WHERE c.status=0 and c.district.districtId IN :districtId Order by c.district.districtName ASC")
+    Optional<List<City>> findAllCityNamesAndDistrictId(List<Long> districtId);
+
 
    @Query(value = "SELECT d FROM City d where d.status=0 and d.cityId = :cityId")
    List<City> findByCityIdAndStatus(Long cityId);

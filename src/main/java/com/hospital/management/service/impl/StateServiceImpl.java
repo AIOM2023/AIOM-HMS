@@ -1,6 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.State;
+import com.hospital.management.entities.commom.SystemParameters;
 import com.hospital.management.entities.response.StateNameId;
 import com.hospital.management.entities.response.StateSearchResult;
 import com.hospital.management.exceptions.DuplicateEntryException;
@@ -22,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StateServiceImpl implements StateService {
@@ -57,8 +59,10 @@ private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, Page<
     }
 
     @Override
-    public List<State> stateListAll() {
-        return stateRepo.findAllStateList();
+    public List<State> stateListAll(List<Long> stateIds) {
+        Optional<List<State>> statesByMainId =  stateRepo.findAllByStateIds(stateIds);
+                return  statesByMainId.orElseThrow(() ->
+                new ResourceNotFoundException(String.format("stateIds not found with the given Id: %s", stateIds)));
     }
 
     @Override
@@ -109,9 +113,11 @@ private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, Page<
     }
 
     @Override
-    public List<StateNameId> getAllStateNames(Long countryId) {
+    public List<State> getAllStateNames(List<Long> countryIds) {
         LOGGER.info("Fetching All state names");
-        return stateRepo.findAllStateNamesAndStateId(countryId);
+        Optional<List<State>> statesByIds =  stateRepo.findAllStateNamesAndStateId(countryIds);
+        return statesByIds.orElseThrow(()->
+                new ResourceNotFoundException("statesByIds not found with the given Ids:"));
     }
 
     private boolean isSateExist(Long stateId){

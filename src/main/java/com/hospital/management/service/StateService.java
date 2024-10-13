@@ -12,7 +12,7 @@ public interface StateService {
 
     List<State> findStateById(Long stateId);
 
-    List<State> stateListAll();
+    List<State> stateListAll(List<Long> stateId);
 
     State saveState(State state);
 
@@ -20,6 +20,6 @@ public interface StateService {
 
     String deleteStateById(Long stateId);
 
-    List<StateNameId> getAllStateNames(Long countryId);
+    List<State> getAllStateNames(List<Long> countryId);
 
 }

@@ -1,6 +1,7 @@
 package com.hospital.management.controllers;
 
 import com.hospital.management.entities.State;
+import com.hospital.management.entities.commom.SystemParameters;
 import com.hospital.management.entities.response.StateNameId;
 import com.hospital.management.entities.response.StateSearchResult;
 import com.hospital.management.exceptions.DuplicateEntryException;
@@ -75,9 +76,9 @@ public class StateController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<GenericResponse<List<State>>> getAllStateList(){
+    public ResponseEntity<GenericResponse<List<State>>> getAllStateList(@RequestParam(required = false) List<Long> stateIds){
         try {
-            List<State> stateList = stateService.stateListAll();
+            List<State> stateList = stateService.stateListAll(stateIds);
 
             if (!stateList.isEmpty()) {
                 return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), true, "State Records found", stateList), HttpStatus.OK);
@@ -136,9 +137,22 @@ public class StateController {
         return new ResponseEntity<>(stateService.deleteStateById(stateId), HttpStatus.OK);
     }
 
-    @GetMapping("/names/{countryId}")
-    public ResponseEntity<List<StateNameId>> getAllStateNamesByCountry(@PathVariable("countryId") Long countryId){
-        return new ResponseEntity<>(stateService.getAllStateNames(countryId), HttpStatus.OK);
+    @GetMapping("/names/countryIds")
+    public ResponseEntity<GenericResponse<List<State>>> getAllStateNamesByCountry(@RequestParam(required = false) List<Long> countryIds){
+        List<State> stateIds = new ArrayList<>();
+        try {
+            stateIds = stateService.getAllStateNames(countryIds);
+            if (!stateIds.isEmpty()) {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), true, "State List By Id", stateIds), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), true, "No State List with this Id", stateIds), HttpStatus.OK);
+            }
+        } catch (ResourceNotFoundException ex) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), true, "No State found with the given Id", stateIds), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "Something went wrong", stateIds), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 }

@@ -20,5 +20,5 @@ public interface CityService {
 
     List<City> cityListAll();
 
-    List<CityNameId> getAllCityNames(Long districtId);
+    List<City> getAllCityNames(List<Long> districtId);
 }

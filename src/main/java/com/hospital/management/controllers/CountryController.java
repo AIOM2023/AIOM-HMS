@@ -50,7 +50,7 @@ public class CountryController {
     }
 
     @GetMapping("/{countryId}")
-    public ResponseEntity<GenericResponse<List<Country>>> findCountryById(@RequestParam(required = false) Long countryId) {
+    public ResponseEntity<GenericResponse<List<Country>>> findCountryById(@PathVariable("countryId") Long countryId) {
       //  Country country = countryService.findCountryById(countryId);
 
         log.info("Country List By Id");

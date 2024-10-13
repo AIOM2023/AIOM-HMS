@@ -1,6 +1,7 @@
 package com.hospital.management.controllers;
 
 import com.hospital.management.entities.District;
+import com.hospital.management.entities.State;
 import com.hospital.management.entities.response.DistrictNameId;
 import com.hospital.management.entities.response.DistrictSearchResult;
 import com.hospital.management.exceptions.DuplicateEntryException;
@@ -133,8 +134,21 @@ public class DistrictController {
         return new ResponseEntity<>(districtService.deleteDistrictById(districtId), HttpStatus.OK);
     }
 
-    @GetMapping("/names/{stateId}")
-    public ResponseEntity<List<DistrictNameId>> getAllDistrictNamesByState(@PathVariable("stateId") Long stateId){
-        return new ResponseEntity<>(districtService.getAllDistrictNames(stateId), HttpStatus.OK);
+    @GetMapping("/names/stateId")
+    public ResponseEntity<GenericResponse<List<District>>> getAllDistrictNamesByState(@RequestParam(required = false) List<Long> stateId){
+       // return new ResponseEntity<>(districtService.getAllDistrictNames(stateId), HttpStatus.OK);
+        List<District> districts = new ArrayList<>();
+        try {
+            districts = districtService.getAllDistrictNames(stateId);
+            if (!districts.isEmpty()) {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.OK.value(), true, "districts List By Id", districts), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), true, "No districts List with this Id", districts), HttpStatus.OK);
+            }
+        } catch (ResourceNotFoundException ex) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.NO_CONTENT.value(), true, "No districts found with the given Id", districts), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new GenericResponse<>(HttpStatus.BAD_REQUEST.value(), false, "Something went wrong", districts), HttpStatus.BAD_REQUEST);
+        }
     }
 }

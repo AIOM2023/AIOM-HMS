@@ -1,6 +1,7 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.City;
+import com.hospital.management.entities.State;
 import com.hospital.management.entities.response.CityNameId;
 import com.hospital.management.entities.response.CitySearchResult;
 import com.hospital.management.exceptions.DuplicateEntryException;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -112,9 +114,12 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public List<CityNameId> getAllCityNames(Long districtId) {
+    public List<City> getAllCityNames(List<Long> districtId) {
         LOGGER.info("Fetching all City names");
-        return cityRepo.findAllCityNamesAndDistrictId(districtId);
+        Optional<List<City>> cityByIds =  cityRepo.findAllCityNamesAndDistrictId(districtId);
+        return cityByIds.orElseThrow(()->
+                new ResourceNotFoundException("cityByIds not found with the given Ids:"));
+
     }
     private boolean isCityExist(Long cityId){
         return cityRepo.findByCityIdAndStatus(cityId, 0).isPresent();

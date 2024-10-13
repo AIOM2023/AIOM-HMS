@@ -1,7 +1,6 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.ServiceRequest;
-import com.hospital.management.entities.commom.SystemParameters;
 import com.hospital.management.entities.search.ServiceRequestSearchList;
 import com.hospital.management.exceptions.DuplicateEntryException;
 import com.hospital.management.repositary.ServiceRequestRepo;
@@ -45,7 +44,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         }
 
         Long maxId = serviceRequestRepo.getMaxId();
-        serviceRequest.setServiceRequestCode("SerReq" +(maxId == null ? 1 : maxId+1));
+        serviceRequest.setServiceRequestCode("SER" +(maxId == null ? 1 : maxId+1));
        return serviceRequestRepo.save(serviceRequest);
     }
 
@@ -83,7 +82,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
 
     private ServiceRequestSearchList mapToServiceRequestSearchResult(int pageNo, int pageSize, Page<ServiceRequest> pages) {
         ServiceRequestSearchList serviceRequestSearchList = new ServiceRequestSearchList();
-        serviceRequestSearchList.setMetaData(HmsCommonUtil.getMetaData((long) pages.getTotalElements(), (long) pages.getTotalPages(), pageNo, pageSize));
+        serviceRequestSearchList.setMetaData(HmsCommonUtil.getMetaData(pages.getTotalElements(), (long) pages.getTotalPages(), pageNo, pageSize));
         serviceRequestSearchList.setData(pages.getContent());
         return serviceRequestSearchList;
     }

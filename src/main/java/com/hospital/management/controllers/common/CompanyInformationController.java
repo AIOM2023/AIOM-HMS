@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,25 +20,29 @@ public class CompanyInformationController {
     private CompanyInfoService companyInfoService;
 
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:8080")
-    public ResponseEntity<List<CompanyInfo>> systemParamsList() {
-        List<CompanyInfo> systemParams = companyInfoService.companyInfoList();
-        return  ResponseEntity.ok(systemParams);
+    public ResponseEntity<List<CompanyInfo>> companyInfoList() {
+        List<CompanyInfo> companyInfoList = companyInfoService.companyInfoList();
+        return  ResponseEntity.ok(companyInfoList);
 
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/save")
-    public ResponseEntity<CompanyInfo> saveSystemParameters(@RequestBody @Validated CompanyInfo companyInfo){
-        CompanyInfo saveCompanyInfo = companyInfoService.save(companyInfo);
-        return new ResponseEntity<>(saveCompanyInfo,HttpStatus.OK);
+    public ResponseEntity<CompanyInfo> saveSystemParameters(@RequestParam("logo") MultipartFile logo,
+                                                            @RequestParam("companyName") String companyName,
+                                                            @RequestParam("companyAddress") String companyAddress,
+                                                            @RequestParam("companyContactNo")String companyContactNo,
+                                                            @RequestParam("tinNo") String tinNo) {
+        CompanyInfo saveCompanyInfo = companyInfoService.save(logo,companyName,companyAddress,companyContactNo,tinNo);
+        return new ResponseEntity<>(saveCompanyInfo, HttpStatus.OK);
     }
 
-
-    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/update")
-    public ResponseEntity<CompanyInfo> updateAuthorization(@RequestBody @Validated CompanyInfo companyInfo){
-        CompanyInfo updateCompanyInfo = companyInfoService.update(companyInfo);
+    public ResponseEntity<CompanyInfo> updateAuthorization(@RequestParam("logo") MultipartFile logo,
+                                                           @RequestParam("companyName") String companyName,
+                                                           @RequestParam("companyAddress") String companyAddress,
+                                                           @RequestParam("companyContactNo")String companyContactNo,
+                                                           @RequestParam("tinNo") String tinNo){
+        CompanyInfo updateCompanyInfo = companyInfoService.update(logo,companyName,companyAddress,companyContactNo,tinNo);
         return new ResponseEntity<>(updateCompanyInfo,HttpStatus.OK);
     }
 }

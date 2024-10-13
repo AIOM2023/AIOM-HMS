@@ -36,7 +36,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private DepartmentSearchResult mapToDepartmentSearchResult(int pageNo, int pageSize, Page<Department> departments) {
         DepartmentSearchResult departmentSearchResult = new DepartmentSearchResult();
-        departmentSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) departments.getTotalElements(), (long) departments.getTotalPages(), pageNo, pageSize));
+        departmentSearchResult.setMetaData(HmsCommonUtil.getMetaData(departments.getTotalElements(), (long) departments.getTotalPages(), pageNo, pageSize));
         departmentSearchResult.setData(departments.getContent());
         return departmentSearchResult;
     }

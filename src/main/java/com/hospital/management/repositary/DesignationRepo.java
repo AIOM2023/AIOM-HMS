@@ -4,30 +4,26 @@ import com.hospital.management.entities.commom.Designation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
-public interface DesignationRepo extends JpaRepository<Designation, Integer > {
+@Repository
+public interface DesignationRepo extends JpaRepository<Designation, Long> {
 
-   /* @Query(value = "SELECT * FROM designation t WHERE t.status = 0", nativeQuery = true)
-    List<Designation> findAllDesignation();*/
-   @Query(value = "SELECT * FROM designation WHERE designation like %?1% OR description like %?1% " +
-           "AND status = 0 ORDER BY ?#{#pageable}",
-           nativeQuery = true)
+    @Query(value = "SELECT d FROM Designation d WHERE d.status = 0")
    Page<Designation> findAllDesignations(String search, Pageable pageable);
 
+    @Query(value = "SELECT d FROM Designation d where d.status=0 and d.designationId = :designationId")
+    List<Designation> findByDesignationId(Long designationId);
 
+    @Query(value = "SELECT d FROM Designation d where d.status=0 ORDER BY d.designation ASC")
+    List<Designation> findAllDesifnationList();
 
-    Optional<Designation> findByDesignationIdAndStatus(Long designationId, Integer status);
+    Designation findByDesignation(String Designation);
 
-    @Query(value = "UPDATE designation SET status = 1 WHERE designation_id = :designationId", nativeQuery = true)
-    @Modifying
-    void deleteDesignationById(@Param("designationId") Long designationId);
-
-    @Query(value = "SELECT max(designation_id) FROM designation", nativeQuery = true)
+    @Query(value = "SELECT max(d.designationId) FROM Designation d")
     Long getMaxId();
 
 }

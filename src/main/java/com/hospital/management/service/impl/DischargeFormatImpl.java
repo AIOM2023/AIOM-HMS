@@ -1,104 +1,86 @@
 package com.hospital.management.service.impl;
 
 import com.hospital.management.entities.commom.DischargeFormat;
-import com.hospital.management.entities.response.DischargeFormatSearchResult;
-import com.hospital.management.exceptions.HmsBusinessException;
-import com.hospital.management.exceptions.ResourceNotFoundException;
-import com.hospital.management.payload.ErrorResponse;
+import com.hospital.management.entities.search.DischargeFormatSearchResult;
+import com.hospital.management.exceptions.DuplicateEntryException;
 import com.hospital.management.repositary.DischargeFormatRepo;
 import com.hospital.management.utils.HmsCommonUtil;
-import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Slf4j
 public class DischargeFormatImpl implements DischargeFormatService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DischargeFormatImpl.class);
-    private static final String REFERRAL_NOT_FOUND = "DischargeFormat not found with the given Id: %s";
+
     @Autowired
     DischargeFormatRepo dischargeFormatRepo;
 
     @Override
-    public DischargeFormat saveDischargeFormat(DischargeFormat dischargeFormat) {
-        LOGGER.info("Creating a new DischargeFormat");
+    public DischargeFormatSearchResult dischargeFormatList(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
+        log.info("find all dischargeFormat List");
+        int actualPage = pageNo - 1; // Pages in Spring Data start from 0
+        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+        Pageable pageable = PageRequest.of(actualPage, pageSize,sort);
+        Page<DischargeFormat> dischargeFormatPages = dischargeFormatRepo.findAllDischargeFormat(search, pageable);
+        return mapToDischargeFormatSearchResult(pageNo, pageSize, dischargeFormatPages);
+    }
 
+    @Override
+    public List<DischargeFormat> findDischargeFormatById(Long discFmtId) {
+        log.info("Fetching DischargeFormat by id");
+        return dischargeFormatRepo.findByDiscFmtId(discFmtId);
+    }
+
+    @Override
+    public List<DischargeFormat> dischargeFormatListAll() {
+        return dischargeFormatRepo.findAllDischargeFormatList();
+    }
+
+    @Override
+    public DischargeFormat saveDischargeFormat(DischargeFormat dischargeFormat) {
+        log.info("Creating a new DischargeFormat");
+        DischargeFormat dischargeFormatExisting = dischargeFormatRepo.findByDisFmtName(dischargeFormat.getDisFmtName());
+        if (dischargeFormatExisting != null) {
+            throw new DuplicateEntryException("A system parameter with the name '" + dischargeFormatExisting.getDisFmtName() + "' already exists.");
+        }
         Long maxId = dischargeFormatRepo.getMaxId();
         dischargeFormat.setDisfmtCode("DF-"+(maxId == null ? 1 : maxId+1));
-        dischargeFormat.setCreatedBy("System");
-        dischargeFormat.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
-        dischargeFormat.setStatus(0);
         return dischargeFormatRepo.save(dischargeFormat);
     }
 
-
     @Override
-    public DischargeFormat updateDischargeFormat(DischargeFormat dischargeFormat,Long discFmtId) {
-        LOGGER.info("Updating an existing DischargeFormat");
-        if(!isDischargeFormatExist(discFmtId)) {
-            LOGGER.error("update() - DischargeFormat not found with the given Id: {} ", discFmtId);
-            throw new ResourceNotFoundException(String.format(REFERRAL_NOT_FOUND, discFmtId));
+    public DischargeFormat updateDischargeFormat(DischargeFormat dischargeFormat) {
+        log.info("Updating an existing DischargeFormat");
+        DischargeFormat dischargeFormatExisting = dischargeFormatRepo.findByDisFmtName(dischargeFormat.getDisFmtName());
+        if(dischargeFormatExisting != null && !(dischargeFormatExisting.getDiscFmtId().equals(dischargeFormat.getDiscFmtId()))){
+            if (dischargeFormatExisting.getDisFmtName().equals(dischargeFormat.getDisFmtName())){
+                throw new DuplicateEntryException("Department with the name '" + dischargeFormatExisting.getDisFmtName() + "' already exists.");
+            }
         }
-        dischargeFormat.setModifiedBy("System");
-        dischargeFormat.setModifiedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         return dischargeFormatRepo.save(dischargeFormat);
     }
 
     @Override
-    public DischargeFormatSearchResult dischargeFormatList(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
-        LOGGER.info("find all dischargeFormat List");
-        Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<DischargeFormat> dischargeFormatPages = dischargeFormatRepo.findAllDischargeFormat(search, pageable);
-        return mapToDischargeFormatSearchResult(pageNo, pageSize, dischargeFormatPages.getContent());
+    public DischargeFormat deleteDischargeFormatById(Long discFmtId) {
+        DischargeFormat dischargeFormat=dischargeFormatRepo.findById(discFmtId)
+                .orElseThrow(() -> new RuntimeException("Id Not Found"));
+        dischargeFormat.setStatus(1);
+        dischargeFormatRepo.save(dischargeFormat);
+        return dischargeFormat;
     }
-    private DischargeFormatSearchResult mapToDischargeFormatSearchResult(int pageNo, int pageSize, List<DischargeFormat> dischargeFormat) {
-        DischargeFormatSearchResult dischargeFormatSearchResult = new DischargeFormatSearchResult();
-        Long totalPages = (long) (dischargeFormat.size() % pageSize == 0 ? dischargeFormat.size() / pageSize : dischargeFormat.size() / pageSize+1);
-        dischargeFormatSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) dischargeFormat.size(), totalPages, pageNo, pageSize));
-        dischargeFormatSearchResult.setData(dischargeFormat);
 
+    private DischargeFormatSearchResult mapToDischargeFormatSearchResult(int pageNo, int pageSize, Page<DischargeFormat> dischargeFormatPages) {
+        DischargeFormatSearchResult dischargeFormatSearchResult = new DischargeFormatSearchResult();
+        dischargeFormatSearchResult.setMetaData(HmsCommonUtil.getMetaData(dischargeFormatPages.getTotalElements(),(long) dischargeFormatPages.getTotalPages(), pageNo, pageSize));
+        dischargeFormatSearchResult.setData(dischargeFormatPages.getContent());
         return dischargeFormatSearchResult;
     }
-
-    @Override
-    public DischargeFormat findDischargeFromatById(Long discFmtId) {
-        LOGGER.info("Fetching DischargeFormat by id");
-        Optional<DischargeFormat> dischargeFormat = dischargeFormatRepo.findByDiscFmtIdAndStatus(discFmtId, 0);
-        return dischargeFormat.orElseThrow(() ->
-                new ResourceNotFoundException(String.format(REFERRAL_NOT_FOUND, discFmtId)));
-    }
-
-    @Transactional
-    @Override
-    public String deleteDischargeFormatById(Long discFmtId) {
-        if(!isDischargeFormatExist(discFmtId)) {
-            LOGGER.error("isDischargeFormatExist    () - DischargeFormat not found with the given Id: {} ", discFmtId);
-            throw new ResourceNotFoundException(String.format(REFERRAL_NOT_FOUND, discFmtId));
-        }
-        try{
-            dischargeFormatRepo.deleteDischargeFormatById(discFmtId);
-        } catch (Exception ex){
-            LOGGER.error("deleteDischargeSummaryById() - Unable to delete DischargeFormat with the given Id: {} ", discFmtId);
-            ErrorResponse errorResponse = new ErrorResponse("500", ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-            throw new HmsBusinessException(String.format("Unable to delete DischargeFormat with the given Id: %s", discFmtId), errorResponse);
-        }
-
-        return "DischargeFormat deleted successfully!";
-    }
-
-    private boolean isDischargeFormatExist(Long discFmtId){
-        return dischargeFormatRepo.findByDiscFmtIdAndStatus(discFmtId, 0).isPresent();
-    }
-
 
 }

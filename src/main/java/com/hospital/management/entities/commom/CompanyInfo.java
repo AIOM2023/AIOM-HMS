@@ -3,8 +3,6 @@ package com.hospital.management.entities.commom;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Blob;
-
 @Data
 @Entity
 @Table(name= "company_info")
@@ -12,7 +10,7 @@ public class CompanyInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name= "cmp_id")
+    @Column(name= "company_id")
     private Integer companyId;
 
     @Column(name= "company_name")
@@ -28,7 +26,7 @@ public class CompanyInfo {
     private String tinNo;
 
     @Lob
-    @Column(name= "logo")
+    @Column(name= "logo",columnDefinition = "LONGBLOB")
     private byte[] logo;
 
 

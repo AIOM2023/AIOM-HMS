@@ -12,6 +12,12 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +29,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@CacheConfig(cacheNames={"tariff"})
 public class TariffServiceImpl implements TariffService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CountryServiceImpl.class);
 
     @Autowired
     TariffRepo tariffRepo;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Override
     public Tariff save(Tariff tariff) {
@@ -39,10 +49,14 @@ public class TariffServiceImpl implements TariffService {
         tariff.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         tariff.setCreatedBy("System");
         tariff.setStatus(0);
-        return tariffRepo.save(tariff);
+
+        Tariff savedTarrif = tariffRepo.save(tariff);
+        updateCache(savedTarrif);
+        return savedTarrif;
     }
 
     @Override
+    @CachePut(key="#tariffId")
     public Tariff update(Tariff tariff, Long tariffId) {
         LOGGER.info("Updating an existing Tariff");
         if(!isTariffExist(tariffId)) {
@@ -73,6 +87,7 @@ public class TariffServiceImpl implements TariffService {
 
 
     @Override
+    @Cacheable(key="#tariffId")
     public Tariff findTariffById(Long tariffId) {
         LOGGER.info("Fetching tariff by id");
         Optional<Tariff> tariff = tariffRepo.findByTariffIdAndStatus(tariffId, 0);
@@ -82,6 +97,7 @@ public class TariffServiceImpl implements TariffService {
 
     @Transactional
     @Override
+    @CacheEvict(key="#tariffId")
     public String deleteTariffById(Long tariffId) {
         if(!isTariffExist(tariffId)) {
             LOGGER.error("deleteTariffById() - Tariff not found with the given Id: {} ", tariffId);
@@ -100,5 +116,10 @@ public class TariffServiceImpl implements TariffService {
 
     private boolean isTariffExist(Long tariffId){
         return tariffRepo.findByTariffIdAndStatus(tariffId, 0).isPresent();
+    }
+
+    private void updateCache(Tariff tariff) {
+        Cache cache = cacheManager.getCache("tariff");
+        cache.put(tariff.getTariffId(), tariff);
     }
 }

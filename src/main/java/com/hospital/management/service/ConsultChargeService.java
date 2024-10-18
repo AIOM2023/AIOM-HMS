@@ -2,9 +2,7 @@ package com.hospital.management.service;
 
 
 import com.hospital.management.entities.commom.ConsultCharge;
-import com.hospital.management.entities.commom.DischargeSummary;
-
-import java.util.List;
+import com.hospital.management.entities.response.ConsultChargesSearchResult;
 
 public interface ConsultChargeService {
 
@@ -12,7 +10,7 @@ public interface ConsultChargeService {
 
     ConsultCharge updateConsultCharge(ConsultCharge consultCharge,Long consultId);
 
-    List<ConsultCharge> consultChargeList();
+    ConsultChargesSearchResult getAllConsultCharges(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
     ConsultCharge findConsultChargeById(Long consultId);
 

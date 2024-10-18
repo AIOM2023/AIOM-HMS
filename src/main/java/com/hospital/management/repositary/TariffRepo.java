@@ -29,4 +29,8 @@ public interface TariffRepo extends JpaRepository<Tariff, Long> {
     @Query(value = "SELECT max(tariff_id) FROM tariff", nativeQuery = true)
     Long getMaxId();
 
+    List<Tariff> findByStatus(Integer status);
+
+    List<Tariff> findByTariffIdIn(List<Long> ids);
+
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/billing/head")
+@RequestMapping("/billing-head")
 @CrossOrigin(origins = "http://localhost:8080")
 public class BillingHeadController {
 

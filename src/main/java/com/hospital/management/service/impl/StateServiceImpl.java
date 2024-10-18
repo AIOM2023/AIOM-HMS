@@ -33,20 +33,19 @@ public class StateServiceImpl implements StateService {
     @Override
     public StateSearchResult getAllStates(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
         LOGGER.info("Fetching all countries");
+        int actualPage = pageNo - 1;
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Pageable pageable = PageRequest.of(actualPage, pageSize, sort);
         Page<State> pages = stateRepo.findAllStates(search, pageable);
-        return mapToStateSearchResult(pageNo, pageSize, pages.getContent());
+        return mapToStateSearchResult(pageNo, pageSize, pages);
     }
 
-private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, List<State> states) {
-    StateSearchResult stateSearchResult = new StateSearchResult();
-        Long totalPages = (long) (states.size() % pageSize == 0 ? states.size() / pageSize : states.size() / pageSize+1);
-    stateSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) states.size(), totalPages, pageNo, pageSize));
-    stateSearchResult.setData(states);
-
+    private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, Page<State> pages) {
+        StateSearchResult stateSearchResult = new StateSearchResult();
+        stateSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) pages.getTotalElements(), (long) pages.getTotalPages(), pageNo, pageSize));
+        stateSearchResult.setData(pages.getContent());
         return stateSearchResult;
-}
+    }
 
     @Override
     public State findStateById(Long stateId) {

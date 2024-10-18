@@ -1,13 +1,15 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.District;
+import com.hospital.management.entities.response.DistrictNameId;
+import com.hospital.management.entities.response.DistrictSearchResult;
 
 import java.util.List;
 
 public interface DistrictService {
-    List<District> getAllDistricts();
+    DistrictSearchResult getAllDistricts(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
-    District findDistrictById(Long districtId);
+    List<District> findDistrictById(Long districtId);
 
     District saveDistrict(District district);
 
@@ -15,6 +17,8 @@ public interface DistrictService {
 
     String deleteDistrictById(Long districtId);
 
-    List<String> getAllDistrictNames(String stateName);
+    List<District> getAllDistrictNames(List<Long> stateId);
+
+    List<District> districtListAll();
 
 }

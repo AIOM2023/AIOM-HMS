@@ -1,13 +1,17 @@
 package com.hospital.management.entities;
 
+import com.hospital.management.entities.commom.Department;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.OffsetDateTime;
 
 
-@Entity
 @Data
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name= "master_state")
 public class State {
 
@@ -22,8 +26,8 @@ public class State {
     @Column(name="STATE_NAME")
     private  String stateName;
 
-    @Column(name="COUNTRY_NAME")
-    private String countryName;
+  /*  @Column(name="COUNTRY_NAME")
+    private String countryName;*/
 
     private Integer status;
 
@@ -38,5 +42,9 @@ public class State {
 
     @Column(name="modified_date")
     private OffsetDateTime modifiedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "COUNTRY_ID")
+    private Country country;
 
 }

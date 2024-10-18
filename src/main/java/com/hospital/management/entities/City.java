@@ -6,7 +6,10 @@ import lombok.*;
 import java.time.OffsetDateTime;
 
 @Data
+@Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name= "master_city")
 public class City {
 
@@ -43,4 +46,8 @@ public class City {
 
     @Column(name="modified_date")
     private OffsetDateTime modifiedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "district_id")
+    private District district;
 }

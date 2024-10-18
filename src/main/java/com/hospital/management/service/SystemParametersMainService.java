@@ -12,5 +12,5 @@ public interface SystemParametersMainService {
 
     List<SystemParametersMain> getSystemParametersMainList();
 
-    SystemParametersMain getSystemParametersMainListById(Integer paramsMainId);
+    SystemParametersMain getSystemParametersMainListById(Long paramsMainId);
 }

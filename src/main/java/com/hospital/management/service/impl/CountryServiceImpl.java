@@ -2,6 +2,8 @@ package com.hospital.management.service.impl;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.hospital.management.entities.Country;
+import com.hospital.management.entities.State;
+import com.hospital.management.entities.commom.SystemParameters;
 import com.hospital.management.entities.response.CountrySearchResult;
 import com.hospital.management.exceptions.DuplicateEntryException;
 import com.hospital.management.exceptions.HmsBusinessException;
@@ -21,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,12 +46,19 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public Country findCountryById(Long countryId) {
+    public List<Country> findCountryById(Long countryId) {
         LOGGER.info("Fetching country by id");
-        Optional<Country> country = countryRepo.findByCountryIdAndStatus(countryId, 0);
-        return country.orElseThrow(() ->
-                new ResourceNotFoundException(String.format("Country not found with the given Id: %s", countryId)));
+
+        Optional<List<Country>> countryByMainId = countryRepo.findByCountryId(countryId);
+        return countryByMainId.orElseThrow(() ->
+                new ResourceNotFoundException(String.format("sysParamsMainId not found with the given Ids: %s", countryId)));
     }
+
+    public List<Country> countryListAll() {
+        return countryRepo.findAllCountryList();
+    }
+
+
 
     @Override
     public Country saveCountry(Country country) {
@@ -71,10 +81,13 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country updateCountry(Country country, Long countryId) {
-        if(!isCountryExist(countryId)) {
-            LOGGER.error("updateCountry() - Given countryId is not exist");
-            throw new ResourceNotFoundException(String.format("Country not found with the given Id: %s", countryId));
+        Country countryExisting = countryRepo.findByCountryName(country.getCountryName());
+        if(countryExisting != null && !(countryExisting.getCountryId().equals(country.getCountryId()))){
+            if (countryExisting.getCountryName().equals(country.getCountryName())){
+                throw new DuplicateEntryException("Country with the name '" + countryExisting.getCountryName() + "' already exists.");
+            }
         }
+
         country.setModifiedDate(HmsCommonUtil.getSystemDateInUTCFormat());
         country.setModifiedBy("System");
         return countryRepo.save(country);
@@ -108,4 +121,5 @@ public class CountryServiceImpl implements CountryService {
         countrySearchResult.setData(pages.getContent());
         return countrySearchResult;
     }
+
 }

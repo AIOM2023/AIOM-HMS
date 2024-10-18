@@ -1,112 +1,90 @@
 package com.hospital.management.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import com.hospital.management.entities.commom.Department;
-import com.hospital.management.entities.response.DepartmentSearchResult;
-import com.hospital.management.entities.response.HowDidSearchResult;
-import com.hospital.management.exceptions.HmsBusinessException;
-import com.hospital.management.exceptions.ResourceNotFoundException;
-import com.hospital.management.payload.ErrorResponse;
+import com.hospital.management.entities.search.DepartmentSearchResult;
+import com.hospital.management.exceptions.DuplicateEntryException;
 import com.hospital.management.repositary.DepartmentRepo;
 import com.hospital.management.service.DepartmentService;
 import com.hospital.management.utils.HmsCommonUtil;
-import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentServiceImpl.class);
 
     @Autowired
     private DepartmentRepo departmentRepo;
 
     @Override
-    public Department saveDepartment(Department department) {
-        LOGGER.info("Creating a new HowDid");
-        Long maxId = departmentRepo.getMaxId();
-
-        department.setDepartmentCode("DEP"
-                +(maxId == null ? 1 : maxId+1));
-        department.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());
-        department.setCreatedBy("System");
-        department.setStatus(0);
-       return departmentRepo.save(department);
-    }
-
-    @Override
-    public Department updateDepartmentById(Department department,Integer departmentId) {
-        LOGGER.info("Updating an existing Department");
-        if(!isDepartmentExist(departmentId)) {
-            LOGGER.error("update() - Department not found with the given Id: {} ", departmentId);
-            throw new ResourceNotFoundException(String.format("Department not found with the given Id: %s", departmentId));
-        }
-        department.setModifiedDate(HmsCommonUtil.getSystemDateInUTCFormat());
-        department.setModifiedBy("System");
-
-         return departmentRepo.save(department);
-    }
-
-    @Override
     public DepartmentSearchResult departmentList(String search, int pageNo, int pageSize, String sortBy, String sortOrder) {
-        LOGGER.info("Fetching all DepartmentList");
+        log.info("Fetching all DepartmentList");
+        int actualPage = pageNo - 1; // Pages in Spring Data start from 0
         Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
-        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Pageable pageable = PageRequest.of(actualPage, pageSize,sort);
         Page<Department> pages = departmentRepo.findAllDepartment(search, pageable);
-               return mapToDepartmentSearchResult(pageNo, pageSize, pages.getContent());
+        log.info(String.valueOf(pages.getTotalElements()));
+               return mapToDepartmentSearchResult(pageNo, pageSize, pages);
     }
-    private DepartmentSearchResult mapToDepartmentSearchResult(int pageNo, int pageSize, List<Department> departments) {
-        DepartmentSearchResult departmentSearchResult = new DepartmentSearchResult();
-        Long totalPages = (long) (departments.size() % pageSize == 0 ? departments.size() / pageSize : departments.size() / pageSize+1);
-        departmentSearchResult.setMetaData(HmsCommonUtil.getMetaData((long) departments.size(), totalPages, pageNo, pageSize));
-        departmentSearchResult.setData(departments);
 
+    private DepartmentSearchResult mapToDepartmentSearchResult(int pageNo, int pageSize, Page<Department> departments) {
+        DepartmentSearchResult departmentSearchResult = new DepartmentSearchResult();
+        departmentSearchResult.setMetaData(HmsCommonUtil.getMetaData(departments.getTotalElements(), (long) departments.getTotalPages(), pageNo, pageSize));
+        departmentSearchResult.setData(departments.getContent());
         return departmentSearchResult;
     }
 
-
-
+    @Override
+    public List<Department> findDepartmentById(Long departmentId) {
+        log.info("Fetching Department by id");
+        return departmentRepo.findByDepartmentId(departmentId);
+    }
 
     @Override
-    public Department findDepartmentById(Integer departmentId) {
-        LOGGER.info("Fetching howDidId by id");
-        Optional<Department> department = departmentRepo.findByDepartmentIdAndStatus(departmentId, 0);
-        return department.orElseThrow(() ->
-                new ResourceNotFoundException(String.format("Department not found with the given Id: %s", departmentId)));
+    public List<Department> departmentListAll() {
+        return departmentRepo.findAllDepartmentList();
     }
 
-    @Transactional
     @Override
-    public String deleteDepartmentById(Integer departmentId) {
-        if(!isDepartmentExist(departmentId)) {
-            LOGGER.error("deleteDepartmentById() - Department not found with the given Id: {} ", departmentId);
-            throw new ResourceNotFoundException(String.format("Department not found with the given Id: %s", departmentId));
+    public Department saveDepartment(Department department) {
+        log.info("Creating a new Department");
+        Department departmentNameExisting = departmentRepo.findByDepartmentName(department.getDepartmentName());
+        if (departmentNameExisting != null) {
+            throw new DuplicateEntryException("A system parameter with the name '" + departmentNameExisting.getDepartmentName() + "' already exists.");
         }
-        try{
-            departmentRepo.deleteDepartmentById(departmentId);
-        } catch (Exception ex){
-            LOGGER.error("deleteDepartmentById() - Unable to delete Department with the given Id: {} ", departmentId);
-            ErrorResponse errorResponse = new ErrorResponse("500", ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-            throw new HmsBusinessException(String.format("Unable to delete Department with the given Id: %s", departmentId), errorResponse);
-        }
-
-        return "Department deleted successfully!";
+        Long maxId = departmentRepo.getMaxId();
+        department.setDepartmentCode("DEP" +(maxId == null ? 1 : maxId+1));
+        return departmentRepo.save(department);
     }
 
-
-
-    private boolean isDepartmentExist(Integer departmentId){
-        return departmentRepo.findByDepartmentIdAndStatus(departmentId, 0).isPresent();
+    @Override
+    public Department updateDepartment(Department department) {
+        log.info("Updating an existing Department");
+        Department departmentNameExisting = departmentRepo.findByDepartmentName(department.getDepartmentName());
+        if(departmentNameExisting != null && !(departmentNameExisting.getDepartmentId().equals(department.getDepartmentId()))){
+            if (departmentNameExisting.getDepartmentName().equals(department.getDepartmentName())){
+                throw new DuplicateEntryException("Department with the name '" + departmentNameExisting.getDepartmentName() + "' already exists.");
+            }
+        }
+        return departmentRepo.save(department);
     }
+
+    @Override
+    public Department delete(Long departmentId) {
+        Department department=departmentRepo.findById(departmentId)
+                .orElseThrow(() -> new RuntimeException("Id Not Found"));
+        department.setStatus(1);
+        departmentRepo.save(department);
+        return department;
+    }
+
 
 }
 

@@ -61,8 +61,8 @@ public class ServiceGroupServiceImpl implements ServiceGroupService {
     public ServiceGroup saveServiceGroup(ServiceGroup serviceGroup) {
         LOGGER.info("Creating a new ServiceGroup");
 
-        Long maxId = serviceGroupRepo.getMaxId();
-        serviceGroup.setServiceGroupCode("SG-"+(maxId == null ? 1 : maxId+1));
+       // Long maxId = serviceGroupRepo.getMaxId();
+       // serviceGroup.setServiceGroupCode(maxId == null ? 1 : maxId+1);
 
         serviceGroup.setCreatedBy("System");
         serviceGroup.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());

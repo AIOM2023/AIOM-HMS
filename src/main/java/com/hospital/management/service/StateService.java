@@ -1,6 +1,7 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.State;
+import com.hospital.management.entities.response.StateNameId;
 import com.hospital.management.entities.response.StateSearchResult;
 
 import java.util.List;
@@ -9,7 +10,9 @@ public interface StateService {
 
     StateSearchResult getAllStates(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
-    State findStateById(Long stateId);
+    List<State> findStateById(Long stateId);
+
+    List<State> stateListAll(List<Long> stateId);
 
     State saveState(State state);
 
@@ -17,6 +20,6 @@ public interface StateService {
 
     String deleteStateById(Long stateId);
 
-    List<String> getAllStateNames(String countryName);
+    List<State> getAllStateNames(List<Long> countryId);
 
 }

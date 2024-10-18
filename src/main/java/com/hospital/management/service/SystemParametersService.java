@@ -1,6 +1,7 @@
 package com.hospital.management.service;
 
 import com.hospital.management.entities.commom.SystemParameters;
+import com.hospital.management.entities.search.SystemParametersSearchList;
 
 import java.util.List;
 
@@ -10,13 +11,14 @@ public interface SystemParametersService {
 
     SystemParameters update(SystemParameters systemParameters);
 
-    SystemParameters delete(Integer paramId);
+    SystemParameters delete(Long paramId);
 
-    List<SystemParameters> getSystemParametersList();
+    SystemParametersSearchList getSystemParametersList(String search, int pageNo, int pageSize, String sortBy, String sortOrder);
 
-    List<SystemParameters> getSystemParametersListByMainId(Integer paramsMainId);
+    List<SystemParameters> getSystemParametersListByMainId(List<Long> paramsMainId);
 
-    List<SystemParameters> getSystemParametersListById(Integer paramId);
+    List<SystemParameters> getSystemParametersListById(Long paramId);
 
+    List<SystemParameters> getSystemParametersWithIds(List<Long> paramIds);
 
 }

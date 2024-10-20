@@ -23,4 +23,8 @@ public interface BillingHeadRepo extends JpaRepository<BillingHead,Long> {
 
     @Query(value = "SELECT max(billing_head_id) FROM billing_head", nativeQuery = true)
     Long getMaxId();
+
+    List<BillingHead> findByStatus(Integer status);
+
+    List<BillingHead> findByBillingHeadIdIn(List<Long> ids);
 }

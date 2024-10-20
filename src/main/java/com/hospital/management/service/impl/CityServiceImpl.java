@@ -67,7 +67,7 @@ public class CityServiceImpl implements CityService {
             throw new DuplicateEntryException("A City with the name '" + cityExisting.getCityName() + "' already exists.");
         }
         Long maxId = cityRepo.getMaxId();
-      //  city.setCityCode("CT-"+(maxId == null ? 1 : maxId+1));
+         city.setCityCode("CT-"+(maxId == null ? 1 : maxId+1));
 
         city.setCreatedBy("System");
         city.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());

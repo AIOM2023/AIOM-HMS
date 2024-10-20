@@ -86,7 +86,7 @@ private StateSearchResult mapToStateSearchResult(int pageNo, int pageSize, Page<
         State stateExisting = stateRepo.findByStateName(state.getStateName());
         if(stateExisting != null && !(stateExisting.getStateId().equals(state.getStateId()))){
             if (stateExisting.getStateName().equals(state.getStateName())){
-                throw new DuplicateEntryException("Department with the name '" + stateExisting.getStateName() + "' already exists.");
+                throw new DuplicateEntryException("State with the name '" + stateExisting.getStateName() + "' already exists.");
             }
         }
         state.setModifiedDate(HmsCommonUtil.getSystemDateInUTCFormat());

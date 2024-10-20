@@ -24,14 +24,14 @@ public class City {
     @Column(name="CITY_NAME")
     private String cityName;
 
-    @Column(name= "COUNTRY_NAME")
-    private String countryName;
+    @Column(name= "COUNTRY_ID")
+    private String countryId;
 
-    @Column(name= "STATE_NAME")
-    private String stateName;
+    @Column(name= "STATE_ID")
+    private String stateId;
 
-    @Column(name= "DISTRICT_NAME")
-    private String districtName;
+    @Column(name= "DISTRICT_ID")
+    private String districtId;
 
     private Integer status;
 

@@ -70,7 +70,7 @@ public class DistrictServiceImpl implements DistrictService {
             throw new DuplicateEntryException("A City with the name '" + districtExisting.getDistrictName() + "' already exists.");
         }
         Long maxId = districtRepo.getMaxId();
-       // district.setDistrictCode("DT-"+(maxId == null ? 1 : maxId+1));
+        district.setDistrictCode("DT-"+(maxId == null ? 1 : maxId+1));
 
         district.setCreatedBy("System");
         district.setCreatedDate(HmsCommonUtil.getSystemDateInUTCFormat());

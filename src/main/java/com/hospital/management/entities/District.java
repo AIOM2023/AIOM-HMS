@@ -42,6 +42,6 @@ public class District {
     private OffsetDateTime modifiedDate;
 
     @ManyToOne
-    @JoinColumn(name = "STATE_ID")
+    @JoinColumn(name = "state_fk_id")
     private State state;
 }

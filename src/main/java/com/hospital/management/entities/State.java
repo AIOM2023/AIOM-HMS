@@ -26,8 +26,8 @@ public class State {
     @Column(name="STATE_NAME")
     private  String stateName;
 
-  /*  @Column(name="COUNTRY_NAME")
-    private String countryName;*/
+   @Column(name="COUNTRY_ID")
+    private String countryId;
 
     private Integer status;
 
@@ -44,7 +44,7 @@ public class State {
     private OffsetDateTime modifiedDate;
 
     @ManyToOne
-    @JoinColumn(name = "COUNTRY_ID")
+    @JoinColumn(name = "country_fk_id")
     private Country country;
 
 }

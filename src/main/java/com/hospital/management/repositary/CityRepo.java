@@ -29,7 +29,7 @@ public interface CityRepo extends JpaRepository<City, Long> {
     @Query(value = "SELECT max(city_id) FROM master_city", nativeQuery = true)
     Long getMaxId();
 
-    @Query(value = "SELECT c FROM City c WHERE c.status=0 and c.district.districtId IN :districtId Order by c.district.districtName ASC")
+    @Query(value = "SELECT c FROM City c WHERE c.status=0 and c.district.districtId IN :districtId Order by c.cityName ASC")
     Optional<List<City>> findAllCityNamesAndDistrictId(List<Long> districtId);
 
 

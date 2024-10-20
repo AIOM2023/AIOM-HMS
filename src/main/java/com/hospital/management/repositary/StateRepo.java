@@ -30,7 +30,7 @@ public interface StateRepo extends JpaRepository<State, Long> {
     @Query(value = "SELECT STATE_NAME,STATE_ID FROM master_state WHERE COUNTRY_ID = :countryId", nativeQuery = true)
     List<StateNameId> findAllStateNamesAndStateId(Long countryId);
 
-    @Query(value = "SELECT s FROM State s where s.status=0 and s.country.countryId IN :countryId Order by s.country.countryName ASC")
+    @Query(value = "SELECT s FROM State s where s.status=0 and s.country.countryId IN :countryId Order by s.stateName ASC")
     Optional<List<State>> findAllStateNamesAndStateId(List<Long> countryId);
 
     @Query(value = "SELECT d FROM State d where d.status=0 and d.stateId = :stateId")

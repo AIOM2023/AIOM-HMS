@@ -20,11 +20,11 @@ public class District {
     @Column(name="district_name")
     private String districtName;
 
-    @Column(name= "state_name")
-    private String stateName;
+    @Column(name= "state_id")
+    private String stateId;
 
-    @Column(name= "country_name")
-    private String countryName;
+    @Column(name= "country_id")
+    private String countryId;
 
     @Column(name= "status")
     private Integer status;
